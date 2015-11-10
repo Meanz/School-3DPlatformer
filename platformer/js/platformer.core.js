@@ -43,12 +43,23 @@ onInit = function() {
 	var box = Geometry.StaticBox(v3(0, 0, 0), v3(5, 5, 5), testMaterial);
 
 	box.value = 0;
+	box.reverse = false;
 	box.onUpdate = function() {
-		box.value++;
+		if(box.reverse) {
+			box.value--;	
+		} else {
+			box.value++;
+		}
 		
-		box.scale.x = box.value * 0.01;
-		box.scale.y = box.value * 0.01;
-		box.scale.z = box.value * 0.01;
+		box.scale.x = box.value * 0.1;
+		box.scale.y = box.value * 0.1;
+		box.scale.z = box.value * 0.1;
+		
+		if(box.value > 100) {
+			box.reverse = true;
+		} else if(box.value < 0) {
+			box.reverse = false;
+		}
 		
 	};
 
