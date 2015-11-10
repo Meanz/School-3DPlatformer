@@ -57,6 +57,14 @@ onInit = function() {
 					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw + Math.PI / 2), 0.0, -f * Math.sin(controls.Yaw + Math.PI / 2)));
 				}
 			}
+			
+			if(cube.position.y < -10) {
+				cube.position.y = 5;
+				cube.position.x = 0;
+				cube.position.z = 0;
+				cube.__dirtyPosition = true;
+				cube.__dirtyRotation = true;
+			}
 		}
 	};
 
