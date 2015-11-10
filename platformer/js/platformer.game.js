@@ -22,6 +22,7 @@ Platformer.LoadLevel = function(levelName) {
 	});
 };
 
+var raycaster = new THREE.Raycaster();
 onInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 
@@ -31,6 +32,7 @@ onInit = function() {
 
 	cube.setCcdMotionThreshold(1);
 	cube.setCcdSweptSphereRadius(0.2);
+	cube.CanJump = false;
 	cube.onUpdate = function() {
 		controls.camera.position.x = cube.position.x;
 		controls.camera.position.y = cube.position.y + 1;
@@ -43,11 +45,28 @@ onInit = function() {
 			var len = lv.length();
 			// console.log(len);
 
-			var impulse = v3z();
-
-			if (controls.Jump) {
-				impulse.y += f * 4;
+			raycaster.set(controls.camera.position, v3(0.0, -1.0, 0.0));
+			var intersections = raycaster.intersectObjects(sceneobjs, true);
+			for (var i = 0; i < intersections.length; i++) {
+				var intersection = intersections[i];
+				if (intersection.object != cube) {
+					console.log(intersection.distance);
+					if (intersection.distance < 1.5) {
+						cube.CanJump = true;
+					} else {
+						cube.CanJump = false;
+					}
+					break;
+				}
 			}
+
+			var impulse = v3z();
+			if (controls.Jump && cube.CanJump) {
+				impulse.y += f * 8;
+				console.log("jumping motherfuckers.");
+				cube.CanJump = false;
+			}
+
 			if (len >= mag) {
 				// cube.setLinearVelocity(v3(-mag * Math.cos(controls.Yaw), 0.0,
 				// -mag * Math.sin(controls.Yaw)));

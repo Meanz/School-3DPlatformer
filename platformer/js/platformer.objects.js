@@ -5,7 +5,6 @@ Platformer.AddFloor = function(position, dimension, material) {
 	var floor = Geometry.StaticBox(position, dimension, material);
 	// Floor does not have any update thingies
 	Platformer.Add(floor);
-	
 	return floor;
 };
 

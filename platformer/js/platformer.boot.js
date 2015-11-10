@@ -92,8 +92,8 @@ Platformer.Init = function() {
 	Platformer.DefaultMaterial = Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({
 				map : loader.load('images/wood.jpg')
-			}), .8, // high friction
-			.4 // low restitution
+			}), .9, // high friction
+			.1 // low restitution
 	);
 
 	$(document).keyup(function(event) {
