@@ -53,12 +53,15 @@ onInit = function() {
 				if (controls.StrafeLeft) {
 					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw - Math.PI / 2), 0.0, -f * Math.sin(controls.Yaw - Math.PI / 2)));
 				}
-				if (controls.StrafeLeft) {
+				if (controls.StrafeRight) {
 					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw + Math.PI / 2), 0.0, -f * Math.sin(controls.Yaw + Math.PI / 2)));
 				}
+				if (controls.Jump) {
+					cube.applyCentralImpulse(v3(0.0, 5.0, 0.0));
+				}
 			}
-			
-			if(cube.position.y < -10) {
+
+			if (cube.position.y < -10) {
 				cube.position.y = 5;
 				cube.position.x = 0;
 				cube.position.z = 0;

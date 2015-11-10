@@ -22,6 +22,7 @@ Platformer.FirstPersonControls = function(camera) {
 	this.Backward = false;
 	this.StrafeLeft = false;
 	this.StrafeRight = false;
+	this.Jump = false;
 	this.Speed = 0.5;
 
 	this.onMouseMove = function(event) {
@@ -70,6 +71,8 @@ Platformer.FirstPersonControls = function(camera) {
 			this.StrafeRight = true;
 		} else if (key == Platformer.VK_S) {
 			this.Backward = true;
+		} else if(key == Platformer.VK_SPACE) {
+			this.Jump = true;
 		}
 	};
 
@@ -84,6 +87,8 @@ Platformer.FirstPersonControls = function(camera) {
 			this.StrafeRight = false;
 		} else if (key == Platformer.VK_S) {
 			this.Backward = false;
+		} else if(key == Platformer.VK_SPACE) {
+			this.Jump = false;
 		}
 	};
 
