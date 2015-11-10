@@ -1,10 +1,10 @@
-
 'use strict';
 
 Physijs.scripts.worker = './lib/physijs_worker.js';
 Physijs.scripts.ammo = './ammo.js';
 
 // Scene, Renderer
+var onInit, onRender, onSimulation;
 var scene;
 var renderer;
 
@@ -22,21 +22,23 @@ var lastTimestamp;
 
 function renderScene(timestamp) {
 	requestAnimationFrame(renderScene);
-	
-	if(lastTimestamp == 0) {
+
+	if (lastTimestamp == 0) {
 		lastTimestamp = timestamp;
 	}
 	var delta = timestamp - lastTimestamp;
 	lastTimestamp = timestamp;
-	
-	if(onRender != 'undefined') {
+
+	if (onRender !== undefined) {
 		onRender(delta);
 	}
 
 	renderer.render(scene, camera);
 }
 
-function initScene() {
+var Platformer = {};
+
+Platformer.Init = function() {
 	lastTimestamp = 0;
 	TWEEN.start();
 
@@ -52,7 +54,7 @@ function initScene() {
 	scene.setGravity(new THREE.Vector3(0, -200, 0));
 	scene.addEventListener('update', function() {
 		scene.simulate(undefined, 2);
-		if(onSimulation != 'undefined') {
+		if (onSimulation !== undefined) {
 			onSimulation();
 		}
 	});
@@ -75,4 +77,8 @@ function initScene() {
 	loader = new THREE.TextureLoader();
 	requestAnimationFrame(renderScene);
 	scene.simulate();
+
+	if (onInit !== undefined) {
+		onInit();
+	}
 };

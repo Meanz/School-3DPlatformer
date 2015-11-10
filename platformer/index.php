@@ -17,6 +17,11 @@
 </head>
 <body>
 	<div id="viewport"></div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			Platformer.Init();
+		});
+	</script>
 </body>
 
 
