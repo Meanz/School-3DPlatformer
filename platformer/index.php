@@ -11,9 +11,16 @@
 	<script src="./lib/tween.js"></script>
 	<script src="./lib/OrbitControls.js"></script>
 	
-	<!-- Scripts -->
+	<!-- Core -->
 	<script src="./js/platformer.boot.js"></script>
+	
+	<!-- Helpers -->
+	<script src="./js/three.mutil.js"></script>
+	<script src="./js/three.mutil.geometry.js"></script>
+	
+	<!--  Go -->
 	<script src="./js/platformer.core.js"></script>
+	
 </head>
 <body>
 	<div id="viewport"></div>

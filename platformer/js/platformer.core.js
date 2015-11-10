@@ -1,4 +1,3 @@
-
 // sg
 var sceneobjs = [];
 
@@ -7,6 +6,7 @@ var insideLoop = false;
 
 /**
  * Add an object to the scene
+ * 
  * @param obj
  */
 function addSceneObject(obj) {
@@ -16,6 +16,7 @@ function addSceneObject(obj) {
 
 /**
  * Remove an object from the scene
+ * 
  * @param obj
  */
 function removeSceneObject(obj) {
@@ -26,12 +27,33 @@ function removeSceneObject(obj) {
 	scene.remove(obj);
 }
 
-//Patch three
-THREE.Scene.add = function(obj) { alert("Rekt meit"); };
+// Patch three
+THREE.Scene.add = function(obj) {
+	alert("Rekt meit");
+};
 
 onInit = function() {
-	
-	
+
+	var testMaterial = Physijs.createMaterial(new THREE.MeshLambertMaterial({
+		map : loader.load('images/plywood.jpg')
+	}), .8, // high friction
+	.4 // low restitution
+	);
+
+	var box = Geometry.StaticBox(v3(0, 0, 0), v3(5, 5, 5), testMaterial);
+
+	box.value = 0;
+	box.onUpdate = function() {
+		box.value++;
+		
+		box.scale.x = box.value * 0.01;
+		box.scale.y = box.value * 0.01;
+		box.scale.z = box.value * 0.01;
+		
+	};
+
+	addSceneObject(box);
+
 };
 
 onRender = function() {
