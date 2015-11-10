@@ -34,22 +34,36 @@ onInit = function() {
 		controls.camera.position.y = cube.position.y + 1;
 		controls.camera.position.z = cube.position.z;
 
-		if (controls.Forward) {
+		if (true) {
 			var mag = 20;
-			var f = 5;
-			
+			var f = 4;
 			var lv = cube.getLinearVelocity();
-			
 			var len = lv.length();
 			console.log(len);
 			if (len >= mag) {
-				cube.setLinearVelocity(v3(-mag * Math.cos(controls.Yaw), 0.0, -mag * Math.sin(controls.Yaw)));
+				// cube.setLinearVelocity(v3(-mag * Math.cos(controls.Yaw), 0.0,
+				// -mag * Math.sin(controls.Yaw)));
 			} else {
-				cube.applyCentralImpulse(v3(
-						-f * Math.cos(controls.Yaw), 
-						0.0, 
-						-f * Math.sin(controls.Yaw)
-				));
+				if (controls.Forward) {
+					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw), 0.0, -f * Math.sin(controls.Yaw)));
+				}
+				if (controls.Backward) {
+					cube.applyCentralImpulse(v3(f * Math.cos(controls.Yaw), 0.0, f * Math.sin(controls.Yaw)));
+				}
+				if (controls.StrafeLeft) {
+					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw - Math.PI / 2), 0.0, -f * Math.sin(controls.Yaw - Math.PI / 2)));
+				}
+				if (controls.StrafeLeft) {
+					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw + Math.PI / 2), 0.0, -f * Math.sin(controls.Yaw + Math.PI / 2)));
+				}
+			}
+			
+			if(cube.position.y < -10) {
+				cube.position.y = 5;
+				cube.position.x = 0;
+				cube.position.z = 0;
+				cube.__dirtyPosition = true;
+				cube.__dirtyRotation = true;
 			}
 		}
 	};
