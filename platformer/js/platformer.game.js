@@ -29,6 +29,8 @@ onInit = function() {
 
 	var cube = Platformer.AddBoxMass(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 1);
 
+	cube.setCcdMotionThreshold(1);
+	cube.setCcdSweptSphereRadius(0.2);
 	cube.onUpdate = function() {
 		controls.camera.position.x = cube.position.x;
 		controls.camera.position.y = cube.position.y + 1;
@@ -39,27 +41,38 @@ onInit = function() {
 			var f = 4;
 			var lv = cube.getLinearVelocity();
 			var len = lv.length();
-			console.log(len);
+			// console.log(len);
+
+			var impulse = v3z();
+
+			if (controls.Jump) {
+				impulse.y += f * 4;
+			}
 			if (len >= mag) {
 				// cube.setLinearVelocity(v3(-mag * Math.cos(controls.Yaw), 0.0,
 				// -mag * Math.sin(controls.Yaw)));
 			} else {
+				var spd = ((controls.StrafeLeft || controls.StrafeRight) && !(controls.StrafeLeft && controls.StrafeRight)
+						&& ((controls.Forward || controls.Backward) && !(controls.Forward && controls.Backward)) ? 0.5 * f : f);
+
 				if (controls.Forward) {
-					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw), 0.0, -f * Math.sin(controls.Yaw)));
+					impulse.x += -spd * Math.cos(controls.Yaw);
+					impulse.z += -spd * Math.sin(controls.Yaw);
 				}
 				if (controls.Backward) {
-					cube.applyCentralImpulse(v3(f * Math.cos(controls.Yaw), 0.0, f * Math.sin(controls.Yaw)));
+					impulse.x -= -spd * Math.cos(controls.Yaw);
+					impulse.z -= -spd * Math.sin(controls.Yaw);
 				}
 				if (controls.StrafeLeft) {
-					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw - Math.PI / 2), 0.0, -f * Math.sin(controls.Yaw - Math.PI / 2)));
+					impulse.x += -spd * Math.cos(controls.Yaw - Math.PI / 2);
+					impulse.z += -spd * Math.sin(controls.Yaw - Math.PI / 2);
 				}
 				if (controls.StrafeRight) {
-					cube.applyCentralImpulse(v3(-f * Math.cos(controls.Yaw + Math.PI / 2), 0.0, -f * Math.sin(controls.Yaw + Math.PI / 2)));
-				}
-				if (controls.Jump) {
-					cube.applyCentralImpulse(v3(0.0, 5.0, 0.0));
+					impulse.x += -spd * Math.cos(controls.Yaw + Math.PI / 2);
+					impulse.z += -spd * Math.sin(controls.Yaw + Math.PI / 2);
 				}
 			}
+			cube.applyCentralImpulse(impulse);
 
 			if (cube.position.y < -10) {
 				cube.position.y = 5;
