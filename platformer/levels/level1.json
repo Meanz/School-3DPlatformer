@@ -1,0 +1,43 @@
+{
+	"objects":[
+		{
+			"type" : "floor", 
+			"position": {
+				"x" : 0, 
+				"y" : 0, 
+				"z" : 0
+			}, 
+			"dimensions": {
+				"x" : 5, 
+				"y" : 1, 
+				"z" : 5
+			}
+		},
+		{
+			"type" : "floor", 
+			"position": {
+				"x" : 0, 
+				"y" : 0, 
+				"z" : 5
+			}, 
+			"dimensions": {
+				"x" : 5, 
+				"y" : 1, 
+				"z" : 5
+			}
+		},
+		{
+			"type" : "floor", 
+			"position": {
+				"x" : 0, 
+				"y" : 0, 
+				"z" : 10
+			}, 
+			"dimensions": {
+				"x" : 5, 
+				"y" : 1, 
+				"z" : 5
+			}
+		}
+	]
+}

@@ -9,7 +9,7 @@ var insideLoop = false;
  * 
  * @param obj
  */
-function addSceneObject(obj) {
+Platformer.Add = function(obj) {
 	sceneobjs.push(obj);
 	scene.add(obj);
 }
@@ -19,7 +19,7 @@ function addSceneObject(obj) {
  * 
  * @param obj
  */
-function removeSceneObject(obj) {
+Platformer.Remove = function(obj) {
 	if (insideLoop) {
 		alert("You moron, you can't remove an object inside the update loop. CONCURRENT MODIFICATION MUCH???");
 	}
@@ -27,50 +27,16 @@ function removeSceneObject(obj) {
 	scene.remove(obj);
 }
 
-// Patch three
-THREE.Scene.add = function(obj) {
-	alert("Rekt meit");
-};
-
-onInit = function() {
-
-	var testMaterial = Physijs.createMaterial(new THREE.MeshLambertMaterial({
-		map : loader.load('images/plywood.jpg')
-	}), .8, // high friction
-	.4 // low restitution
-	);
-
-	var box = Geometry.StaticBox(v3(0, 0, 0), v3(5, 5, 5), testMaterial);
-
-	box.value = 0;
-	box.reverse = false;
-	box.onUpdate = function() {
-		if(box.reverse) {
-			box.value--;	
-		} else {
-			box.value++;
-		}
-		
-		box.scale.x = box.value * 0.1;
-		box.scale.y = box.value * 0.1;
-		box.scale.z = box.value * 0.1;
-		
-		if(box.value > 100) {
-			box.reverse = true;
-		} else if(box.value < 0) {
-			box.reverse = false;
-		}
-		
-	};
-
-	addSceneObject(box);
-
-};
-
+/**
+ * 
+ */
 onRender = function() {
 
 };
 
+/**
+ * 
+ */
 onSimulation = function() {
 	insideLoop = true;
 	for (var i = 0; i < sceneobjs.length; i++) {
