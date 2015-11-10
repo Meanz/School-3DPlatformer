@@ -1,6 +1,6 @@
 Platformer.AddFloor = function(position, dimension, material) {
 	if (material === undefined) {
-		materail = Platformer.DefaultMaterial;
+		material = Platformer.DefaultMaterial;
 	}
 	var floor = Geometry.StaticBox(position, dimension, material);
 	// Floor does not have any update thingies
@@ -11,7 +11,7 @@ Platformer.AddFloor = function(position, dimension, material) {
 
 Platformer.AddBoxMass = function(position, dimension, material, mass) {
 	if (material === undefined) {
-		materail = Platformer.DefaultMaterial;
+		material = Platformer.DefaultMaterial;
 	}
 	var floor = Geometry.StaticBoxMass(position, dimension, material, mass);
 	// Floor does not have any update thingies
