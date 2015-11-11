@@ -97,6 +97,12 @@ Platformer.FirstPersonControls = function(camera) {
 		//
 		this.Yaw += this.DeltaX * 0.001;
 		this.Pitch -= this.DeltaY * 0.001;
+		// Makes sure the Pitch dosen't flip the camera
+		if(this.Pitch < -Math.PI+0.0001){
+			this.Pitch = -Math.PI+0.0001;
+		}else if(this.Pitch > -0.0001){
+			this.Pitch = -0.0001;
+		}
 
 		// console.log("Yaw:" + this.Yaw);
 		// console.log("Pitch: " + this.Pitch);
@@ -131,6 +137,7 @@ Platformer.FirstPersonControls = function(camera) {
 		targetPosition.x = position.x + 10 * Math.sin(this.Pitch) * Math.cos(this.Yaw);
 		targetPosition.y = position.y + 10 * Math.cos(this.Pitch);
 		targetPosition.z = position.z + 10 * Math.sin(this.Pitch) * Math.sin(this.Yaw);
+		console.log(this.Pitch);
 
 		// console.log("LookAt: " + targetPosition.x + " / " + targetPosition.y
 		// + " / "
