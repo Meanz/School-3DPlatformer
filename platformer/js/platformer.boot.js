@@ -61,7 +61,7 @@ Platformer.Init = function() {
 	scene = new Physijs.Scene({
 		fixedTimeStep : 1 / 60
 	});
-	scene.setGravity(new THREE.Vector3(0, -200, 0));
+	scene.setGravity(new THREE.Vector3(0, -15, 0));
 	scene.addEventListener('update', function() {
 		scene.simulate(undefined, 2);
 		if (onSimulation !== undefined) {
@@ -92,7 +92,7 @@ Platformer.Init = function() {
 	Platformer.DefaultMaterial = Physijs.createMaterial(
 			new THREE.MeshLambertMaterial({
 				map : loader.load('images/wood.jpg')
-			}), .9, // high friction
+			}), 5, // high friction
 			.1 // low restitution
 	);
 
