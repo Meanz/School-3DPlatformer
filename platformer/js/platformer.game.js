@@ -28,11 +28,12 @@ onInit = function() {
 
 	Platformer.LoadLevel("level1.json");
 
-	var cube = Platformer.AddBoxMass(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 1);
+	var cube = Platformer.AddBoxMass(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
 
 	cube.setCcdMotionThreshold(1);
 	cube.setCcdSweptSphereRadius(0.2);
 	cube.CanJump = false;
+	cube.setAngularFactor(v3z());
 	cube.onUpdate = function() {
 		controls.camera.position.x = cube.position.x;
 		controls.camera.position.y = cube.position.y + 1;
@@ -40,7 +41,7 @@ onInit = function() {
 
 		if (true) {
 			var mag = 20;
-			var f = 4;
+			var f = 40;
 			var lv = cube.getLinearVelocity();
 			var len = lv.length();
 			// console.log(len);
@@ -51,7 +52,7 @@ onInit = function() {
 				var intersection = intersections[i];
 				if (intersection.object != cube) {
 					console.log(intersection.distance);
-					if (intersection.distance < 1.5) {
+					if (intersection.distance <= 1.5) {
 						cube.CanJump = true;
 					} else {
 						cube.CanJump = false;
@@ -62,8 +63,8 @@ onInit = function() {
 
 			var impulse = v3z();
 			if (controls.Jump && cube.CanJump) {
-				impulse.y += f * 8;
-				console.log("jumping motherfuckers.");
+				impulse.y += f * 2;
+				//console.log("jumping motherfuckers.");
 				cube.CanJump = false;
 			}
 
