@@ -1,5 +1,4 @@
 var KEY_SPACE = 32;
-
 var KEY_LCASE = 32;
 var KEY_A = 97;
 var KEY_B = 98;
@@ -49,6 +48,7 @@ MInput.DeltaMouseX = 0;
 MInput.DeltaMouseY = 0;
 MInput.KeysDown = [];
 MInput.MouseKeysDown = [];
+MInput.PreventRightClickMenu = false;
 MInput.IsListenersAdded = false;
 
 MInput.AddListeners = function(who) {
@@ -60,6 +60,12 @@ MInput.AddListeners = function(who) {
 		who.addEventListener("mouseup", MInput.OnMouseUp, false);
 		who.addEventListener("mousedown", MInput.OnMouseDown, false);
 		who.addEventListener("mousemove", MInput.OnMouseMove, false);
+
+		if (MInput.PreventRightClickMenu) {
+			who.addEventListener("contextmenu", function(event) {
+				event.preventDefault();
+			}, false);
+		}
 		MInput.IsListenersAdded = true;
 	}
 };
@@ -122,6 +128,10 @@ MInput.IsKeyReleased = function(which) {
 }
 
 MInput.OnMouseDown = function(event) {
+	if (event.button == MOUSE_RMB) {
+		event.preventDefault();
+		event.stopPropagation();
+	}
 	MInput.MouseKeysDown[event.button] = true;
 	MInput.F_MouseKeysPressed.push(event.button);
 };
@@ -138,7 +148,7 @@ MInput.IsMouseKeyDown = function(which) {
 	return MInput.MouseKeysDown[which];
 };
 
-MInput.IsMousePressed = function(which) {
+MInput.IsMouseKeyPressed = function(which) {
 	for (var i = 0; i < MInput.F_MouseKeysPressed.length; i++) {
 		if (MInput.F_MouseKeysPressed[i] == which) {
 			return true;
@@ -147,7 +157,7 @@ MInput.IsMousePressed = function(which) {
 	return false;
 }
 
-MInput.IsMouseReleased = function(which) {
+MInput.IsMouseKeyReleased = function(which) {
 	for (var i = 0; i < MInput.F_MouseKeysReleased.length; i++) {
 		if (MInput.F_MouseKeysReleased[i] == which) {
 			return true;
@@ -159,5 +169,5 @@ MInput.IsMouseReleased = function(which) {
 MInput.OnMouseMove = function(event) {
 	MInput.MouseX = event.pageX;
 	MInput.MouseY = event.pageY;
-	// :D
+
 };
