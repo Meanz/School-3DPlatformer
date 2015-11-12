@@ -51,7 +51,7 @@ onInit = function() {
 			for (var i = 0; i < intersections.length; i++) {
 				var intersection = intersections[i];
 				if (intersection.object != cube) {
-					console.log(intersection.distance);
+					//console.log(intersection.distance);
 					if (intersection.distance <= 1.5) {
 						cube.CanJump = true;
 					} else {

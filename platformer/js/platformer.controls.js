@@ -137,7 +137,6 @@ Platformer.FirstPersonControls = function(camera) {
 		targetPosition.x = position.x + 10 * Math.sin(this.Pitch) * Math.cos(this.Yaw);
 		targetPosition.y = position.y + 10 * Math.cos(this.Pitch);
 		targetPosition.z = position.z + 10 * Math.sin(this.Pitch) * Math.sin(this.Yaw);
-		console.log(this.Pitch);
 
 		// console.log("LookAt: " + targetPosition.x + " / " + targetPosition.y
 		// + " / "

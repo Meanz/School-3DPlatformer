@@ -27,6 +27,17 @@ var KEY_X = 120;
 var KEY_Y = 121;
 var KEY_Z = 122;
 
+var KEY_1 = 49;
+var KEY_2 = 50;
+var KEY_3 = 51;
+var KEY_4 = 52;
+var KEY_5 = 53;
+var KEY_6 = 54;
+var KEY_7 = 55;
+var KEY_8 = 56;
+var KEY_9 = 57;
+var KEY_0 = 48;
+
 var MOUSE_LMB = 0;
 var MOUSE_MMB = 1;
 var MOUSE_RMB = 2;
@@ -55,8 +66,9 @@ MInput.AddListeners = function(who) {
 	if (MInput.IsListenersAdded) {
 		console.log("MInput::AddListeners() Error: Listeners is already added!");
 	} else {
-		who.addEventListener("keyup", MInput.OnKeyUp, false);
-		who.addEventListener("keydown", MInput.OnKeyDown, false);
+		//ARGH
+		document.addEventListener("keyup", MInput.OnKeyUp, false);
+		document.addEventListener("keydown", MInput.OnKeyDown, false);
 		who.addEventListener("mouseup", MInput.OnMouseUp, false);
 		who.addEventListener("mousedown", MInput.OnMouseDown, false);
 		who.addEventListener("mousemove", MInput.OnMouseMove, false);
@@ -95,11 +107,14 @@ MInput.Flush = function() {
 MInput.OnKeyDown = function(event) {
 	var key = event.which;
 	MInput.KeysDown[key] = true;
+	MInput.F_KeysPressed.push(key);
 };
 
 MInput.OnKeyUp = function(event) {
 	var key = event.which;
 	MInput.KeysDown[key] = false;
+	MInput.F_KeysReleased.push(key);
+	console.log("Pushed " + key);
 };
 
 MInput.IsKeyDown = function(which) {
@@ -128,10 +143,6 @@ MInput.IsKeyReleased = function(which) {
 }
 
 MInput.OnMouseDown = function(event) {
-	if (event.button == MOUSE_RMB) {
-		event.preventDefault();
-		event.stopPropagation();
-	}
 	MInput.MouseKeysDown[event.button] = true;
 	MInput.F_MouseKeysPressed.push(event.button);
 };

@@ -1,5 +1,15 @@
 var Designer = {};
 
+var TOOL_FLOOR = "floor";
+var TOOL_REMOVE = "tool_remove";
+var TOOL_WALL = "wall";
+var TOOL_TRACER = "tracer";
+var TOOL_SCANNER = "scanner";
+var TOOL_JUMPPAD = "jumppad";
+var TOOL_START = "start";
+var TOOL_END = "end";
+
+Designer.Tool = TOOL_FLOOR;
 Designer.SaveX = 0;
 Designer.SaveY = 0;
 Designer.IsDragging = false;
@@ -8,26 +18,26 @@ Designer.OffsetY = 0;
 Designer.Tiles = [];
 Designer.TileSize = 32;
 
-var NewTile = function(tileX, tileY) {
-
+var Tile = function(tileX, tileY) {
 	this.TileX = tileX;
 	this.TileY = tileY;
-
+	this.TileType = "unknown";
+	this.Color = "#00ff00";
 	this.OnRender = function() {
-
 		Designer.Context.beginPath();
-
 		var drawX = Math.floor((Math.floor(Designer.OffsetX / Designer.TileSize) + this.TileX) * Designer.TileSize)
 				+ (Math.floor(Designer.OffsetX) % Designer.TileSize);
 
 		var drawY = Math.floor((Math.floor(Designer.OffsetY / Designer.TileSize) + this.TileY) * Designer.TileSize)
 				+ (Math.floor(Designer.OffsetY) % Designer.TileSize);
-
 		Designer.Context.fillRect(drawX, drawY, Designer.TileSize, Designer.TileSize);
-		Designer.Context.strokeStyle = "#00ff00";
+		Designer.Context.strokeStyle = this.Color;
 		Designer.Context.stroke();
-		console.log("drawing tile");
 	};
+};
+
+var Floor = function(tileX, tileY) {
+
 };
 
 Designer.RefreshFPS = function() {
@@ -65,30 +75,83 @@ Designer.Update = function() {
 	// Move!
 	if (MInput.IsMouseKeyPressed(MOUSE_LMB)) {
 		Designer.IsDragging = true;
-		console.log("Drag Start");
 	}
 	if (MInput.IsMouseKeyReleased(MOUSE_LMB)) {
 		Designer.IsDragging = false;
-		console.log("Drag End");
+	}
+	
+	if(MInput.IsKeyReleased(KEY_1)) {
+		Designer.Tool = TOOL_FLOOR;
+		Designer.Render();
+	}
+	if(MInput.IsKeyReleased(KEY_2)) {
+		Designer.Tool = TOOL_REMOVE;
+		Designer.Render();
+	}
+	if(MInput.IsKeyReleased(KEY_3)) {
+		Designer.Tool = TOOL_WALL;
+		Designer.Render();
+	}
+	if(MInput.IsKeyReleased(KEY_4)) {
+		Designer.Tool = TOOL_TRACER;
+		Designer.Render();
+	}
+	if(MInput.IsKeyReleased(KEY_5)) {
+		Designer.Tool = TOOL_SCANNER;
+		Designer.Render();
+	}
+	if(MInput.IsKeyReleased(KEY_6)) {
+		Designer.Tool = TOOL_JUMPPAD;
+		Designer.Render();
+	}
+	if(MInput.IsKeyReleased(KEY_7)) {
+		Designer.Tool = TOOL_START;
+		Designer.Render();
+	}
+	if(MInput.IsKeyReleased(KEY_8)) {
+		Designer.Tool = TOOL_END;
+		Designer.Render();
 	}
 
 	if (MInput.IsMouseKeyReleased(MOUSE_RMB)) {
-		//
-		var tileX = Math.floor(MInput.MouseX / Designer.TileSize) - Math.floor(Designer.OffsetX / Designer.TileSize);
-		var tileY = Math.floor(MInput.MouseY / Designer.TileSize) - Math.floor(Designer.OffsetY / Designer.TileSize);
 
-		Designer.Tiles.push(new NewTile(tileX, tileY));
-
-		console.log("added tile");
+		var tileX = Math.floor((MInput.MouseX - 10 - (Math.floor(Designer.OffsetX) % Designer.TileSize)) / Designer.TileSize)
+				- Math.floor(Designer.OffsetX / Designer.TileSize);
+		var tileY = Math.floor((MInput.MouseY - 10 - (Math.floor(Designer.OffsetY) % Designer.TileSize)) / Designer.TileSize)
+				- Math.floor(Designer.OffsetY / Designer.TileSize);
+		// Do we have a tile at this position?
+		var hasTile = false;
+		var tile = undefined;
+		var tileIndex = -1;
+		for (var i = 0; i < Designer.Tiles.length; i++) {
+			tile = Designer.Tiles[i];
+			tileIndex = i;
+			if (tile.TileX == tileX && tile.TileY == tileY) {
+				// We already have a tile
+				hasTile = true;
+				break;
+			}
+		}
+		if (!hasTile) {
+			if (Designer.Tool == TOOL_FLOOR) {
+				Designer.Tiles.push(new Tile(tileX, tileY));
+			}
+		} else {
+			if (Designer.Tool == TOOL_REMOVE) {
+				// Get the index of
+				Designer.Tiles.splice(tileIndex, 1);
+			}
+		}
+		Designer.Render();
 	}
 
 	if ((MInput.DeltaMouseX != 0 || MInput.DeltaMouseY != 0) && Designer.IsDragging) {
 		Designer.OffsetX += MInput.DeltaMouseX;
 		Designer.OffsetY += MInput.DeltaMouseY;
-
 		Designer.Render();
-		console.log("Update frame");
 	}
+	
+
 
 	// Flush input
 	MInput.Flush();
@@ -115,8 +178,8 @@ Designer.Render = function() {
 
 	// Draw tile map thing
 	Designer.Context.beginPath();
-	for (x = -1; x < numWTiles; x++) {
-		for (y = -1; y < numHTiles; y++) {
+	for (x = -1; x < numWTiles + 1; x++) {
+		for (y = -1; y < numHTiles + 1; y++) {
 			var drawX = (Math.floor(Designer.OffsetX) % Designer.TileSize) + Math.floor((x * Designer.TileSize));
 			var drawY = (Math.floor(Designer.OffsetY) % Designer.TileSize) + Math.floor((y * Designer.TileSize));
 
@@ -126,8 +189,8 @@ Designer.Render = function() {
 			var tileY = y - Math.floor(Designer.OffsetY / Designer.TileSize);
 
 			Designer.Context.rect(drawX, drawY, Designer.TileSize, Designer.TileSize);
-			// Designer.Context.fillText("" + tileX + ", " + tileY, drawX + 3,
-			// drawY + 15);
+			Designer.Context.fillText("" + tileX, drawX + 4, drawY + 13);
+			Designer.Context.fillText("" + tileY, drawX + 4, drawY + 25);
 			// Designer.Context.fillText("" + y, drawX + 3, drawY + 25);
 		}
 	}
@@ -142,9 +205,7 @@ Designer.Render = function() {
 	for (var i = 0; i < Designer.Tiles.length; i++) {
 		tile = Designer.Tiles[i];
 		if (tile != undefined) {
-			console.log("has tile");
 			if (tile.OnRender != undefined) {
-				console.log("drawing tile 0");
 				tile.OnRender();
 			}
 		}
@@ -153,8 +214,7 @@ Designer.Render = function() {
 	// Draw debug text
 	Designer.Context.fillStyle = "#000000";
 	Designer.Context.font = "16px Arial";
-	Designer.Context.fillText("OffsetX: " + Designer.OffsetX, 10, 20);
-	Designer.Context.fillText("OffsetY: " + Designer.OffsetX, 10, 35);
+	Designer.Context.fillText("Tool: " + Designer.Tool, 10, 20);
 
 	// calculate fps
 	// Designer.Context.fillText("FPS: " + Designer.RefreshFPS(), 10, 50);
