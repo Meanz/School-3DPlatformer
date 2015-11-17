@@ -99,6 +99,18 @@ function TextureCreate(clrx, clry, clrz, delta) {
 		}
 	}
 
+	
+	ctx.lineWidth = 5;
+	ctx.strokeStyle = "#ff0000";
+	ctx.beginPath();
+	
+	ctx.moveTo(0, 0);
+	ctx.lineTo(0, resy);
+	ctx.lineTo(resx, resy);
+	
+	ctx.stroke();
+	ctx.closePath();
+	
 	Platformer.Texture.needsUpdate = true;
 	return Platformer.Texture;
 }
