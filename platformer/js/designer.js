@@ -16,56 +16,102 @@ Designer.IsDragging = false;
 Designer.OffsetX = 0;
 Designer.OffsetY = 0;
 Designer.Tiles = [];
-Designer.TileSize = 32;
-
-var Tile = function(tileX, tileY) {
-	this.TileX = tileX;
-	this.TileY = tileY;
-	this.TileType = "unknown";
-	this.Color = "#00ff00";
-	this.OnRender = function() {
-		Designer.Context.beginPath();
-		var drawX = Math.floor((Math.floor(Designer.OffsetX / Designer.TileSize) + this.TileX) * Designer.TileSize)
-				+ (Math.floor(Designer.OffsetX) % Designer.TileSize);
-
-		var drawY = Math.floor((Math.floor(Designer.OffsetY / Designer.TileSize) + this.TileY) * Designer.TileSize)
-				+ (Math.floor(Designer.OffsetY) % Designer.TileSize);
-		Designer.Context.fillRect(drawX, drawY, Designer.TileSize, Designer.TileSize);
-		Designer.Context.strokeStyle = this.Color;
-		Designer.Context.stroke();
-	};
-};
-
-var Floor = function(tileX, tileY) {
-
-};
-
-Designer.RefreshFPS = function() {
-	var date = new Date();
-	var ms = date.getMilliseconds();
-	var fps = 1000 / (ms - Designer.LastMs); // 1000 / frameDelta
-	Designer.LastMs = ms;
-	return fps;
-};
+Designer.TileSize = 64;
+Designer.TickTime = 1000 / 30; // 30 TPS
+Designer.AccumDelta = 0;
+Designer.MAX_SKIP_FRAMES = 5;
+Designer.ActiveTab = 0;
+Designer.StartTile = null;
+Designer.EndTile = null;
 
 Designer.Init = function() {
 
-	Designer.Canvas = document.getElementById("viewport");
+	Designer.FinalCanvas = document.getElementById("viewport");
+	Designer.FinalContext = Designer.FinalCanvas.getContext("2d");
+
+	Designer.Canvas = document.createElement("canvas");
+	Designer.Canvas.width = Designer.FinalCanvas.width;
+	Designer.Canvas.height = Designer.FinalCanvas.height;
 	Designer.Context = Designer.Canvas.getContext("2d");
-	console.log(Designer.Context);
+
+	// Make tile 0,0 centered on the screen
+	Designer.OffsetX = Math.ceil(Designer.Canvas.width / 2);
+	Designer.OffsetY = Math.ceil(Designer.Canvas.height / 2);
 
 	// Setup stuff
 	MInput.PreventRightClickMenu = true;
 
 	// Event listeners
-	MInput.AddListeners(Designer.Canvas);
+	MInput.AddListeners(Designer.FinalCanvas);
 
-	// Init some stuff
-	Designer.RefreshFPS();
-
-	// Start rendering
-	setInterval(Designer.Update, 1000 / 60);
+	// Render our frame
 	Designer.Render();
+
+	// Stuff
+	Designer.AddTools();
+
+	// Start render loop
+	requestAnimationFrame(Designer.FrameRefresh);
+};
+
+Designer.AddTools = function() {
+	Designer.AddTool(TOOL_FLOOR);
+	Designer.AddTool(TOOL_REMOVE);
+	Designer.AddTool(TOOL_WALL);
+	Designer.AddTool(TOOL_TRACER);
+	Designer.AddTool(TOOL_SCANNER);
+	Designer.AddTool(TOOL_JUMPPAD);
+	Designer.AddTool(TOOL_START);
+	Designer.AddTool(TOOL_END);
+	Designer.SelectTool(TOOL_FLOOR);
+};
+
+Designer.AddTool = function(tool) {
+	$("#tool-list").append(
+			"<a id=\"tool-" + tool + "\" href=\"javascript:Designer.SelectTool('" + tool
+					+ "');\" class=\"list-group-item\">" + tool + "</a>");
+};
+
+Designer.SelectTool = function(tool) {
+	Designer.Tool = tool;
+};
+
+Designer.FrameRefresh = function(timestamp) {
+
+	// Initialization
+	if (Designer.LastFrame == undefined) {
+		Designer.LastFrame = timestamp;
+	}
+
+	// Delta time and time accumulation
+	var delta = timestamp - Designer.LastFrame;
+	Designer.LastFrame = timestamp;
+	Designer.AccumDelta += delta;
+
+	// Tick loop
+	var skipFrames = 0;
+	while (Designer.AccumDelta > Designer.TickTime && skipFrames < Designer.MAX_SKIP_FRAMES) {
+		Designer.Update();
+		Designer.AccumDelta -= Designer.TickTime;
+		skipFrames++;
+	}
+
+	// Clear
+	Designer.FinalContext.clearRect(0, 0, Designer.FinalCanvas.width, Designer.FinalCanvas.height);
+
+	// Render frame
+	Designer.FinalContext.drawImage(Designer.Canvas, 0, 0);
+
+	// Debug
+	Designer.FinalContext.beginPath();
+	Designer.FinalContext.fillStyle = "#000000";
+	Designer.FinalContext.font = "bolder 16px Arial";
+	Designer.FinalContext.fillText("FPS: " + Math.floor(1000 / delta), 10, 35);
+	Designer.FinalContext.fillText("AccumDelta: " + Math.floor(Designer.AccumDelta), 10, 50);
+	Designer.FinalContext.closePath();
+
+	// Request next frame
+	requestAnimationFrame(Designer.FrameRefresh);
 };
 
 Designer.Update = function() {
@@ -79,45 +125,48 @@ Designer.Update = function() {
 	if (MInput.IsMouseKeyReleased(MOUSE_LMB)) {
 		Designer.IsDragging = false;
 	}
-	
-	if(MInput.IsKeyReleased(KEY_1)) {
+
+	if (MInput.WheelDelta != 0) {
+		Designer.TileSize += Math.ceil(Math.ceil(MInput.WheelDelta / 120) * 2);
+		if (Designer.TileSize < 16) {
+			Designer.TileSize = 16;
+		} else if (Designer.TileSize > 128) {
+			Designer.TileSize = 128;
+		}
+	}
+
+	if (MInput.IsKeyReleased(KEY_1)) {
 		Designer.Tool = TOOL_FLOOR;
-		Designer.Render();
 	}
-	if(MInput.IsKeyReleased(KEY_2)) {
+	if (MInput.IsKeyReleased(KEY_2)) {
 		Designer.Tool = TOOL_REMOVE;
-		Designer.Render();
 	}
-	if(MInput.IsKeyReleased(KEY_3)) {
+	if (MInput.IsKeyReleased(KEY_3)) {
 		Designer.Tool = TOOL_WALL;
-		Designer.Render();
 	}
-	if(MInput.IsKeyReleased(KEY_4)) {
+	if (MInput.IsKeyReleased(KEY_4)) {
 		Designer.Tool = TOOL_TRACER;
-		Designer.Render();
 	}
-	if(MInput.IsKeyReleased(KEY_5)) {
+	if (MInput.IsKeyReleased(KEY_5)) {
 		Designer.Tool = TOOL_SCANNER;
-		Designer.Render();
 	}
-	if(MInput.IsKeyReleased(KEY_6)) {
+	if (MInput.IsKeyReleased(KEY_6)) {
 		Designer.Tool = TOOL_JUMPPAD;
-		Designer.Render();
 	}
-	if(MInput.IsKeyReleased(KEY_7)) {
+	if (MInput.IsKeyReleased(KEY_7)) {
 		Designer.Tool = TOOL_START;
-		Designer.Render();
 	}
-	if(MInput.IsKeyReleased(KEY_8)) {
+	if (MInput.IsKeyReleased(KEY_8)) {
 		Designer.Tool = TOOL_END;
-		Designer.Render();
 	}
 
 	if (MInput.IsMouseKeyReleased(MOUSE_RMB)) {
 
-		var tileX = Math.floor((MInput.MouseX - 10 - (Math.floor(Designer.OffsetX) % Designer.TileSize)) / Designer.TileSize)
+		var tileX = Math
+				.floor((MInput.MouseX - (Math.floor(Designer.OffsetX) % Designer.TileSize)) / Designer.TileSize)
 				- Math.floor(Designer.OffsetX / Designer.TileSize);
-		var tileY = Math.floor((MInput.MouseY - 10 - (Math.floor(Designer.OffsetY) % Designer.TileSize)) / Designer.TileSize)
+		var tileY = Math
+				.floor((MInput.MouseY - (Math.floor(Designer.OffsetY) % Designer.TileSize)) / Designer.TileSize)
 				- Math.floor(Designer.OffsetY / Designer.TileSize);
 		// Do we have a tile at this position?
 		var hasTile = false;
@@ -134,7 +183,47 @@ Designer.Update = function() {
 		}
 		if (!hasTile) {
 			if (Designer.Tool == TOOL_FLOOR) {
-				Designer.Tiles.push(new Tile(tileX, tileY));
+				Designer.Tiles.push(new Tile_Floor(tileX, tileY));
+			} else if (Designer.Tool == TOOL_WALL) {
+				Designer.Tiles.push(new Tile_Wall(tileX, tileY));
+			} else if (Designer.Tool == TOOL_START) {
+				var startTile = new Tile_Start(tileX, tileY);
+				// find old start tile, remove it
+				if (Designer.StartTile != null) {
+					var startTileIndex = -1;
+					for (var i = 0; i < Designer.Tiles.length; i++) {
+						if (Designer.StartTile == Designer.Tiles[i]) {
+							startTileIndex = i;
+							break;
+						}
+					}
+					if (startTileIndex != -1) {
+						Designer.Tiles.splice(startTileIndex, 1);
+					} else {
+						console.log("Designer.StartTile != null but it couldn't be find in the tile list?");
+					}
+				}
+				Designer.StartTile = startTile;
+				Designer.Tiles.push(startTile);
+			} else if (Designer.Tool == TOOL_END) {
+				var endTile = new Tile_End(tileX, tileY);
+				// find old start tile, remove it
+				if (Designer.EndTile != null) {
+					var endTileIndex = -1;
+					for (var i = 0; i < Designer.Tiles.length; i++) {
+						if (Designer.EndTile == Designer.Tiles[i]) {
+							endTileIndex = i;
+							break;
+						}
+					}
+					if (endTileIndex != -1) {
+						Designer.Tiles.splice(endTileIndex, 1);
+					} else {
+						console.log("Designer.EndTile != null but it couldn't be find in the tile list?");
+					}
+				}
+				Designer.EndTile = endTile;
+				Designer.Tiles.push(endTile);
 			}
 		} else {
 			if (Designer.Tool == TOOL_REMOVE) {
@@ -142,42 +231,36 @@ Designer.Update = function() {
 				Designer.Tiles.splice(tileIndex, 1);
 			}
 		}
-		Designer.Render();
 	}
 
 	if ((MInput.DeltaMouseX != 0 || MInput.DeltaMouseY != 0) && Designer.IsDragging) {
 		Designer.OffsetX += MInput.DeltaMouseX;
 		Designer.OffsetY += MInput.DeltaMouseY;
-		Designer.Render();
 	}
-	
-
 
 	// Flush input
 	MInput.Flush();
+
+	//
+	Designer.Render();
 };
 
 Designer.Render = function() {
 	var x, y, numWTiles, numHTiles;
 
 	// Clear
+	Designer.Context.beginPath();
 	Designer.Context.fillStyle = "#ffffff";
-	Designer.Context.fillRect(0, 0, Designer.Canvas.width, Designer.Canvas.height);
-	// Designer.Context.clearRect(0, 0, Designer.Canvas.width,
-	// Designer.Canvas.height);
+	Designer.Context.clearRect(0, 0, Designer.Canvas.width, Designer.Canvas.height);
+	Designer.Context.closePath();
 
 	numWTiles = Math.ceil(Designer.Canvas.width / Designer.TileSize);
 	numHTiles = Math.ceil(Designer.Canvas.height / Designer.TileSize);
 
-	// console.log("numW: " + numWTiles + " numH: " + numHTiles);
-	// console.log("offsetX: " + Designer.OffsetX + " offsetY: " +
-	// Designer.OffsetY);
-	// Debug
-	Designer.Context.fillStyle = "#000000";
-	Designer.Context.font = "12px Arial";
-
 	// Draw tile map thing
 	Designer.Context.beginPath();
+	Designer.Context.fillStyle = "#000000";
+	Designer.Context.font = "bolder 11px Arial";
 	for (x = -1; x < numWTiles + 1; x++) {
 		for (y = -1; y < numHTiles + 1; y++) {
 			var drawX = (Math.floor(Designer.OffsetX) % Designer.TileSize) + Math.floor((x * Designer.TileSize));
@@ -195,10 +278,9 @@ Designer.Render = function() {
 		}
 	}
 
-	// Designer.Context.endPath();
-	//
 	Designer.Context.strokeStyle = "#ff0000";
 	Designer.Context.stroke();
+	Designer.Context.closePath();
 
 	// Render each tile
 	var tile = undefined;
@@ -212,10 +294,86 @@ Designer.Render = function() {
 	}
 
 	// Draw debug text
+	Designer.Context.beginPath();
 	Designer.Context.fillStyle = "#000000";
-	Designer.Context.font = "16px Arial";
+	Designer.Context.font = "bolder 16px Arial";
 	Designer.Context.fillText("Tool: " + Designer.Tool, 10, 20);
+	Designer.Context.closePath();
+};
 
-	// calculate fps
-	// Designer.Context.fillText("FPS: " + Designer.RefreshFPS(), 10, 50);
+var Tile = function(tileX, tileY) {
+	this.TileX = tileX;
+	this.TileY = tileY;
+	this.TileType = "unknown";
+	this.Color = "#00ff00";
+	this.TextColor = "#000000";
+	this.Font = "bolder 12px Arial";
+	this.Text = "Tile";
+	this.CachedTextWidth = 0;
+	this.CachedTextHeight = 0;
+};
+
+Tile.prototype.OnRender = function() {
+	Designer.Context.beginPath();
+	Designer.Context.strokeStyle = this.Color;
+	Designer.Context.fillStyle = this.Color;
+	var drawX = Math.floor((Math.floor(Designer.OffsetX / Designer.TileSize) + this.TileX) * Designer.TileSize)
+			+ (Math.floor(Designer.OffsetX) % Designer.TileSize);
+
+	var drawY = Math.floor((Math.floor(Designer.OffsetY / Designer.TileSize) + this.TileY) * Designer.TileSize)
+			+ (Math.floor(Designer.OffsetY) % Designer.TileSize);
+	Designer.Context.fillRect(drawX, drawY, Designer.TileSize, Designer.TileSize);
+
+	if (this.Text != "") {
+		Designer.Context.fillStyle = this.TextColor;
+		Designer.Context.font = this.Font;
+
+		// Measure the text
+		if (this.CachedTextWidth == 0) {
+			this.CachedTextWidth = Designer.Context.measureText(this.Text).width;
+			this.CachedTextHeight = Designer.Context.measureText('M').width;
+		}
+		Designer.Context.fillText(this.Text, Math.ceil(drawX + (Designer.TileSize / 2) - (this.CachedTextWidth / 2)),
+				Math.ceil(drawY + (Designer.TileSize / 2) + (this.CachedTextHeight / 2)));
+	}
+
+	Designer.Context.stroke();
+	Designer.Context.closePath();
+};
+
+var Tile_Floor = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.Color = "#0000ff";
+	this.Text = "Floor";
+};
+Tile_Floor.prototype = Object.create(Tile.prototype);
+
+var Tile_Wall = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.Color = "#00ffff";
+	this.Text = "Wall";
+};
+Tile_Wall.prototype = Object.create(Tile.prototype);
+
+var Tile_Start = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.Color = "#00ff00";
+	this.Text = "Start";
+}
+Tile_Start.prototype = Object.create(Tile.prototype);
+
+var Tile_End = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.Color = "#ff0000";
+	this.Text = "Stop";
+}
+Tile_End.prototype = Object.create(Tile.prototype);
+
+// Tab related
+Designer.SelectTab = function(index) {
+	$("#tab" + Designer.ActiveTab).removeAttr("class");
+	$("#tab" + Designer.ActiveTab + "-content").hide();
+	$("#tab" + index).attr("class", "active");
+	$("#tab" + index + "-content").show();
+	Designer.ActiveTab = index;
 };

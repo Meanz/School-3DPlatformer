@@ -57,6 +57,7 @@ MInput.LastMouseX = 0;
 MInput.LastMouseY = 0;
 MInput.DeltaMouseX = 0;
 MInput.DeltaMouseY = 0;
+MInput.WheelDelta = 0;
 MInput.KeysDown = [];
 MInput.MouseKeysDown = [];
 MInput.PreventRightClickMenu = false;
@@ -72,6 +73,7 @@ MInput.AddListeners = function(who) {
 		who.addEventListener("mouseup", MInput.OnMouseUp, false);
 		who.addEventListener("mousedown", MInput.OnMouseDown, false);
 		who.addEventListener("mousemove", MInput.OnMouseMove, false);
+		who.addEventListener("mousewheel", MInput.OnMouseWheelChange, false);
 
 		if (MInput.PreventRightClickMenu) {
 			who.addEventListener("contextmenu", function(event) {
@@ -101,6 +103,9 @@ MInput.Flush = function() {
 	//
 	MInput.LastMouseX = MInput.MouseX;
 	MInput.LastMouseY = MInput.MouseY;
+	
+	//
+	MInput.WheelDelta = 0;
 
 };
 
@@ -114,7 +119,6 @@ MInput.OnKeyUp = function(event) {
 	var key = event.which;
 	MInput.KeysDown[key] = false;
 	MInput.F_KeysReleased.push(key);
-	console.log("Pushed " + key);
 };
 
 MInput.IsKeyDown = function(which) {
@@ -143,13 +147,32 @@ MInput.IsKeyReleased = function(which) {
 }
 
 MInput.OnMouseDown = function(event) {
+	
+	event.preventDefault();
+	event.stopPropagation();
+	
 	MInput.MouseKeysDown[event.button] = true;
 	MInput.F_MouseKeysPressed.push(event.button);
 };
 
 MInput.OnMouseUp = function(event) {
+
+	event.preventDefault();
+	event.stopPropagation();
+	
 	MInput.MouseKeysDown[event.button] = false;
 	MInput.F_MouseKeysReleased.push(event.button);
+};
+
+MInput.OnMouseWheelChange = function(event) {
+	
+	event.preventDefault();
+	event.stopPropagation();
+	
+	var delta = event.wheelDelta;
+	
+	MInput.WheelDelta = delta;
+	
 };
 
 MInput.IsMouseKeyDown = function(which) {
