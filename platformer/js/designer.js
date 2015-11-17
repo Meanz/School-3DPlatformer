@@ -23,6 +23,7 @@ Designer.MAX_SKIP_FRAMES = 5;
 Designer.ActiveTab = 0;
 Designer.StartTile = null;
 Designer.EndTile = null;
+Designer.SelectedTile = null;
 
 Designer.Init = function() {
 
@@ -33,6 +34,7 @@ Designer.Init = function() {
 	Designer.Canvas.width = Designer.FinalCanvas.width;
 	Designer.Canvas.height = Designer.FinalCanvas.height;
 	Designer.Context = Designer.Canvas.getContext("2d");
+	Designer.Context.lineWidth = 2;
 
 	// Make tile 0,0 centered on the screen
 	Designer.OffsetX = Math.ceil(Designer.Canvas.width / 2);
@@ -50,9 +52,38 @@ Designer.Init = function() {
 	// Stuff
 	Designer.AddTools();
 
+	// Add a start tile at origo
+	Designer.Tiles.push(new Tile_Start(0, 0));
+	Designer.StartTile = Designer.Tiles[0];
+	Designer.SelectedTile = Designer.StartTile;
+
 	// Start render loop
 	requestAnimationFrame(Designer.FrameRefresh);
 };
+
+Designer.OutputJSON = function() {
+	var replacer = function(key, value) {
+		if (key == "Color" || key == "TextColor" || key == "Font" || key == "CachedTextWidth"
+				|| key == "CachedTextHeight" || key == "Text") {
+			return undefined;
+		} else {
+			return value;
+		}
+	};
+
+	var tostringify = {};
+	tostringify.objects = Designer.Tiles;
+	
+	var stringified = JSON.stringify(tostringify, replacer);
+	var myWindow = window.open("", "JSON Output", "width=200, height=100");
+	myWindow.document.write(stringified);
+};
+
+Designer.SelectTile = function(tile) {
+	Designer.SelectedTile = tile;
+	$("#tab1-content").html(tile.GetHtml());
+	Designer.SelectTab(1);
+}
 
 Designer.AddTools = function() {
 	Designer.AddTool(TOOL_FLOOR);
@@ -119,10 +150,10 @@ Designer.Update = function() {
 	MInput.Update();
 
 	// Move!
-	if (MInput.IsMouseKeyPressed(MOUSE_LMB)) {
+	if (MInput.IsMouseKeyPressed(MOUSE_MMB)) {
 		Designer.IsDragging = true;
 	}
-	if (MInput.IsMouseKeyReleased(MOUSE_LMB)) {
+	if (MInput.IsMouseKeyReleased(MOUSE_MMB)) {
 		Designer.IsDragging = false;
 	}
 
@@ -160,7 +191,7 @@ Designer.Update = function() {
 		Designer.Tool = TOOL_END;
 	}
 
-	if (MInput.IsMouseKeyReleased(MOUSE_RMB)) {
+	if (MInput.IsMouseKeyReleased(MOUSE_RMB) || MInput.IsMouseKeyReleased(MOUSE_LMB)) {
 
 		var tileX = Math
 				.floor((MInput.MouseX - (Math.floor(Designer.OffsetX) % Designer.TileSize)) / Designer.TileSize)
@@ -181,54 +212,64 @@ Designer.Update = function() {
 				break;
 			}
 		}
-		if (!hasTile) {
-			if (Designer.Tool == TOOL_FLOOR) {
-				Designer.Tiles.push(new Tile_Floor(tileX, tileY));
-			} else if (Designer.Tool == TOOL_WALL) {
-				Designer.Tiles.push(new Tile_Wall(tileX, tileY));
-			} else if (Designer.Tool == TOOL_START) {
-				var startTile = new Tile_Start(tileX, tileY);
-				// find old start tile, remove it
-				if (Designer.StartTile != null) {
-					var startTileIndex = -1;
-					for (var i = 0; i < Designer.Tiles.length; i++) {
-						if (Designer.StartTile == Designer.Tiles[i]) {
-							startTileIndex = i;
-							break;
-						}
-					}
-					if (startTileIndex != -1) {
-						Designer.Tiles.splice(startTileIndex, 1);
-					} else {
-						console.log("Designer.StartTile != null but it couldn't be find in the tile list?");
-					}
-				}
-				Designer.StartTile = startTile;
-				Designer.Tiles.push(startTile);
-			} else if (Designer.Tool == TOOL_END) {
-				var endTile = new Tile_End(tileX, tileY);
-				// find old start tile, remove it
-				if (Designer.EndTile != null) {
-					var endTileIndex = -1;
-					for (var i = 0; i < Designer.Tiles.length; i++) {
-						if (Designer.EndTile == Designer.Tiles[i]) {
-							endTileIndex = i;
-							break;
-						}
-					}
-					if (endTileIndex != -1) {
-						Designer.Tiles.splice(endTileIndex, 1);
-					} else {
-						console.log("Designer.EndTile != null but it couldn't be find in the tile list?");
-					}
-				}
-				Designer.EndTile = endTile;
-				Designer.Tiles.push(endTile);
+
+		if (MInput.IsMouseKeyReleased(MOUSE_LMB)) {
+			if (hasTile) {
+				Designer.SelectTile(tile);
 			}
-		} else {
-			if (Designer.Tool == TOOL_REMOVE) {
-				// Get the index of
-				Designer.Tiles.splice(tileIndex, 1);
+		} else if (MInput.IsMouseKeyReleased(MOUSE_RMB)) {
+			if (!hasTile) {
+				if (Designer.Tool == TOOL_FLOOR) {
+					Designer.Tiles.push(new Tile_Floor(tileX, tileY));
+				} else if (Designer.Tool == TOOL_WALL) {
+					Designer.Tiles.push(new Tile_Wall(tileX, tileY));
+				} else if (Designer.Tool == TOOL_START) {
+					var startTile = new Tile_Start(tileX, tileY);
+					// find old start tile, remove it
+					if (Designer.StartTile != null) {
+						var startTileIndex = -1;
+						for (var i = 0; i < Designer.Tiles.length; i++) {
+							if (Designer.StartTile == Designer.Tiles[i]) {
+								startTileIndex = i;
+								break;
+							}
+						}
+						if (startTileIndex != -1) {
+							Designer.Tiles.splice(startTileIndex, 1);
+						} else {
+							console.log("Designer.StartTile != null but it couldn't be find in the tile list?");
+						}
+					}
+					Designer.StartTile = startTile;
+					Designer.Tiles.push(startTile);
+				} else if (Designer.Tool == TOOL_END) {
+					var endTile = new Tile_End(tileX, tileY);
+					// find old start tile, remove it
+					if (Designer.EndTile != null) {
+						var endTileIndex = -1;
+						for (var i = 0; i < Designer.Tiles.length; i++) {
+							if (Designer.EndTile == Designer.Tiles[i]) {
+								endTileIndex = i;
+								break;
+							}
+						}
+						if (endTileIndex != -1) {
+							Designer.Tiles.splice(endTileIndex, 1);
+						} else {
+							console.log("Designer.EndTile != null but it couldn't be find in the tile list?");
+						}
+					}
+					Designer.EndTile = endTile;
+					Designer.Tiles.push(endTile);
+				}
+			} else {
+				if (Designer.Tool == TOOL_REMOVE) {
+					// Get the index of
+					if(Designer.SelectedTile == tile) {
+						Designer.SelectedTile = null;
+					}
+					Designer.Tiles.splice(tileIndex, 1);
+				}
 			}
 		}
 	}
@@ -278,7 +319,7 @@ Designer.Render = function() {
 		}
 	}
 
-	Designer.Context.strokeStyle = "#ff0000";
+	Designer.Context.strokeStyle = "#000000";
 	Designer.Context.stroke();
 	Designer.Context.closePath();
 
@@ -338,11 +379,30 @@ Tile.prototype.OnRender = function() {
 	}
 
 	Designer.Context.stroke();
+	Designer.Context.strokeStyle = "#ff0000";
+	if (Designer.SelectedTile == this) {
+		Designer.Context.rect(drawX + 1, drawY + 1, Designer.TileSize - 2, Designer.TileSize - 2);
+	}
+	Designer.Context.stroke();
+
 	Designer.Context.closePath();
+};
+
+Tile.prototype.GetHtml = function() {
+	var html = "";
+
+	html += "<h4>Tile: " + this.Text + "</h4>";
+	html += "<p>";
+	html += "TileX: " + this.TileX + "<br />";
+	html += "TileY: " + this.TileY + "<br />";
+	html += "</p>";
+
+	return html;
 };
 
 var Tile_Floor = function(tileX, tileY) {
 	Tile.call(this, tileX, tileY);
+	this.TileType = "floor";
 	this.Color = "#0000ff";
 	this.Text = "Floor";
 };
@@ -350,13 +410,15 @@ Tile_Floor.prototype = Object.create(Tile.prototype);
 
 var Tile_Wall = function(tileX, tileY) {
 	Tile.call(this, tileX, tileY);
+	this.TileType = "wall";
 	this.Color = "#00ffff";
 	this.Text = "Wall";
 };
 Tile_Wall.prototype = Object.create(Tile.prototype);
 
 var Tile_Start = function(tileX, tileY) {
-	Tile.call(this, tileX, tileY);
+	Floor.call(this, tileX, tileY);
+	this.TileType = "start";
 	this.Color = "#00ff00";
 	this.Text = "Start";
 }
@@ -364,6 +426,7 @@ Tile_Start.prototype = Object.create(Tile.prototype);
 
 var Tile_End = function(tileX, tileY) {
 	Tile.call(this, tileX, tileY);
+	this.TileType = "stop";
 	this.Color = "#ff0000";
 	this.Text = "Stop";
 }
