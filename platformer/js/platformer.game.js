@@ -14,17 +14,19 @@ Platformer.LoadLevel = function(levelName) {
 			var type = obj.TileType;
 
 			if (type == "floor" || type == "start") {
+				var tileHeight = obj.TileHeight;
 				var dimension = v3(8, 1, 8);
-				var position = v3(dimension.x * tileX, dimension.y, dimension.z * tileY);
+				var position = v3(dimension.x * tileX, dimension.y * tileHeight, dimension.z * tileY);
 				
 				if (type == "start") {
 					StartPositionX = tileX * dimension.x;
+					StartPositionY = tileHeight * dimension.y;
 					StartPositionZ = tileY * dimension.z;
 				}
 
 				Platformer.AddFloor(position, dimension);
 
-				console.log("Added floor at " + tileX + " / " + tileY);
+				//console.log("Added floor at " + tileX + " / " + tileY);
 
 			} else {
 				console.log("type: " + type);
@@ -34,6 +36,7 @@ Platformer.LoadLevel = function(levelName) {
 
 	});
 };
+
 
 var raycaster = new THREE.Raycaster();
 onInit = function() {

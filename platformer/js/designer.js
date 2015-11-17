@@ -402,11 +402,25 @@ Tile.prototype.GetHtml = function() {
 
 var Tile_Floor = function(tileX, tileY) {
 	Tile.call(this, tileX, tileY);
+	this.TileHeight = 0;
 	this.TileType = "floor";
 	this.Color = "#0000ff";
 	this.Text = "Floor";
 };
 Tile_Floor.prototype = Object.create(Tile.prototype);
+Tile_Floor.prototype.GetHtml = function() {
+	var html = Tile.prototype.GetHtml.call(this);
+	
+	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
+	
+	html += "TileHeight: <input id='input_tileHeight' type='text' " + onchange + " value='" + this.TileHeight + "' />";
+	
+	return html;
+}
+Tile_Floor.prototype.UpdateValues = function() {
+	this.TileHeight = $("#input_tileHeight").val();
+	console.log("Value update");
+};
 
 var Tile_Wall = function(tileX, tileY) {
 	Tile.call(this, tileX, tileY);
@@ -417,7 +431,7 @@ var Tile_Wall = function(tileX, tileY) {
 Tile_Wall.prototype = Object.create(Tile.prototype);
 
 var Tile_Start = function(tileX, tileY) {
-	Floor.call(this, tileX, tileY);
+	Tile_Floor.call(this, tileX, tileY);
 	this.TileType = "start";
 	this.Color = "#00ff00";
 	this.Text = "Start";

@@ -41,7 +41,9 @@ Platformer.Remove = function(obj) {
 /**
  * 
  */
-onRender = function() {
+var AccumDelta = 0;
+var AccumThing = 0;
+onRender = function(delta) {
 	insideLoop = true;
 	for (var i = 0; i < sceneobjs.length; i++) {
 		var so = sceneobjs[i];
@@ -52,6 +54,17 @@ onRender = function() {
 		}
 	}
 	insideLoop = false;
+	
+	AccumDelta += delta;
+	if(AccumDelta > 100) {
+		AccumThing += 1;
+		AccumThing = AccumThing % 128;
+		var ranr = Math.floor(Math.random() * 255);
+		var rang = Math.floor(Math.random() * 255);
+		var ranb = 255;
+		TextureCreate(ranr, rang, ranb, AccumThing);
+		AccumDelta = 0;
+	}
 };
 
 /**
