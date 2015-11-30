@@ -20,7 +20,7 @@ Platformer.LoadLevel = function(levelName) {
 				
 				if (type == "start") {
 					StartPositionX = tileX * dimension.x;
-					StartPositionY = tileHeight * dimension.y;
+					StartPositionY = tileHeight * dimension.y + 1;
 					StartPositionZ = tileY * dimension.z;
 				}
 
@@ -42,7 +42,7 @@ var raycaster = new THREE.Raycaster();
 onInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 
-	Platformer.LoadLevel("level2.json");
+	Platformer.LoadLevel("test.json");
 
 	var cube = Platformer.AddBoxMass(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
 
@@ -59,7 +59,10 @@ onInit = function() {
 			var mag = 20;
 			var f = 40;
 			var lv = cube.getLinearVelocity();
-			var len = lv.length();
+			var hlv = v3(lv.x, 0, lv.z);
+			var len = hlv.length();
+			var cv = controls.camera.getWorldDirection();
+			var chv = v3(cv.x, 0 ,cv.z);
 			// console.log(len);
 
 			raycaster.set(controls.camera.position, v3(0.0, -1.0, 0.0));
@@ -70,8 +73,10 @@ onInit = function() {
 					// console.log(intersection.distance);
 					if (intersection.distance <= 1.5) {
 						cube.CanJump = true;
+						cube.inAir = false;
 					} else {
 						cube.CanJump = false;
+						cube.inAir = true;
 					}
 					break;
 				}
@@ -84,32 +89,34 @@ onInit = function() {
 				cube.CanJump = false;
 			}
 
-			if (len >= mag) {
-				// cube.setLinearVelocity(v3(-mag * Math.cos(controls.Yaw), 0.0,
-				// -mag * Math.sin(controls.Yaw)));
-			} else {
-				var spd = ((controls.StrafeLeft || controls.StrafeRight)
-						&& !(controls.StrafeLeft && controls.StrafeRight)
-						&& ((controls.Forward || controls.Backward) && !(controls.Forward && controls.Backward)) ? 0.5 * f
-						: f);
 
-				if (controls.Forward) {
-					impulse.x += -spd * Math.cos(controls.Yaw);
-					impulse.z += -spd * Math.sin(controls.Yaw);
-				}
-				if (controls.Backward) {
-					impulse.x -= -spd * Math.cos(controls.Yaw);
-					impulse.z -= -spd * Math.sin(controls.Yaw);
-				}
-				if (controls.StrafeLeft) {
-					impulse.x += -spd * Math.cos(controls.Yaw - Math.PI / 2);
-					impulse.z += -spd * Math.sin(controls.Yaw - Math.PI / 2);
-				}
-				if (controls.StrafeRight) {
-					impulse.x += -spd * Math.cos(controls.Yaw + Math.PI / 2);
-					impulse.z += -spd * Math.sin(controls.Yaw + Math.PI / 2);
-				}
+			var spd = ((controls.StrafeLeft || controls.StrafeRight)
+					&& !(controls.StrafeLeft && controls.StrafeRight)
+					&& ((controls.Forward || controls.Backward) && !(controls.Forward && controls.Backward)) ? 0.5 * f
+					: f);
+
+			if(cube.inAir){
+				spd /= 4;
 			}
+
+			if (controls.Forward && (len < mag || hlv.dot(chv) <= 0 )) {
+				impulse.x += -spd * Math.cos(controls.Yaw);
+				impulse.z += -spd * Math.sin(controls.Yaw);
+			}
+			if (controls.Backward && (len < mag || hlv.dot(chv) >= 0 )) {
+				impulse.x -= -spd * Math.cos(controls.Yaw);
+				impulse.z -= -spd * Math.sin(controls.Yaw);
+			}
+			chv.applyAxisAngle(v3(0, 1, 0), Math.PI/2);
+			if (controls.StrafeLeft && (len < mag || hlv.dot(chv) <= 0 )) {
+				impulse.x += -spd * Math.cos(controls.Yaw - Math.PI / 2);
+				impulse.z += -spd * Math.sin(controls.Yaw - Math.PI / 2);
+			}
+			if (controls.StrafeRight && (len < mag || hlv.dot(chv) >= 0 )) {
+				impulse.x += -spd * Math.cos(controls.Yaw + Math.PI / 2);
+				impulse.z += -spd * Math.sin(controls.Yaw + Math.PI / 2);
+			}
+
 			cube.applyCentralImpulse(impulse);
 
 			if (cube.position.y < -10) {
