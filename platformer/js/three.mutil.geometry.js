@@ -93,9 +93,15 @@ Geometry.FancyRotationFunction = function(geometry, scaleVector)
 		var axis = v3z().crossVectors(faceNormal, zAxis).normalize();
 		//faceNormal.applyAxisAngle(axis, angle);
 		
-		var newa = v3z().copy(a).applyAxisAngle(axis, angle);
-		var newb = v3z().copy(b).applyAxisAngle(axis, angle);
-		var newc = v3z().copy(c).applyAxisAngle(axis, angle);
+		var euler = new THREE.Euler(
+				axis.x * angle,
+				axis.y * angle,
+				axis.z * angle,
+				"XYZ"
+		);
+		var newa = v3z().copy(a).applyEuler(euler);
+		var newb = v3z().copy(b).applyEuler(euler);
+		var newc = v3z().copy(c).applyEuler(euler);
 		
 		//
 		var ab2 = v3z().subVectors(newb, newa);
