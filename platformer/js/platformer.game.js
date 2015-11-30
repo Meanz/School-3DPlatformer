@@ -42,7 +42,7 @@ var raycaster = new THREE.Raycaster();
 onInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 
-	Platformer.LoadLevel("test.json");
+	Platformer.LoadLevel("level2.json");
 
 	var cube = Platformer.AddBoxMass(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
 

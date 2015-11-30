@@ -62,7 +62,7 @@ onRender = function(delta) {
 		var ranr = Math.floor(Math.random() * 255);
 		var rang = Math.floor(Math.random() * 255);
 		var ranb = 255;
-		TextureCreate(ranr, rang, ranb, AccumThing);
+		//TextureCreate(ranr, rang, ranb, AccumThing);
 		AccumDelta = 0;
 	}
 };

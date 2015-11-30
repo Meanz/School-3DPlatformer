@@ -166,8 +166,6 @@ Platformer.Init = function() {
 	Platformer.Canvas.height = resy;
 
 	Platformer.Texture = new THREE.Texture(Platformer.Canvas);
-	Platformer.Texture.repeat.x = 4;
-	Platformer.Texture.repeat.y = 4;
 	Platformer.Texture.wrapS = THREE.RepeatWrapping;
 	Platformer.Texture.wrapT = THREE.RepeatWrapping;
 	Platformer.Texture.magFilter = THREE.NearestFilter;
