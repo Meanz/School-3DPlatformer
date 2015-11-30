@@ -31,6 +31,14 @@ function v2(x, y) {
 }
 
 /**
+ * Construct a Zero Vector2
+ * @returns {Vector2}
+ */
+function v2z() {
+	return new Vector2(0, 0);
+}
+
+/**
  * Construct a Vector3
  * 
  * @param x

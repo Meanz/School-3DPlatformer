@@ -24,6 +24,7 @@ Designer.ActiveTab = 0;
 Designer.StartTile = null;
 Designer.EndTile = null;
 Designer.SelectedTile = null;
+Designer.LevelName = "leveltest";
 
 Designer.Init = function() {
 
@@ -61,7 +62,11 @@ Designer.Init = function() {
 	requestAnimationFrame(Designer.FrameRefresh);
 };
 
-Designer.OutputJSON = function() {
+Designer.LevelFromJSON = function(json) {
+	
+};
+
+Designer.LevelToJSON = function() {
 	var replacer = function(key, value) {
 		if (key == "Color" || key == "TextColor" || key == "Font" || key == "CachedTextWidth"
 				|| key == "CachedTextHeight" || key == "Text") {
@@ -75,8 +80,30 @@ Designer.OutputJSON = function() {
 	tostringify.objects = Designer.Tiles;
 	
 	var stringified = JSON.stringify(tostringify, replacer);
+	return stringified;
+}
+
+Designer.OutputJSON = function() {
 	var myWindow = window.open("", "JSON Output", "width=200, height=100");
-	myWindow.document.write(stringified);
+	myWindow.document.write(Designer.LevelToJSON());
+};
+
+Designer.SaveLevel = function() {
+	$("#tab0-savestatus").html("Saving...");
+	$.post(
+			"designer.php?op=savelevel&levelName=" + Designer.LevelName,
+			{
+				data : Designer.LevelToJSON()
+			},
+			function(data, status) {
+				if(data == "ok") {
+					$("#tab0-savestatus").html("<font color='#00ff00'>Saved!</font>");		
+				} else {
+					$("#tab0-savestatus").html("<font color='#ff0000'>Error! :'(</font>");
+				}
+			}
+	);
+	
 };
 
 Designer.SelectTile = function(tile) {
