@@ -57,13 +57,16 @@ Designer.Init = function() {
 	Designer.Tiles.push(new Tile_Start(0, 0));
 	Designer.StartTile = Designer.Tiles[0];
 	Designer.SelectedTile = Designer.StartTile;
+	
+	// Load the level
+	Designer.LoadLevel();
 
 	// Start render loop
 	requestAnimationFrame(Designer.FrameRefresh);
 };
 
 Designer.LevelFromJSON = function(json) {
-	
+
 };
 
 Designer.LevelToJSON = function() {
@@ -78,7 +81,7 @@ Designer.LevelToJSON = function() {
 
 	var tostringify = {};
 	tostringify.objects = Designer.Tiles;
-	
+
 	var stringified = JSON.stringify(tostringify, replacer);
 	return stringified;
 }
@@ -88,22 +91,58 @@ Designer.OutputJSON = function() {
 	myWindow.document.write(Designer.LevelToJSON());
 };
 
-Designer.SaveLevel = function() {
-	$("#tab0-savestatus").html("Saving...");
-	$.post(
-			"designer.php?op=savelevel&levelName=" + Designer.LevelName,
-			{
-				data : Designer.LevelToJSON()
-			},
-			function(data, status) {
-				if(data == "ok") {
-					$("#tab0-savestatus").html("<font color='#00ff00'>Saved!</font>");		
-				} else {
-					$("#tab0-savestatus").html("<font color='#ff0000'>Error! :'(</font>");
-				}
+Designer.LoadLevel = function() {
+	Designer.LevelName = $("#levelName").val();
+	Designer.Tiles = [];
+	Designer.StartTile = null;
+	Designer.EndTile = null;
+	Designer.SelectedTile = null;
+	$.getJSON("./levels/" + Designer.LevelName + ".json", function(data) {
+		$("#tab0-loadstatus").html("Loaded: " + "./levels/" + Designer.LevelName + ".json");
+		for (var i = 0; i < data.objects.length; i++) {
+
+			var obj = data.objects[i];
+
+			var tileX = obj.TileX;
+			var tileY = obj.TileY;
+			var type = obj.TileType;
+
+			if (type == "floor") {
+				var tileFloor = new Tile_Floor(tileX, tileY);
+				var tileHeight = obj.TileHeight;
+
+				tileFloor.TileHeight = tileHeight;
+				// Platformer.AddFloor(position, dimension);
+				Designer.Tiles.push(tileFloor);
+				// console.log("Added floor at " + tileX + " / " + tileY);
+
+			} else if (type == "start") {
+				Designer.AddStartTile(tileX, tileY);
+			} else if (type == "end") {
+				Designer.AddEndTile(tileX, tileY);
+			} else {
+				console.log("type: " + type);
 			}
-	);
-	
+
+		}
+
+	});
+
+};
+
+Designer.SaveLevel = function() {
+	Designer.LevelName = $("#levelName").val();
+	$("#tab0-savestatus").html("Saving...");
+	$.post("designer.php?op=savelevel&levelName=" + Designer.LevelName, {
+		data : Designer.LevelToJSON()
+	}, function(data, status) {
+		if (data == "ok") {
+			$("#tab0-savestatus").html("<font color='#00ff00'>Saved!</font>");
+		} else {
+			$("#tab0-savestatus").html("<font color='#ff0000'>Error! :'(</font>");
+		}
+	});
+
 };
 
 Designer.SelectTile = function(tile) {
@@ -170,6 +209,27 @@ Designer.FrameRefresh = function(timestamp) {
 
 	// Request next frame
 	requestAnimationFrame(Designer.FrameRefresh);
+};
+
+Designer.AddStartTile = function(tileX, tileY) {
+	var startTile = new Tile_Start(tileX, tileY);
+	// find old start tile, remove it
+	if (Designer.StartTile != null) {
+		var startTileIndex = -1;
+		for (var i = 0; i < Designer.Tiles.length; i++) {
+			if (Designer.StartTile == Designer.Tiles[i]) {
+				startTileIndex = i;
+				break;
+			}
+		}
+		if (startTileIndex != -1) {
+			Designer.Tiles.splice(startTileIndex, 1);
+		} else {
+			console.log("Designer.StartTile != null but it couldn't be find in the tile list?");
+		}
+	}
+	Designer.StartTile = startTile;
+	Designer.Tiles.push(startTile);
 };
 
 Designer.Update = function() {
@@ -251,24 +311,7 @@ Designer.Update = function() {
 				} else if (Designer.Tool == TOOL_WALL) {
 					Designer.Tiles.push(new Tile_Wall(tileX, tileY));
 				} else if (Designer.Tool == TOOL_START) {
-					var startTile = new Tile_Start(tileX, tileY);
-					// find old start tile, remove it
-					if (Designer.StartTile != null) {
-						var startTileIndex = -1;
-						for (var i = 0; i < Designer.Tiles.length; i++) {
-							if (Designer.StartTile == Designer.Tiles[i]) {
-								startTileIndex = i;
-								break;
-							}
-						}
-						if (startTileIndex != -1) {
-							Designer.Tiles.splice(startTileIndex, 1);
-						} else {
-							console.log("Designer.StartTile != null but it couldn't be find in the tile list?");
-						}
-					}
-					Designer.StartTile = startTile;
-					Designer.Tiles.push(startTile);
+					Designer.AddStartTile(tileX, tileY);
 				} else if (Designer.Tool == TOOL_END) {
 					var endTile = new Tile_End(tileX, tileY);
 					// find old start tile, remove it
@@ -292,7 +335,7 @@ Designer.Update = function() {
 			} else {
 				if (Designer.Tool == TOOL_REMOVE) {
 					// Get the index of
-					if(Designer.SelectedTile == tile) {
+					if (Designer.SelectedTile == tile) {
 						Designer.SelectedTile = null;
 					}
 					Designer.Tiles.splice(tileIndex, 1);
@@ -437,11 +480,11 @@ var Tile_Floor = function(tileX, tileY) {
 Tile_Floor.prototype = Object.create(Tile.prototype);
 Tile_Floor.prototype.GetHtml = function() {
 	var html = Tile.prototype.GetHtml.call(this);
-	
+
 	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
-	
+
 	html += "TileHeight: <input id='input_tileHeight' type='text' " + onchange + " value='" + this.TileHeight + "' />";
-	
+
 	return html;
 }
 Tile_Floor.prototype.UpdateValues = function() {
