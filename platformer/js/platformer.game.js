@@ -34,34 +34,36 @@ Platformer.LoadLevel = function(levelName) {
 
 		}
 
+		Platformer.AddTracer(v3(20, 2, 0));
+
 
 	});
 };
 
 
 var raycaster = new THREE.Raycaster();
-onInit = function() {
+OnInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 
 	Platformer.ParseJsonObjects();
 
 	Platformer.LoadLevel("level2.json");
 
-	var cube = Platformer.AddBoxMass(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
-
-	cube.setCcdMotionThreshold(1);
-	cube.setCcdSweptSphereRadius(0.2);
-	cube.CanJump = false;
-	cube.setAngularFactor(v3z());
-	cube.onUpdate = function() {
-		controls.camera.position.x = cube.position.x;
-		controls.camera.position.y = cube.position.y + 1;
-		controls.camera.position.z = cube.position.z;
+	var player = Platformer.AddBoxMass(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
+	player.name = "player";
+	player.setCcdMotionThreshold(1);
+	player.setCcdSweptSphereRadius(0.2);
+	player.CanJump = false;
+	player.setAngularFactor(v3z());
+	player.onUpdate = function() {
+		controls.camera.position.x = player.position.x;
+		controls.camera.position.y = player.position.y + 1;
+		controls.camera.position.z = player.position.z;
 
 		if (true) {
 			var mag = 20;
 			var f = 40;
-			var lv = cube.getLinearVelocity();
+			var lv = player.getLinearVelocity();
 			var hlv = v3(lv.x, 0, lv.z);
 			var len = hlv.length();
 			var cv = controls.camera.getWorldDirection();
@@ -72,24 +74,24 @@ onInit = function() {
 			var intersections = raycaster.intersectObjects(sceneobjs, true);
 			for (var i = 0; i < intersections.length; i++) {
 				var intersection = intersections[i];
-				if (intersection.object != cube) {
+				if (intersection.object != player) {
 					// console.log(intersection.distance);
 					if (intersection.distance <= 1.5) {
-						cube.CanJump = true;
-						cube.inAir = false;
+						player.CanJump = true;
+						player.inAir = false;
 					} else {
-						cube.CanJump = false;
-						cube.inAir = true;
+						player.CanJump = false;
+						player.inAir = true;
 					}
 					break;
 				}
 			}
 
 			var impulse = v3z();
-			if (controls.Jump && cube.CanJump) {
+			if (controls.Jump && player.CanJump) {
 				impulse.y += f * 2;
 				// console.log("jumping motherfuckers.");
-				cube.CanJump = false;
+				player.CanJump = false;
 			}
 
 
@@ -98,7 +100,7 @@ onInit = function() {
 					&& ((controls.Forward || controls.Backward) && !(controls.Forward && controls.Backward)) ? 0.5 * f
 					: f);
 
-			if(cube.inAir){
+			if(player.inAir){
 				spd /= 4;
 			}
 
@@ -120,16 +122,21 @@ onInit = function() {
 				impulse.z += -spd * Math.sin(controls.Yaw + Math.PI / 2);
 			}
 
-			cube.applyCentralImpulse(impulse);
+			player.applyCentralImpulse(impulse);
 
-			if (cube.position.y < -10) {
-				cube.position.y = StartPositionY;
-				cube.position.x = StartPositionX;
-				cube.position.z = StartPositionZ;
-				cube.__dirtyPosition = true;
-				cube.__dirtyRotation = true;
+			if (player.position.y < -10) {
+				player.position.y = StartPositionY;
+				player.position.x = StartPositionX;
+				player.position.z = StartPositionZ;
+				player.__dirtyPosition = true;
+				player.__dirtyRotation = true;
 			}
 		}
 	};
 
+};
+
+
+Platformer.PlayerDied = function(killedBy){
+	console.log("Player killed by " + killedBy);
 };

@@ -53,6 +53,40 @@ Platformer.AddTestBox = function(position, dimension) {
 };
 
 Platformer.AddTracer = function(position){
+	var tracer = new THREE.Mesh(Platformer.Tracer.geomery, Platformer.Tracer.material);
+	tracer.position.set(position.x, position.y, position.z);
+	tracer.scale.set(0.08, 0.08, 0.08);
+	tracer.isActive = false;
+	tracer.speed = 1;
+	tracer.speedVector = v3z();
+
+	tracer.onRender= function(delta){
+		var player = scene.getObjectByName ("player");
+		var disVec = v3z();
+		disVec.subVectors(player.position, tracer.position);
+
+		if(tracer.isActive){
+			if(disVec.length() < 3.2){
+				Platformer.PlayerDied("tracer");
+			}else{
+				tracer.speedVector.subVectors(player.position, tracer.position);
+				tracer.speedVector.normalize();
+				tracer.speedVector.multiplyScalar(delta/1000 * tracer.speed);
+				tracer.position.add(tracer.speedVector);
+			}
+		}else{
+
+
+			if(disVec.length() < 20){
+				tracer.isActive = true;
+				console.log("Tracer became active");
+			}
+		}
+	};
+
+	console.log("Tracer created");
+	Platformer.Add(tracer);
+	return tracer;
 
 };
 
@@ -86,7 +120,8 @@ Platformer.ParseJsonObjects = function(){
 
 	});
 	Platformer.Tracer = {};
-	Platformer.Tracer.geomery = tracerParced.Geometry;
+	Platformer.Tracer.geomery = tracerParced.geometry;
 	Platformer.Tracer.material = new THREE.MeshPhongMaterial({color: 0x384040, specular: 0xD6D6D6, shininess: 10} );
+
 
 };

@@ -12,7 +12,7 @@ var insideLoop = false;
 Platformer.Add = function(obj) {
 	sceneobjs.push(obj);
 	scene.add(obj);
-}
+};
 
 /**
  * Add an object to the scene
@@ -22,7 +22,7 @@ Platformer.Add = function(obj) {
 Platformer.AddParent = function(parent, obj) {
 	sceneobjs.push(obj);
 	parent.add(obj);
-}
+};
 
 
 /**
@@ -36,7 +36,7 @@ Platformer.Remove = function(obj) {
 	}
 	sceneobjs.splice(sceneobjs.indexOf(obj), 1);
 	scene.remove(obj);
-}
+};
 
 /**
  * 
@@ -49,7 +49,7 @@ onRender = function(delta) {
 		var so = sceneobjs[i];
 		if (so !== undefined) {
 			if (so.onRender !== undefined) {
-				so.onRender();
+				so.onRender(delta);
 			}
 		}
 	}
