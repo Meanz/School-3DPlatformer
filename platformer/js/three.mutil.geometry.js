@@ -109,9 +109,9 @@ Geometry.FancyRotationFunction = function(geometry, scaleVector)
 		var faceNormal2 = v3z().crossVectors(ab2, ac2).normalize();
 		
 		//
-		console.log("n0: " + faceNormal + " n1: " + faceNormal2);
-		console.log("v0: " + a + " v1: " + b + " v2: " + c);
-		console.log("v0: " + newa + " v1: " + newb + " v2: " + newc);
+		//console.log("n0: " + faceNormal + " n1: " + faceNormal2);
+		//console.log("v0: " + a + " v1: " + b + " v2: " + c);
+		//console.log("v0: " + newa + " v1: " + newb + " v2: " + newc);
 		
 		
 		//Transform to origo
@@ -150,7 +150,7 @@ Geometry.FancyRotationFunction = function(geometry, scaleVector)
 		//c
 		UVs[faceIndex][2].set(tc.x, tc.y);
 		
-		console.log("------------------------------------------");
+		//console.log("------------------------------------------");
 		
 	}
 	

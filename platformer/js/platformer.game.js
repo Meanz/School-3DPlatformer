@@ -34,6 +34,7 @@ Platformer.LoadLevel = function(levelName) {
 
 		}
 
+
 	});
 };
 
@@ -41,6 +42,8 @@ Platformer.LoadLevel = function(levelName) {
 var raycaster = new THREE.Raycaster();
 onInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
+
+	Platformer.ParseJsonObjects();
 
 	Platformer.LoadLevel("level2.json");
 
