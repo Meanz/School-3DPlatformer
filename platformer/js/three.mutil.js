@@ -32,6 +32,7 @@ function v2(x, y) {
 
 /**
  * Construct a Zero Vector2
+ * 
  * @returns {Vector2}
  */
 function v2z() {
@@ -142,3 +143,62 @@ function applyParent(parent, obj) {
 
 	obj.applyMatrix(result);
 }
+
+/**
+ */
+var Util = {};
+
+// Returns a texture
+Util.NearestPowerOfTwo = function(val) {
+	// 125 -> 256
+	var tmp = 1;
+	while (tmp < val) {
+		tmp *= 2;
+	}
+	return tmp;
+};
+
+Util.GetTextWidth = function(text, font)
+{
+	// Check size
+	var ctx = Platformer.Canvas.getContext("2d");
+	ctx.font = font;
+	var txtWidth = Math.ceil(ctx.measureText(text).width);
+	return txtWidth;
+};
+
+Util.GetTextHeight = function(text, font)
+{
+	// Check size
+	var ctx = Platformer.Canvas.getContext("2d");
+	ctx.font = font;
+	var txtHeight = Math.ceil(ctx.measureText("M").width);
+	return txtHeight;
+};
+
+Util.DrawTextToTexture = function(text, font, color, texture) {
+	// Check size
+	var txtWidth = Util.GetTextWidth(text, font);
+	var txtHeight = Util.GetTextHeight(text, font);
+
+	// Create new canvas
+	var cnv = document.createElement("canvas");
+	cnv.width = Util.NearestPowerOfTwo(txtWidth + 2);
+	cnv.height = Util.NearestPowerOfTwo(txtHeight + 2);
+	ctx = cnv.getContext("2d");
+	ctx.font = font;
+
+	ctx.beginPath();
+
+	//ctx.fillStyle = "#ffffff";
+	//ctx.fillRect(0, 0, cnv.width, cnv.height);
+	ctx.stroke();
+	ctx.fillStyle = color;
+	ctx.fillText(text, (cnv.width - txtWidth) / 2, txtHeight + (cnv.height - txtHeight) / 2);
+	ctx.stroke();
+	ctx.closePath();
+
+	texture.image = cnv;
+	texture.needsUpdate = true;
+	return texture;
+};

@@ -15,9 +15,6 @@ var renderer;
 // The initial light of the scene
 var light;
 
-// Camera Controls
-var camera, controls;
-
 // Texture Loader
 var loader;
 
@@ -34,17 +31,22 @@ function renderScene(timestamp) {
 	lastTimestamp = timestamp;
 
 	if (onRender !== undefined) {
-		controls.Update(delta);
+		if (Platformer.Camera.inPerspectiveMode) {
+			Platformer.Controls.Update(delta);
+		}
+		Platformer.MouseX = Platformer.Controls.LastMouseX;
+		Platformer.MouseY = Platformer.Controls.LastMouseY - 8;
 		onRender(delta);
 	}
 
-	renderer.render(scene, camera);
+	renderer.render(scene, Platformer.Camera);
 }
 
 var Platformer = {};
+Platformer.Scene = null;
 Platformer.Canvas = document.createElement("canvas");
 Platformer.Texture = null;
-
+Platformer.Camera = null;
 
 var resx = 512;
 var resy = 512;
@@ -52,8 +54,6 @@ function TextureCreate(clrx, clry, clrz, delta) {
 	var x, y;
 	// Do some fancy magic
 	var ctx = Platformer.Canvas.getContext("2d");
-	var imgd = ctx.createImageData(resx, resy);
-
 	// Make some data
 	var blockX = 0;
 	var blockY = 0;
@@ -81,9 +81,8 @@ function TextureCreate(clrx, clry, clrz, delta) {
 	var txtwidth = Math.ceil(ctx.measureText("9").width);
 	var txtheight = Math.ceil(ctx.measureText("M").width);
 
-	console.log("w: " + txtwidth);
-
-	var elems = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+	var elems = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+			'u', 'v', 'w', 'x', 'y', 'z' ];
 
 	for (var i = 0; i < Math.floor(resx / txtwidth) + 1; i++) {
 		for (var j = 0; j < Math.ceil(resy / txtheight) + 1; j++) {
@@ -99,18 +98,17 @@ function TextureCreate(clrx, clry, clrz, delta) {
 		}
 	}
 
-	
 	ctx.lineWidth = 5;
 	ctx.strokeStyle = "#ff0000";
 	ctx.beginPath();
-	
+
 	ctx.moveTo(0, 0);
 	ctx.lineTo(0, resy);
 	ctx.lineTo(resx, resy);
-	
+
 	ctx.stroke();
 	ctx.closePath();
-	
+
 	Platformer.Texture.needsUpdate = true;
 	return Platformer.Texture;
 }
@@ -128,23 +126,29 @@ Platformer.Init = function() {
 			|| canvas.webkitRequestPointerLock;
 	canvas.exitPointerLock = canvas.exitPointerLock || canvas.mozExitPointerLock || canvas.webkitExitPointerLock;
 
+	MInput.AddListeners(canvas);
+	
 	scene = new Physijs.Scene({
 		fixedTimeStep : 1 / 60
 	});
+	Platformer.Scene = scene;
 	scene.setGravity(new THREE.Vector3(0, -15, 0));
 	scene.addEventListener('update', function() {
+		MInput.Update();
 		scene.simulate(undefined, 2);
 		if (onSimulation !== undefined) {
 			onSimulation();
 		}
+		MInput.Flush();
 	});
 
-	camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 1000);
-	camera.position.set(-10, 10, -10);
-	camera.lookAt(scene.position);
-	scene.add(camera);
+	// width, height, fov, near, far, orthoNear, orthoFar
+	Platformer.Camera = new THREE.CombinedCamera(window.innerWidth, window.innerHeight, 60, 1, 1000, -10, 10);
+	Platformer.Camera.position.set(-10, 10, -10);
+	Platformer.Camera.lookAt(scene.position);
+	scene.add(Platformer.Camera);
 
-	controls = new Platformer.FirstPersonControls(camera);
+	Platformer.Controls = new Platformer.FirstPersonControls(Platformer.Camera);
 
 	// Light
 	light = new THREE.DirectionalLight(0x444444);
@@ -184,7 +188,7 @@ Platformer.Init = function() {
 
 		if (key == 32) {
 			canvas.requestPointerLock();
-			controls.PointerLock = true;
+			Platformer.Controls.PointerLock = true;
 			isPointerLocked = !isPointerLocked;
 		}
 		if (key == 72) {
@@ -193,7 +197,7 @@ Platformer.Init = function() {
 	});
 
 	Platformer.jsonLoader = new THREE.JSONLoader();
-	
+
 	if (OnInit !== undefined) {
 		OnInit();
 	}

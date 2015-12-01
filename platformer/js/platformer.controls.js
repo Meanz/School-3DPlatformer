@@ -53,7 +53,7 @@ Platformer.FirstPersonControls = function(camera) {
 	};
 
 	this.onMouseDown = function(event) {
-
+	
 	};
 
 	this.onMouseUp = function(event) {

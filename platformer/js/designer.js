@@ -57,7 +57,7 @@ Designer.Init = function() {
 	Designer.Tiles.push(new Tile_Start(0, 0));
 	Designer.StartTile = Designer.Tiles[0];
 	Designer.SelectedTile = Designer.StartTile;
-	
+
 	// Load the level
 	Designer.LoadLevel();
 
@@ -112,6 +112,7 @@ Designer.LoadLevel = function() {
 				var tileHeight = obj.TileHeight;
 
 				tileFloor.TileHeight = tileHeight;
+				tileFloor.Text = "Floor (" + tileHeight + ")";
 				// Platformer.AddFloor(position, dimension);
 				Designer.Tiles.push(tileFloor);
 				// console.log("Added floor at " + tileX + " / " + tileY);
@@ -120,6 +121,8 @@ Designer.LoadLevel = function() {
 				Designer.AddStartTile(tileX, tileY);
 			} else if (type == "end") {
 				Designer.AddEndTile(tileX, tileY);
+			} else if (type == "wall") {
+				Designer.Tiles.push(new Tile_Wall(tileX, tileY));
 			} else {
 				console.log("type: " + type);
 			}
@@ -232,6 +235,27 @@ Designer.AddStartTile = function(tileX, tileY) {
 	Designer.Tiles.push(startTile);
 };
 
+Designer.AddEndTile = function(tileX, tileY) {
+	var endTile = new Tile_End(tileX, tileY);
+	// find old start tile, remove it
+	if (Designer.EndTile != null) {
+		var endTileIndex = -1;
+		for (var i = 0; i < Designer.Tiles.length; i++) {
+			if (Designer.EndTile == Designer.Tiles[i]) {
+				endTileIndex = i;
+				break;
+			}
+		}
+		if (endTileIndex != -1) {
+			Designer.Tiles.splice(endTileIndex, 1);
+		} else {
+			console.log("Designer.EndTile != null but it couldn't be find in the tile list?");
+		}
+	}
+	Designer.EndTile = endTile;
+	Designer.Tiles.push(endTile);
+};
+
 Designer.Update = function() {
 	// Update Input
 	MInput.Update();
@@ -313,24 +337,7 @@ Designer.Update = function() {
 				} else if (Designer.Tool == TOOL_START) {
 					Designer.AddStartTile(tileX, tileY);
 				} else if (Designer.Tool == TOOL_END) {
-					var endTile = new Tile_End(tileX, tileY);
-					// find old start tile, remove it
-					if (Designer.EndTile != null) {
-						var endTileIndex = -1;
-						for (var i = 0; i < Designer.Tiles.length; i++) {
-							if (Designer.EndTile == Designer.Tiles[i]) {
-								endTileIndex = i;
-								break;
-							}
-						}
-						if (endTileIndex != -1) {
-							Designer.Tiles.splice(endTileIndex, 1);
-						} else {
-							console.log("Designer.EndTile != null but it couldn't be find in the tile list?");
-						}
-					}
-					Designer.EndTile = endTile;
-					Designer.Tiles.push(endTile);
+					Designer.AddEndTile(tileX, tileY);
 				}
 			} else {
 				if (Designer.Tool == TOOL_REMOVE) {
@@ -475,7 +482,7 @@ var Tile_Floor = function(tileX, tileY) {
 	this.TileHeight = 0;
 	this.TileType = "floor";
 	this.Color = "#0000ff";
-	this.Text = "Floor";
+	this.Text = "Floor (0)";
 };
 Tile_Floor.prototype = Object.create(Tile.prototype);
 Tile_Floor.prototype.GetHtml = function() {
@@ -489,6 +496,7 @@ Tile_Floor.prototype.GetHtml = function() {
 }
 Tile_Floor.prototype.UpdateValues = function() {
 	this.TileHeight = $("#input_tileHeight").val();
+	this.Text = "Floor (" + this.TileHeight + ")";
 	console.log("Value update");
 };
 
@@ -510,9 +518,9 @@ Tile_Start.prototype = Object.create(Tile.prototype);
 
 var Tile_End = function(tileX, tileY) {
 	Tile.call(this, tileX, tileY);
-	this.TileType = "stop";
+	this.TileType = "end";
 	this.Color = "#ff0000";
-	this.Text = "Stop";
+	this.Text = "End";
 }
 Tile_End.prototype = Object.create(Tile.prototype);
 
