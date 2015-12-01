@@ -35,6 +35,7 @@ Platformer.LoadLevel = function(levelName) {
 		}
 
 		Platformer.AddTracer(v3(20, 2, 0));
+		Platformer.AddScanner([v3(5, 5, 0)]);
 
 
 	});
