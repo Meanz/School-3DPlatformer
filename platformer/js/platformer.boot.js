@@ -6,7 +6,7 @@ Physijs.scripts.ammo = './ammo.js';
 // Scene, Renderer
 var Platformer = {};
 
-var onInit, onRender, onSimulation;
+var OnInit, onRender, onSimulation;
 var isPointerLocked = false;
 var canvas;
 var scene;
@@ -192,7 +192,9 @@ Platformer.Init = function() {
 		}
 	});
 
-	if (onInit !== undefined) {
-		onInit();
+	Platformer.jsonLoader = new THREE.JSONLoader();
+	
+	if (OnInit !== undefined) {
+		OnInit();
 	}
 };
