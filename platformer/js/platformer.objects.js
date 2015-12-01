@@ -43,6 +43,34 @@ Platformer.MainMenu = function() {
 		}));
 	};
 	
+	this.DisplayLevelMenu = function() {
+		
+		var mainMenu = this;
+		
+		var text = Platformer.AddAsChild(mainMenu, 
+				new Platformer.UIText("Inside the Mainframe", "48px Arial", "#ff0000", v3z()));
+		text.SetPosition(0, Platformer.Camera.top - (text.GetHeight() / 2));
+
+		var levels = ["level1.json", "level2.json", "leveltest.json", "niva1.json", "test.json"];
+		
+		for(var i=0; i < levels.length; i++) {
+			var that = Platformer.AddAsChild(mainMenu, new Platformer.UIButton(levels[i], v2(0, 100 - (i * 50)), function() {
+				
+				mainMenu.Clear();
+				//Fix camera
+				Platformer.Camera.toPerspective();
+				
+				Platformer.StartLevel(this.level);
+			}));
+			that.level = levels[i];
+		}
+		
+		Platformer.AddAsChild(mainMenu, new Platformer.UIButton("Back", v2(0, 100 - (levels.length * 50) - 20), function() {
+			mainMenu.Clear();
+			mainMenu.DisplayMainMenu();
+		}));
+	};
+	
 	this.DisplayMainMenu = function() {
 
 		var mainMenu = this;
@@ -56,10 +84,7 @@ Platformer.MainMenu = function() {
 			//alert("You clicked buttan");
 			mainMenu.Clear();
 			
-			//Fix camera
-			Platformer.Camera.toPerspective();
-			
-			Platformer.StartLevel("niva1.json");
+			mainMenu.DisplayLevelMenu();
 		}));
 
 		this.settingsButton = Platformer.AddAsChild(mainMenu, new Platformer.UIButton("Innstillinger", v2(0, 0), function() {

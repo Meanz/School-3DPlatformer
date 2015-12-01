@@ -69,9 +69,9 @@ Platformer.StartLevel = function(levelName) {
 	player.CanJump = false;
 	player.setAngularFactor(v3z());
 	player.onUpdate = function() {
-		controls.camera.position.x = player.position.x;
-		controls.camera.position.y = player.position.y + 1;
-		controls.camera.position.z = player.position.z;
+		Platformer.Controls.camera.position.x = player.position.x;
+		Platformer.Controls.camera.position.y = player.position.y + 1;
+		Platformer.Controls.camera.position.z = player.position.z;
 
 		if (true) {
 			var mag = 20;
@@ -79,11 +79,11 @@ Platformer.StartLevel = function(levelName) {
 			var lv = player.getLinearVelocity();
 			var hlv = v3(lv.x, 0, lv.z);
 			var len = hlv.length();
-			var cv = controls.camera.getWorldDirection();
+			var cv = Platformer.Controls.camera.getWorldDirection();
 			var chv = v3(cv.x, 0 ,cv.z);
 			// console.log(len);
 
-			raycaster.set(controls.camera.position, v3(0.0, -1.0, 0.0));
+			raycaster.set(Platformer.Controls.camera.position, v3(0.0, -1.0, 0.0));
 			var intersections = raycaster.intersectObjects(sceneobjs, true);
 			for (var i = 0; i < intersections.length; i++) {
 				var intersection = intersections[i];
@@ -101,38 +101,38 @@ Platformer.StartLevel = function(levelName) {
 			}
 
 			var impulse = v3z();
-			if (controls.Jump && player.CanJump) {
+			if (Platformer.Controls.Jump && player.CanJump) {
 				impulse.y += f * 2;
 				// console.log("jumping motherfuckers.");
 				player.CanJump = false;
 			}
 
 
-			var spd = ((controls.StrafeLeft || controls.StrafeRight)
-					&& !(controls.StrafeLeft && controls.StrafeRight)
-					&& ((controls.Forward || controls.Backward) && !(controls.Forward && controls.Backward)) ? 0.5 * f
+			var spd = ((Platformer.Controls.StrafeLeft || Platformer.Controls.StrafeRight)
+					&& !(Platformer.Controls.StrafeLeft && Platformer.Controls.StrafeRight)
+					&& ((Platformer.Controls.Forward || Platformer.Controls.Backward) && !(Platformer.Controls.Forward && Platformer.Controls.Backward)) ? 0.5 * f
 					: f);
 
 			if(player.inAir){
 				spd /= 4;
 			}
 
-			if (controls.Forward && (len < mag || hlv.dot(chv) <= 0 )) {
-				impulse.x += -spd * Math.cos(controls.Yaw);
-				impulse.z += -spd * Math.sin(controls.Yaw);
+			if (Platformer.Controls.Forward && (len < mag || hlv.dot(chv) <= 0 )) {
+				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw);
+				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw);
 			}
-			if (controls.Backward && (len < mag || hlv.dot(chv) >= 0 )) {
-				impulse.x -= -spd * Math.cos(controls.Yaw);
-				impulse.z -= -spd * Math.sin(controls.Yaw);
+			if (Platformer.Controls.Backward && (len < mag || hlv.dot(chv) >= 0 )) {
+				impulse.x -= -spd * Math.cos(Platformer.Controls.Yaw);
+				impulse.z -= -spd * Math.sin(Platformer.Controls.Yaw);
 			}
 			chv.applyAxisAngle(v3(0, 1, 0), Math.PI/2);
-			if (controls.StrafeLeft && (len < mag || hlv.dot(chv) <= 0 )) {
-				impulse.x += -spd * Math.cos(controls.Yaw - Math.PI / 2);
-				impulse.z += -spd * Math.sin(controls.Yaw - Math.PI / 2);
+			if (Platformer.Controls.StrafeLeft && (len < mag || hlv.dot(chv) <= 0 )) {
+				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw - Math.PI / 2);
+				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw - Math.PI / 2);
 			}
-			if (controls.StrafeRight && (len < mag || hlv.dot(chv) >= 0 )) {
-				impulse.x += -spd * Math.cos(controls.Yaw + Math.PI / 2);
-				impulse.z += -spd * Math.sin(controls.Yaw + Math.PI / 2);
+			if (Platformer.Controls.StrafeRight && (len < mag || hlv.dot(chv) >= 0 )) {
+				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw + Math.PI / 2);
+				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw + Math.PI / 2);
 			}
 
 			player.applyCentralImpulse(impulse);

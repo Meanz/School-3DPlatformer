@@ -51,6 +51,16 @@ Platformer.AddParent = function(parent, obj) {
 };
 
 /**
+ * 
+ */
+Platformer.QueueEverythingForRemoval = function() {
+	//=D
+	for(var i=0; i < sceneobjs.length; i++) {
+		Platformer.QueueRemove(sceneobjs[i]);
+	}
+};
+
+/**
  * Queue an object for removal
  */
 Platformer.QueueRemove = function(obj) {
