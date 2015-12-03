@@ -58,19 +58,22 @@ OnInit = function() {
 	SceneManager.Add(new Platformer.MainMenu(false));
 
 	var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
-	player.name = "player";
-	player.setCcdMotionThreshold(1);
-	player.setCcdSweptSphereRadius(0.2);
-	player.CanJump = false;
-	player.setAngularFactor(v3z());
 	Platformer.audioListener = new THREE.AudioListener();
+	Platformer.Player = player;
 	player.add(Platformer.audioListener);
+
+	player.OnStart = function () {
+		player.name = "player";
+		player.setCcdMotionThreshold(1);
+		player.setCcdSweptSphereRadius(0.2);
+		player.CanJump = false;
+		player.setAngularFactor(v3z());
+		player.LastTimeUpdate = Date.now();
+		player.TimeRemaining = 0;
+		console.log("Set angular factor");
+	};
 	player.OnEnd = function() {
 		console.log("Player was removed");
-	};
-	player.OnStart = function () {
-		player.setAngularFactor(v3z());
-		console.log("Set angular factor");
 	};
 	player.onUpdate = function() {
 
@@ -78,7 +81,7 @@ OnInit = function() {
 			console.log("SceneObjects: " + SceneManager.SceneObjects.length);
 			console.log("LevelObjects: " + SceneManager.LevelObjects.length);
 			console.log("TileObjects: " + SceneManager.TileObjects.length);
-			
+
 		}
 
 		if (Platformer.IsPlaying) {
@@ -96,6 +99,20 @@ OnInit = function() {
 				SceneManager.Add(new Platformer.MainMenu(true));
 				SceneManager.HideLevel();
 				Platformer.FreeCursor();
+			}
+
+			if(Date.now() - player.LastTimeUpdate > 1000) {
+				player.TimeRemaining--;
+				player.LastTimeUpdate = Date.now();
+				$("#hud-time").html("" + player.TimeRemaining);
+				if(player.TimeRemaining < 0) {
+					Platformer.IsPlaying = false;
+					SceneManager.ClearLevel();
+					// Spawn the main menu!
+					SceneManager.Add(new Platformer.LostMenu());
+					Platformer.FreeCursor();
+					$("#hud-ingame").hide();
+				}
 			}
 
 			Platformer.Controls.camera.position.x = player.position.x;
@@ -180,6 +197,9 @@ Platformer.StartLevel = function(levelName) {
 	Platformer.ParseJsonObjects();
 	Platformer.LoadLevel(levelName);
 	Platformer.IsPlaying = true;
+	Platformer.Player.TimeRemaining = 5;
+	Platformer.Player.LastTimeUpdate = Date.now();
+	$("#hud-ingame").show();
 };
 
 Platformer.PlayerDied = function(killedBy) {
