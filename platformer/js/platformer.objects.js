@@ -337,6 +337,8 @@ Platformer.AddScanner = function(positions) {
 
 	};
 
+	console.log("Scanner created");
+
 	scanner.onRender = function(delta) {
 		if (scanner.cooldown <= 0) {
 			scanner.spot.visible = true;
@@ -348,7 +350,12 @@ Platformer.AddScanner = function(positions) {
 			if (angleToY < scanner.spot.angle && vScanToPlay.length() < scanner.spot.distance) {
 				Platformer.PlayerSeenByScanner(scanner.id);
 				scanner.spot.visible = false;
-				scanner.sound.play();
+				if(scanner.sound.source.buffer instanceof AudioBuffer){
+					scanner.sound.play();
+				}else{
+					Platformer.LogError("AudioBuffer not loaded")
+				}
+
 				scanner.cooldown = scanner.cooldownTime;
 			}
 		} else {
@@ -362,8 +369,6 @@ Platformer.AddScanner = function(positions) {
 		scanner.spot.position.set(scanner.position.x, scanner.position.y + 1.01, scanner.position.z);
 
 	};
-
-	console.log("Scanner created");
 	SceneManager.Add(scanner);
 	return scanner;
 
@@ -388,18 +393,21 @@ Platformer.AddTeleporter = function(position) {
 	return teleporter;
 };
 
-Platformer.AddJumppad = function(position) {
-	var jumppad = new Physijs.ConvexMesh(Platformer.Jumppad.geomery, Platformer.Jumppad.material, 0);
+Platformer.AddJumppad = function(position){
+	//var jumppad = new Physijs.ConvexMesh(Platformer.Jumppad.geomery, Platformer.Jumppad.material, 0);
+	var jumppad = new THREE.Mesh(Platformer.Jumppad.geomery, Platformer.Jumppad.material);
 	jumppad.position.copy(position);
 	jumppad.scale.set(0.09, 0.09, 0.09);
 	jumppad.cooldownTime = 5000;
 	jumppad.cooldown = 0;
 
-	jumppad.onUpdate = function(delta) {
-		if (jumppad.cooldown <= 0) {
-			var player = Platformer.Scene.getObjectByName("player");
-			if (v3z().subVectors(player.position, jumppad.position).length() < 2) {
-				player.applyCentralImpulse(v3(0, 150, 0));
+
+
+	jumppad.onUpdate = function(delta){
+		if(jumppad.cooldown <= 0 ){
+			var player = Platformer.Scene.getObjectByName ("player");
+			if(v3z().subVectors(player.position, jumppad.position).length() < 2 ){
+				player.applyCentralImpulse(v3(0, 500, 0));
 				jumppad.cooldown = jumppad.cooldownTime;
 			}
 		} else {
@@ -413,7 +421,31 @@ Platformer.AddJumppad = function(position) {
 	return jumppad;
 };
 
-Platformer.ParseJsonObjects = function() {
+Platformer.AddFloppyDisk = function(position, extraTime){
+	var floppyDisk = new THREE.Mesh(Platformer.FloppyDisk.geomery, Platformer.FloppyDisk.material);
+	floppyDisk.position.copy(position);
+	floppyDisk.scale.set(0.09, 0.09, 0.09);
+
+	if(extraTime === undefined){
+		extraTime = 10000;
+	}
+	floppyDisk.extraTime = extraTime;
+
+	floppyDisk.onUpdate = function(){
+		var player = Platformer.Scene.getObjectByName ("player");
+		if(floppyDisk.position.distanceTo(player.position) < 2){
+			/*
+			TODO:
+			Gjør at spilleren får mer tid
+			Terminer seg selv
+			 */
+		}
+	};
+};
+
+
+
+Platformer.ParseJsonObjects = function(){
 
 	var tracerParced = Platformer.jsonLoader.parse(Platformer.jsonModels.GetTracer());
 	Platformer.Tracer = {};
@@ -433,11 +465,25 @@ Platformer.ParseJsonObjects = function() {
 		shininess : 10
 	});
 
-	var jumppadParsed = Platformer.jsonLoader.parse(Platformer.jsonModels.GetScanner());
+	var jumppadParsed = Platformer.jsonLoader.parse(Platformer.jsonModels.GetJumppad());
 	Platformer.Jumppad = {};
 	Platformer.Jumppad.geomery = jumppadParsed.geometry;
-	Platformer.Jumppad.material = new THREE.MeshPhongMaterial(jumppadParsed.materials);
+	Platformer.Jumppad.material = new THREE.MeshPhongMaterial();
+	Platformer.textureLoader.load("images/jumppadTex.png",
+			function(texture){
+				Platformer.Jumppad.material.setValues({map: texture});
+			}
+	);
 
+	var floppyDiskParsed = Platformer.jsonLoader.parse(Platformer.jsonModels.GetFloppyDisk());
+	Platformer.FloppyDisk = {};
+	Platformer.FloppyDisk.geomery = floppyDiskParsed.geometry;
+	Platformer.FloppyDisk.material = new THREE.MeshPhongMaterial();
+	Platformer.textureLoader.load("images/floppydiskTex.png",
+			function(texture){
+				Platformer.FloppyDisk.material.setValues({map: texture});
+			}
+	);
 	var teleporterParsed = Platformer.jsonLoader.parse({
 
 		"metadata" : {

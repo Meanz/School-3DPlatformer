@@ -45,7 +45,7 @@ Platformer.LoadLevel = function(levelName) {
 
 		}
 		Platformer.AddTracer(v3(0, 2, -20));
-		
+
 		//Hardcode scanners =D?
 		Platformer.AddScanner([ v3(5, 5, 0), v3(10, 5, 0), v3(-5, 5, -20) ]);
 	});

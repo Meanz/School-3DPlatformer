@@ -201,6 +201,7 @@ Platformer.Init = function() {
 	});
 
 	Platformer.jsonLoader = new THREE.JSONLoader();
+	Platformer.textureLoader = new THREE.TextureLoader();
 
 	if(SceneManager !== undefined && SceneManager.Init !== undefined) {
 		SceneManager.Init();
