@@ -5,12 +5,14 @@ Physijs.scripts.ammo = './ammo.js';
 
 // Scene, Renderer
 var Platformer = {};
+Platformer.Scene = null;
+Platformer.Canvas = document.createElement("canvas");
+Platformer.Texture = null;
+Platformer.Camera = null;
+Platformer.IsPointerLocked = false;
+var OnInit, OnRender, OnSimulation;
 
-var OnInit, onRender, onSimulation;
-var isPointerLocked = false;
 var canvas;
-var scene;
-var renderer;
 
 // The initial light of the scene
 var light;
@@ -18,35 +20,30 @@ var light;
 // Texture Loader
 var loader;
 
-//
-var lastTimestamp;
+//Loop timining
+Platformer.LastFrameTimestamp = null;
+Platformer.LastPhysicsTimestamp = null;
 
 function renderScene(timestamp) {
 	requestAnimationFrame(renderScene);
 
-	if (lastTimestamp == 0) {
-		lastTimestamp = timestamp;
+	if (Platformer.LastFrameTimestamp == null) {
+		Platformer.LastFrameTimestamp = timestamp;
 	}
-	var delta = timestamp - lastTimestamp;
-	lastTimestamp = timestamp;
+	var delta = timestamp - Platformer.LastFrameTimestamp;
+	Platformer.LastFrameTimestamp = timestamp;
 
-	if (onRender !== undefined) {
+	if (OnRender !== undefined) {
 		if (Platformer.Camera.inPerspectiveMode) {
 			Platformer.Controls.Update(delta);
 		}
 		Platformer.MouseX = Platformer.Controls.LastMouseX;
 		Platformer.MouseY = Platformer.Controls.LastMouseY - 8;
-		onRender(delta);
+		OnRender(delta);
 	}
 
-	renderer.render(scene, Platformer.Camera);
+	Platformer.Renderer.render(Platformer.Scene, Platformer.Camera);
 }
-
-var Platformer = {};
-Platformer.Scene = null;
-Platformer.Canvas = document.createElement("canvas");
-Platformer.Texture = null;
-Platformer.Camera = null;
 
 var resx = 512;
 var resy = 512;
@@ -114,30 +111,37 @@ function TextureCreate(clrx, clry, clrz, delta) {
 }
 
 Platformer.Init = function() {
-	lastTimestamp = 0;
 	TWEEN.start();
 
-	renderer = new THREE.WebGLRenderer({
+	Platformer.Renderer = new THREE.WebGLRenderer({
 		antialias : true
 	});
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	canvas = document.getElementById('viewport').appendChild(renderer.domElement);
+	Platformer.Renderer.setSize(window.innerWidth, window.innerHeight);
+	canvas = document.getElementById('viewport').appendChild(Platformer.Renderer.domElement);
 	canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock
 			|| canvas.webkitRequestPointerLock;
 	canvas.exitPointerLock = canvas.exitPointerLock || canvas.mozExitPointerLock || canvas.webkitExitPointerLock;
 
 	MInput.AddListeners(canvas);
 	
-	scene = new Physijs.Scene({
+	Platformer.Scene = new Physijs.Scene({
 		fixedTimeStep : 1 / 60
 	});
-	Platformer.Scene = scene;
-	scene.setGravity(new THREE.Vector3(0, -15, 0));
-	scene.addEventListener('update', function() {
+	Platformer.Scene.setGravity(new THREE.Vector3(0, -15, 0));
+	Platformer.Scene.addEventListener('update', function() {
 		MInput.Update();
-		scene.simulate(undefined, 2);
-		if (onSimulation !== undefined) {
-			onSimulation();
+		
+		//update timing
+		var ctime = Date.now();
+		if(Platformer.LastPhysicsTimestamp == null) {
+			Platformer.LastPhysicsTimestamp = ctime;
+		}
+		var delta = ctime - Platformer.LastPhysicsTimestamp;
+		Platformer.LastPhysicsTimestamp = ctime;
+		
+		Platformer.Scene.simulate(undefined, 2);
+		if (OnSimulation !== undefined) {
+			OnSimulation(delta);
 		}
 		MInput.Flush();
 	});
@@ -145,25 +149,25 @@ Platformer.Init = function() {
 	// width, height, fov, near, far, orthoNear, orthoFar
 	Platformer.Camera = new THREE.CombinedCamera(window.innerWidth, window.innerHeight, 60, 1, 1000, -10, 10);
 	Platformer.Camera.position.set(-10, 10, -10);
-	Platformer.Camera.lookAt(scene.position);
-	scene.add(Platformer.Camera);
+	Platformer.Camera.lookAt(Platformer.Scene.position);
+	Platformer.Scene.add(Platformer.Camera);
 
 	Platformer.Controls = new Platformer.FirstPersonControls(Platformer.Camera);
 
 	// Light
 	light = new THREE.DirectionalLight(0x444444);
 	light.position.set(-0.4, 0.6, -0.4);
-	light.target.position.copy(scene.position);
+	light.target.position.copy(Platformer.Scene.position);
 	// scene.add(light);
 
 	var ambLight = new THREE.AmbientLight(0xFFFFFF);
 
-	scene.add(ambLight);
+	Platformer.Scene.add(ambLight);
 
 	// Loader
 	loader = new THREE.TextureLoader();
 	requestAnimationFrame(renderScene);
-	scene.simulate();
+	Platformer.Scene.simulate();
 
 	Platformer.Canvas = document.createElement("canvas");
 	Platformer.Canvas.width = resx;
@@ -189,7 +193,7 @@ Platformer.Init = function() {
 		if (key == 32) {
 			canvas.requestPointerLock();
 			Platformer.Controls.PointerLock = true;
-			isPointerLocked = !isPointerLocked;
+			Platformer.IsPointerLocked = !Platformer.IsPointerLocked;
 		}
 		if (key == 72) {
 

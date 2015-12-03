@@ -13,7 +13,7 @@ var insideLoop = false;
  */
 Platformer.Add = function(obj) {
 	sceneobjs.push(obj);
-	scene.add(obj);
+	Platformer.Scene.add(obj);
 	if (obj.OnStart !== undefined) {
 		obj.OnStart();
 	}
@@ -86,7 +86,7 @@ Platformer.Remove = function(obj) {
  */
 var AccumDelta = 0;
 var AccumThing = 0;
-onRender = function(delta) {
+OnRender = function(delta) {
 
 
 	insideLoop = true;
@@ -115,7 +115,7 @@ onRender = function(delta) {
 /**
  * 
  */
-onSimulation = function() {
+OnSimulation = function(delta) {
 	// Do all removes
 	for (var i = 0; i < removequeue.length; i++) {
 		Platformer.Remove(removequeue[i]);
@@ -136,7 +136,7 @@ onSimulation = function() {
 		var so = sceneobjs[i];
 		if (so !== undefined) {
 			if (so.onUpdate !== undefined) {
-				so.onUpdate();
+				so.onUpdate(delta);
 			}
 		}
 	}
