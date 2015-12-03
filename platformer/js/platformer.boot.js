@@ -209,3 +209,14 @@ Platformer.Init = function() {
 		OnInit();
 	}
 };
+
+Platformer.LockCursor = function() {
+	canvas.requestPointerLock();
+	Platformer.Controls.PointerLock = true;
+};
+
+Platformer.FreeCursor = function() {
+	document.exitPointerLock();
+	Platformer.IsPointerLocked = false;
+	Platformer.Controls.PointerLock = false;
+};

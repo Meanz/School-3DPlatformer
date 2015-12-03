@@ -5,6 +5,8 @@ var StartPositionZ = 0;
 Platformer.LoadLevel = function(levelName) {
 	$.getJSON("levels/" + levelName, function(data) {
 
+		var scale = v3(2, 2, 2);
+
 		for (var i = 0; i < data.objects.length; i++) {
 
 			var obj = data.objects[i];
@@ -15,7 +17,7 @@ Platformer.LoadLevel = function(levelName) {
 
 			if (type == "floor" || type == "start") {
 				var tileHeight = obj.TileHeight;
-				var dimension = v3(1, 1, 1);
+				var dimension = scale;
 				var position = v3(dimension.x * tileX, dimension.y * tileHeight, dimension.z * tileY);
 
 				if (type == "start") {
@@ -29,18 +31,23 @@ Platformer.LoadLevel = function(levelName) {
 				// console.log("Added floor at " + tileX + " / " + tileY);
 
 			} else if (type == "wall") {
-				var dimension = v3(1, 5, 1);
+				var dimension = v3(scale.x, scale.y * 5, scale.z);
 				var position = v3(dimension.x * tileX, 1, dimension.z * tileY);
 				Platformer.AddFloor(position, dimension);
+			} else if (type == "end") {
+				Platformer.AddTeleporter(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
+			} else if (type == "tracer") {
+				Platformer.AddTracer(v3(0, 2, -20));
+			} else if (type == "scanner") {
 			} else {
 				console.log("type: " + type);
 			}
 
 		}
 		Platformer.AddTracer(v3(0, 2, -20));
+		
+		//Hardcode scanners =D?
 		Platformer.AddScanner([ v3(5, 5, 0), v3(10, 5, 0), v3(-5, 5, -20) ]);
-		Platformer.AddTeleporter(v3(10, 0.5, 0));
-
 	});
 };
 
@@ -68,7 +75,7 @@ OnInit = function() {
 			console.log("LevelObjects: " + SceneManager.LevelObjects.length);
 			console.log("TileObjects: " + SceneManager.TileObjects.length);
 		}
-		
+
 		if (Platformer.IsPlaying) {
 
 			if (MInput.IsKeyReleased(KEY_Q - KEY_LCASE)) {
@@ -76,6 +83,7 @@ OnInit = function() {
 				SceneManager.ClearLevel();
 				// Spawn the main menu!
 				SceneManager.Add(new Platformer.MainMenu());
+				Platformer.FreeCursor();
 			}
 
 			Platformer.Controls.camera.position.x = player.position.x;

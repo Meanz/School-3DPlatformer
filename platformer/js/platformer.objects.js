@@ -59,6 +59,7 @@ Platformer.MainMenu = function() {
 				Platformer.Camera.toPerspective();
 
 				Platformer.StartLevel(this.level);
+				Platformer.LockCursor();
 			}));
 			that.level = levels[i];
 		}
@@ -337,7 +338,6 @@ Platformer.AddScanner = function(positions) {
 	};
 
 	scanner.onRender = function(delta) {
-		if(*Is)
 		if (scanner.cooldown <= 0) {
 			scanner.spot.visible = true;
 			var player = Platformer.Scene.getObjectByName("player");
