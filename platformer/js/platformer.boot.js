@@ -111,7 +111,6 @@ function TextureCreate(clrx, clry, clrz, delta) {
 }
 
 Platformer.Init = function() {
-	TWEEN.start();
 
 	Platformer.Renderer = new THREE.WebGLRenderer({
 		antialias : true
@@ -130,7 +129,7 @@ Platformer.Init = function() {
 	Platformer.Scene.setGravity(new THREE.Vector3(0, -15, 0));
 	Platformer.Scene.addEventListener('update', function() {
 		MInput.Update();
-		
+
 		//update timing
 		var ctime = Date.now();
 		if(Platformer.LastPhysicsTimestamp == null) {
@@ -138,7 +137,7 @@ Platformer.Init = function() {
 		}
 		var delta = ctime - Platformer.LastPhysicsTimestamp;
 		Platformer.LastPhysicsTimestamp = ctime;
-		
+
 		Platformer.Scene.simulate(undefined, 2);
 		if (OnSimulation !== undefined) {
 			OnSimulation(delta);
@@ -158,7 +157,7 @@ Platformer.Init = function() {
 	light = new THREE.DirectionalLight(0x444444);
 	light.position.set(-0.4, 0.6, -0.4);
 	light.target.position.copy(Platformer.Scene.position);
-	// scene.add(light);
+	Platformer.Scene.add(light);
 
 	var ambLight = new THREE.AmbientLight(0xFFFFFF);
 

@@ -90,6 +90,7 @@ OnRender = function(delta) {
 
 
 	insideLoop = true;
+	TWEEN.update();
 	for (var i = 0; i < sceneobjs.length; i++) {
 		var so = sceneobjs[i];
 		if (so !== undefined) {
