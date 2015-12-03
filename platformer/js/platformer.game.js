@@ -38,9 +38,8 @@ Platformer.LoadLevel = function(levelName) {
 
 		}
 		Platformer.AddTracer(v3(0, 2, -20));
-		Platformer.AddScanner([v3(5, 5, 0), v3(10, 5, 0), v3(-5, 5, -20)]);
+		Platformer.AddScanner([ v3(5, 5, 0), v3(10, 5, 0), v3(-5, 5, -20) ]);
 		Platformer.AddTeleporter(v3(10, 0.5, 0));
-
 
 	});
 };
@@ -48,24 +47,10 @@ Platformer.LoadLevel = function(levelName) {
 var raycaster = new THREE.Raycaster();
 OnInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
-
-	// Start menu
-	Platformer.State = "MainMenu";
-
 	// Add main menu object
-	Platformer.Add(new Platformer.MainMenu());
+	SceneManager.Add(new Platformer.MainMenu());
 
-};
-
-Platformer.StartLevel = function(levelName) {
-	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
-
-	Platformer.ParseJsonObjects();
-
-
-	Platformer.LoadLevel(levelName);
-
-	var player = Platformer.AddBoxMass(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
+	var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
 	player.name = "player";
 	player.setCcdMotionThreshold(1);
 	player.setCcdSweptSphereRadius(0.2);
@@ -73,23 +58,41 @@ Platformer.StartLevel = function(levelName) {
 	player.setAngularFactor(v3z());
 	Platformer.audioListener = new THREE.AudioListener();
 	player.add(Platformer.audioListener);
+	player.OnEnd = function() {
+		console.log("Player was removed");
+	};
 	player.onUpdate = function() {
-		Platformer.Controls.camera.position.x = player.position.x;
-		Platformer.Controls.camera.position.y = player.position.y + 1;
-		Platformer.Controls.camera.position.z = player.position.z;
 
-		if (true) {
+		if (MInput.IsKeyReleased(KEY_1)) {
+			console.log("SceneObjects: " + SceneManager.SceneObjects.length);
+			console.log("LevelObjects: " + SceneManager.LevelObjects.length);
+			console.log("TileObjects: " + SceneManager.TileObjects.length);
+		}
+		
+		if (Platformer.IsPlaying) {
+
+			if (MInput.IsKeyReleased(KEY_Q - KEY_LCASE)) {
+				Platformer.IsPlaying = false;
+				SceneManager.ClearLevel();
+				// Spawn the main menu!
+				SceneManager.Add(new Platformer.MainMenu());
+			}
+
+			Platformer.Controls.camera.position.x = player.position.x;
+			Platformer.Controls.camera.position.y = player.position.y + 1;
+			Platformer.Controls.camera.position.z = player.position.z;
+
 			var mag = 20;
 			var f = 40;
 			var lv = player.getLinearVelocity();
 			var hlv = v3(lv.x, 0, lv.z);
 			var len = hlv.length();
 			var cv = Platformer.Controls.camera.getWorldDirection();
-			var chv = v3(cv.x, 0 ,cv.z);
+			var chv = v3(cv.x, 0, cv.z);
 			// console.log(len);
 
 			raycaster.set(Platformer.Controls.camera.position, v3(0.0, -1.0, 0.0));
-			var intersections = raycaster.intersectObjects(sceneobjs, true);
+			var intersections = raycaster.intersectObjects(SceneManager.TileObjects, true);
 			for (var i = 0; i < intersections.length; i++) {
 				var intersection = intersections[i];
 				if (intersection.object != player) {
@@ -112,30 +115,29 @@ Platformer.StartLevel = function(levelName) {
 				player.CanJump = false;
 			}
 
-
 			var spd = ((Platformer.Controls.StrafeLeft || Platformer.Controls.StrafeRight)
 					&& !(Platformer.Controls.StrafeLeft && Platformer.Controls.StrafeRight)
 					&& ((Platformer.Controls.Forward || Platformer.Controls.Backward) && !(Platformer.Controls.Forward && Platformer.Controls.Backward)) ? 0.5 * f
 					: f);
 
-			if(player.inAir){
+			if (player.inAir) {
 				spd /= 4;
 			}
 
-			if (Platformer.Controls.Forward && (len < mag || hlv.dot(chv) <= 0 )) {
+			if (Platformer.Controls.Forward && (len < mag || hlv.dot(chv) <= 0)) {
 				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw);
 				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw);
 			}
-			if (Platformer.Controls.Backward && (len < mag || hlv.dot(chv) >= 0 )) {
+			if (Platformer.Controls.Backward && (len < mag || hlv.dot(chv) >= 0)) {
 				impulse.x -= -spd * Math.cos(Platformer.Controls.Yaw);
 				impulse.z -= -spd * Math.sin(Platformer.Controls.Yaw);
 			}
-			chv.applyAxisAngle(v3(0, 1, 0), Math.PI/2);
-			if (Platformer.Controls.StrafeLeft && (len < mag || hlv.dot(chv) <= 0 )) {
+			chv.applyAxisAngle(v3(0, 1, 0), Math.PI / 2);
+			if (Platformer.Controls.StrafeLeft && (len < mag || hlv.dot(chv) <= 0)) {
 				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw - Math.PI / 2);
 				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw - Math.PI / 2);
 			}
-			if (Platformer.Controls.StrafeRight && (len < mag || hlv.dot(chv) >= 0 )) {
+			if (Platformer.Controls.StrafeRight && (len < mag || hlv.dot(chv) >= 0)) {
 				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw + Math.PI / 2);
 				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw + Math.PI / 2);
 			}
@@ -153,15 +155,21 @@ Platformer.StartLevel = function(levelName) {
 	};
 };
 
+Platformer.StartLevel = function(levelName) {
+	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
+	Platformer.ParseJsonObjects();
+	Platformer.LoadLevel(levelName);
+	Platformer.IsPlaying = true;
+};
 
-Platformer.PlayerDied = function(killedBy){
+Platformer.PlayerDied = function(killedBy) {
 	console.log("Player killed by " + killedBy);
 };
 
-Platformer.PlayerReachedEnd = function(){
+Platformer.PlayerReachedEnd = function() {
 	console.log("Player reached end");
 };
 
-Platformer.PlayerSeenByScanner = function(id){
+Platformer.PlayerSeenByScanner = function(id) {
 	console.log("Player seen by scanner: " + id);
 };

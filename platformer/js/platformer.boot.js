@@ -10,7 +10,8 @@ Platformer.Canvas = document.createElement("canvas");
 Platformer.Texture = null;
 Platformer.Camera = null;
 Platformer.IsPointerLocked = false;
-var OnInit, OnRender, OnSimulation;
+Platformer.IsPlaying = false;
+var OnInit;
 
 var canvas;
 
@@ -20,7 +21,7 @@ var light;
 // Texture Loader
 var loader;
 
-//Loop timining
+// Loop timining
 Platformer.LastFrameTimestamp = null;
 Platformer.LastPhysicsTimestamp = null;
 
@@ -33,13 +34,13 @@ function renderScene(timestamp) {
 	var delta = timestamp - Platformer.LastFrameTimestamp;
 	Platformer.LastFrameTimestamp = timestamp;
 
-	if (OnRender !== undefined) {
+	if (SceneManager.OnRender !== undefined) {
 		if (Platformer.Camera.inPerspectiveMode) {
 			Platformer.Controls.Update(delta);
 		}
 		Platformer.MouseX = Platformer.Controls.LastMouseX;
 		Platformer.MouseY = Platformer.Controls.LastMouseY - 8;
-		OnRender(delta);
+		SceneManager.OnRender(delta);
 	}
 
 	Platformer.Renderer.render(Platformer.Scene, Platformer.Camera);
@@ -122,7 +123,7 @@ Platformer.Init = function() {
 	canvas.exitPointerLock = canvas.exitPointerLock || canvas.mozExitPointerLock || canvas.webkitExitPointerLock;
 
 	MInput.AddListeners(canvas);
-	
+
 	Platformer.Scene = new Physijs.Scene({
 		fixedTimeStep : 1 / 60
 	});
@@ -130,17 +131,17 @@ Platformer.Init = function() {
 	Platformer.Scene.addEventListener('update', function() {
 		MInput.Update();
 
-		//update timing
+		// update timing
 		var ctime = Date.now();
-		if(Platformer.LastPhysicsTimestamp == null) {
+		if (Platformer.LastPhysicsTimestamp == null) {
 			Platformer.LastPhysicsTimestamp = ctime;
 		}
 		var delta = ctime - Platformer.LastPhysicsTimestamp;
 		Platformer.LastPhysicsTimestamp = ctime;
 
 		Platformer.Scene.simulate(undefined, 2);
-		if (OnSimulation !== undefined) {
-			OnSimulation(delta);
+		if (SceneManager.OnSimulation !== undefined) {
+			SceneManager.OnSimulation(delta);
 		}
 		MInput.Flush();
 	});
@@ -201,6 +202,9 @@ Platformer.Init = function() {
 
 	Platformer.jsonLoader = new THREE.JSONLoader();
 
+	if(SceneManager !== undefined && SceneManager.Init !== undefined) {
+		SceneManager.Init();
+	}
 	if (OnInit !== undefined) {
 		OnInit();
 	}
