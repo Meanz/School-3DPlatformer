@@ -1,7 +1,8 @@
-Platformer.MainMenu = function() {
+Platformer.MainMenu = function(inPauseMode) {
 	THREE.Object3D.call(this);
 	// Base is THREE.Object3D
 	this.Menu = "main";
+	this.InPauseMode = inPauseMode;
 	this.Clear = function() {
 		for (var i = 0; i < this.children.length; i++) {
 			SceneManager.Remove(this.children[i]);
@@ -77,14 +78,26 @@ Platformer.MainMenu = function() {
 				v3z()));
 		text.SetPosition(0, Platformer.Camera.top - (text.GetHeight() / 2));
 
-		this.startButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Start", v2(0, 60), function() {
+		if(this.InPauseMode) {
+			this.resumeButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Resume", v2(0, 60), function() {
+				mainMenu.Clear();
+				SceneManager.Remove(mainMenu);
+				// Fix camera
+				Platformer.Camera.toPerspective();
+				Platformer.IsPlaying = true;
+				SceneManager.ShowLevel();
+				Platformer.LockCursor();
+			}));
+		} else {
+			this.startButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Start", v2(0, 60), function() {
 
-			// Remove everything from zhe scene
-			// alert("You clicked buttan");
-			mainMenu.Clear();
+				// Remove everything from zhe scene
+				// alert("You clicked buttan");
+				mainMenu.Clear();
 
-			mainMenu.DisplayLevelMenu();
-		}));
+				mainMenu.DisplayLevelMenu();
+			}));
+		}
 
 		this.settingsButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Innstillinger", v2(0, 0), function() {
 			mainMenu.Clear();
@@ -255,6 +268,7 @@ Platformer.AddTracer = function(position) {
 	tracer.scale.set(0.08, 0.08, 0.08);
 	tracer.isActive = false;
 	tracer.speed = 1;
+	tracer.t = 1;
 	tracer.speedVector = v3z();
 
 	tracer.onRender = function(delta) {
@@ -345,14 +359,14 @@ Platformer.AddScanner = function(positions) {
 			var player = Platformer.Scene.getObjectByName("player");
 			var vScanToPlay = v3z().subVectors(scanner.position, player.position);
 			var angleToY = vScanToPlay.angleTo(v3(0, 1, 0));
-			//console.log("To player angle: " + angleToY);
-			//console.log("Spot angle: " + scanner.spot.angle);
+			// console.log("To player angle: " + angleToY);
+			// console.log("Spot angle: " + scanner.spot.angle);
 			if (angleToY < scanner.spot.angle && vScanToPlay.length() < scanner.spot.distance) {
 				Platformer.PlayerSeenByScanner(scanner.id);
 				scanner.spot.visible = false;
-				if(scanner.sound.source.buffer instanceof AudioBuffer){
+				if (scanner.sound.source.buffer instanceof AudioBuffer) {
 					scanner.sound.play();
-				}else{
+				} else {
 					Platformer.LogError("AudioBuffer not loaded")
 				}
 
@@ -393,20 +407,19 @@ Platformer.AddTeleporter = function(position) {
 	return teleporter;
 };
 
-Platformer.AddJumppad = function(position){
-	//var jumppad = new Physijs.ConvexMesh(Platformer.Jumppad.geomery, Platformer.Jumppad.material, 0);
+Platformer.AddJumppad = function(position) {
+	// var jumppad = new Physijs.ConvexMesh(Platformer.Jumppad.geomery,
+	// Platformer.Jumppad.material, 0);
 	var jumppad = new THREE.Mesh(Platformer.Jumppad.geomery, Platformer.Jumppad.material);
 	jumppad.position.copy(position);
 	jumppad.scale.set(0.09, 0.09, 0.09);
 	jumppad.cooldownTime = 5000;
 	jumppad.cooldown = 0;
 
-
-
-	jumppad.onUpdate = function(delta){
-		if(jumppad.cooldown <= 0 ){
-			var player = Platformer.Scene.getObjectByName ("player");
-			if(v3z().subVectors(player.position, jumppad.position).length() < 2 ){
+	jumppad.onUpdate = function(delta) {
+		if (jumppad.cooldown <= 0) {
+			var player = Platformer.Scene.getObjectByName("player");
+			if (v3z().subVectors(player.position, jumppad.position).length() < 2) {
 				player.applyCentralImpulse(v3(0, 500, 0));
 				jumppad.cooldown = jumppad.cooldownTime;
 			}
@@ -421,31 +434,27 @@ Platformer.AddJumppad = function(position){
 	return jumppad;
 };
 
-Platformer.AddFloppyDisk = function(position, extraTime){
+Platformer.AddFloppyDisk = function(position, extraTime) {
 	var floppyDisk = new THREE.Mesh(Platformer.FloppyDisk.geomery, Platformer.FloppyDisk.material);
 	floppyDisk.position.copy(position);
 	floppyDisk.scale.set(0.09, 0.09, 0.09);
 
-	if(extraTime === undefined){
+	if (extraTime === undefined) {
 		extraTime = 10000;
 	}
 	floppyDisk.extraTime = extraTime;
 
-	floppyDisk.onUpdate = function(){
-		var player = Platformer.Scene.getObjectByName ("player");
-		if(floppyDisk.position.distanceTo(player.position) < 2){
+	floppyDisk.onUpdate = function() {
+		var player = Platformer.Scene.getObjectByName("player");
+		if (floppyDisk.position.distanceTo(player.position) < 2) {
 			/*
-			TODO:
-			Gjør at spilleren får mer tid
-			Terminer seg selv
+			 * TODO: Gjør at spilleren får mer tid Terminer seg selv
 			 */
 		}
 	};
 };
 
-
-
-Platformer.ParseJsonObjects = function(){
+Platformer.ParseJsonObjects = function() {
 
 	var tracerParced = Platformer.jsonLoader.parse(Platformer.jsonModels.GetTracer());
 	Platformer.Tracer = {};
@@ -469,21 +478,21 @@ Platformer.ParseJsonObjects = function(){
 	Platformer.Jumppad = {};
 	Platformer.Jumppad.geomery = jumppadParsed.geometry;
 	Platformer.Jumppad.material = new THREE.MeshPhongMaterial();
-	Platformer.textureLoader.load("images/jumppadTex.png",
-			function(texture){
-				Platformer.Jumppad.material.setValues({map: texture});
-			}
-	);
+	Platformer.textureLoader.load("images/jumppadTex.png", function(texture) {
+		Platformer.Jumppad.material.setValues({
+			map : texture
+		});
+	});
 
 	var floppyDiskParsed = Platformer.jsonLoader.parse(Platformer.jsonModels.GetFloppyDisk());
 	Platformer.FloppyDisk = {};
 	Platformer.FloppyDisk.geomery = floppyDiskParsed.geometry;
 	Platformer.FloppyDisk.material = new THREE.MeshPhongMaterial();
-	Platformer.textureLoader.load("images/floppydiskTex.png",
-			function(texture){
-				Platformer.FloppyDisk.material.setValues({map: texture});
-			}
-	);
+	Platformer.textureLoader.load("images/floppydiskTex.png", function(texture) {
+		Platformer.FloppyDisk.material.setValues({
+			map : texture
+		});
+	});
 	var teleporterParsed = Platformer.jsonLoader.parse({
 
 		"metadata" : {

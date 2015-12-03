@@ -55,7 +55,7 @@ var raycaster = new THREE.Raycaster();
 OnInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 	// Add main menu object
-	SceneManager.Add(new Platformer.MainMenu());
+	SceneManager.Add(new Platformer.MainMenu(false));
 
 	var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
 	player.name = "player";
@@ -68,12 +68,17 @@ OnInit = function() {
 	player.OnEnd = function() {
 		console.log("Player was removed");
 	};
+	player.OnStart = function () {
+		player.setAngularFactor(v3z());
+		console.log("Set angular factor");
+	};
 	player.onUpdate = function() {
 
 		if (MInput.IsKeyReleased(KEY_1)) {
 			console.log("SceneObjects: " + SceneManager.SceneObjects.length);
 			console.log("LevelObjects: " + SceneManager.LevelObjects.length);
 			console.log("TileObjects: " + SceneManager.TileObjects.length);
+			
 		}
 
 		if (Platformer.IsPlaying) {
@@ -82,7 +87,14 @@ OnInit = function() {
 				Platformer.IsPlaying = false;
 				SceneManager.ClearLevel();
 				// Spawn the main menu!
-				SceneManager.Add(new Platformer.MainMenu());
+				SceneManager.Add(new Platformer.MainMenu(false));
+				Platformer.FreeCursor();
+			}
+			if(MInput.IsKeyReleased(KEY_M - KEY_LCASE)) {
+				Platformer.IsPlaying = false;
+				//Spawn the main menu in pause mode!
+				SceneManager.Add(new Platformer.MainMenu(true));
+				SceneManager.HideLevel();
 				Platformer.FreeCursor();
 			}
 

@@ -1,5 +1,9 @@
 //For debugging
 Platformer.AlertOnError = true;
+Platformer.Log = function(message) {
+	// =D
+	console.log(message);
+};
 Platformer.LogError = function(message) {
 	if (Platformer.AlertOnError) {
 		alert(message);
@@ -59,8 +63,8 @@ SceneManager.Add = function(obj1, obj2) {
 		parent = Platformer.Scene;
 		child = obj1;
 		if (child.Tag !== undefined) {
-			if(!(child.Tag & TAG_BASE)) {
-				child.Tag |= TAG_LEVEL;		
+			if (!(child.Tag & TAG_BASE)) {
+				child.Tag |= TAG_LEVEL;
 			}
 		} else {
 			child.Tag = TAG_LEVEL;
@@ -109,6 +113,7 @@ SceneManager.Internal_Add = function(obj) {
 		var child = obj[1];
 		// Add to the scene
 		SceneManager.SceneObjects.push(child);
+
 		// Add to THREE.JS
 		parent.add(child);
 		// Check tag
@@ -150,29 +155,32 @@ SceneManager.Remove = function(obj) {
 SceneManager.Internal_Remove = function(obj) {
 	if (!SceneManager.IsInsideLoop) {
 		if (obj != undefined && obj != null) {
-			if (obj.parent != null) {
-				// Remove from our scene system
-				SceneManager.SceneObjects.splice(SceneManager.SceneObjects.indexOf(obj), 1);
-				// Does this object have a tag?
-				if (obj.Tag !== undefined) {
-					// Is this object a part of the tile list?
-					if (obj.Tag & TAG_TILE) {
-						// Remove it from the tile list
-						SceneManager.TileObjects.splice(SceneManager.TileObjects.indexOf(obj), 1);
-					}
-					// Is this object a part of the level?
-					// If so, remove it
-					if (obj.Tag & TAG_LEVEL) {
-						SceneManager.LevelObjects.splice(SceneManager.LevelObjects.indexOf(obj), 1);
-					}
+
+			// Remove from our scene system
+			SceneManager.SceneObjects.splice(SceneManager.SceneObjects.indexOf(obj), 1);
+			// Does this object have a tag?
+			if (obj.Tag !== undefined) {
+				// Is this object a part of the tile list?
+				if (obj.Tag & TAG_TILE) {
+					// Remove it from the tile list
+					SceneManager.TileObjects.splice(SceneManager.TileObjects.indexOf(obj), 1);
 				}
-				// Remove from THREE.JS
-				obj.parent.remove(obj);
-				if (obj.OnEnd !== undefined) {
-					obj.OnEnd();
+				// Is this object a part of the level?
+				// If so, remove it
+				if (obj.Tag & TAG_LEVEL) {
+					SceneManager.LevelObjects.splice(SceneManager.LevelObjects.indexOf(obj), 1);
 				}
+			}
+
+			// Remove from THREE.JS
+			if (obj.parent == null) {
+				// Dis wurk?
+				Platformer.Scene.remove(obj);
 			} else {
-				Platformer.LogError("Unknown error.");
+				obj.parent.remove(obj);
+			}
+			if (obj.OnEnd !== undefined) {
+				obj.OnEnd();
 			}
 		} else {
 			Platformer.NullArgument("SceneManager.Internal_Remove", "obj");
@@ -208,11 +216,28 @@ SceneManager.RemoveAllChildren = function(from) {
  * Clear our level
  */
 SceneManager.ClearLevel = function() {
-	for (var i = 0; i < SceneManager.LevelObjects; i++) {
+	for (var i = 0; i < SceneManager.LevelObjects.length; i++) {
 		SceneManager.Remove(SceneManager.LevelObjects[i]);
 	}
-	SceneManager.ClearTiles();
 };
+
+/**
+ * Hide all level objects
+ */
+SceneManager.HideLevel = function() {
+	for (var i = 0; i < SceneManager.LevelObjects.length; i++) {
+		SceneManager.LevelObjects[i].visible = false;
+	}
+}
+
+/**
+ * Show all level objects
+ */
+SceneManager.ShowLevel = function() {
+	for (var i = 0; i < SceneManager.LevelObjects.length; i++) {
+		SceneManager.LevelObjects[i].visible = true;
+	}
+}
 
 /**
  * Clear all tiles in our level
@@ -242,7 +267,9 @@ var AccumDelta = 0;
 var AccumThing = 0;
 SceneManager.OnRender = function(delta) {
 	SceneManager.IsInsideLoop = true;
-	TWEEN.update();
+	if (Platformer.IsPlaying) {
+		TWEEN.update();
+	}
 	for (var i = 0; i < SceneManager.SceneObjects.length; i++) {
 		var so = SceneManager.SceneObjects[i];
 		if (so !== undefined) {
@@ -289,7 +316,9 @@ SceneManager.OnSimulation = function(delta) {
 		var so = SceneManager.SceneObjects[i];
 		if (so !== undefined) {
 			if (so.onUpdate !== undefined) {
-				so.onUpdate(delta);
+				if (Platformer.IsPlaying || !(so.Tag !== undefined && so.Tag & TAG_LEVEL)) {
+					so.onUpdate(delta);
+				}
 			}
 		}
 	}
