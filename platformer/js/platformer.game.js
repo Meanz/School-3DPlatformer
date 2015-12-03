@@ -5,6 +5,16 @@ var StartPositionZ = 0;
 Platformer.LoadLevel = function(levelName) {
 	$.getJSON("levels/" + levelName, function(data) {
 
+		var floorMaterial = Physijs.createMaterial(new THREE.MeshPhongMaterial({
+					color: 0xffffff,
+					//map: Platformer.Texture,
+					blending: THREE.AdditiveBlending,
+					shininess: 0,
+					// loader.load('images/bg.png')
+				}), 5, // high friction
+				.1 // low restitution
+		);
+
 		var scale = v3(2, 2, 2);
 
 		for (var i = 0; i < data.objects.length; i++) {
@@ -26,7 +36,7 @@ Platformer.LoadLevel = function(levelName) {
 					StartPositionZ = tileY * dimension.z;
 				}
 
-				Platformer.AddFloor(position, dimension);
+				Platformer.AddFloor(position, dimension, floorMaterial);
 
 				// console.log("Added floor at " + tileX + " / " + tileY);
 
@@ -50,6 +60,8 @@ Platformer.LoadLevel = function(levelName) {
 		Platformer.AddScanner([ v3(5, 5, 0), v3(10, 5, 0), v3(-5, 5, -20) ]);
 	});
 };
+
+//TODO(Meanzie): Some objects are not being removed properly.
 
 var raycaster = new THREE.Raycaster();
 OnInit = function() {
@@ -197,7 +209,7 @@ Platformer.StartLevel = function(levelName) {
 	Platformer.ParseJsonObjects();
 	Platformer.LoadLevel(levelName);
 	Platformer.IsPlaying = true;
-	Platformer.Player.TimeRemaining = 5;
+	Platformer.Player.TimeRemaining = 300;
 	Platformer.Player.LastTimeUpdate = Date.now();
 	$("#hud-ingame").show();
 };

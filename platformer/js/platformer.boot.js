@@ -155,12 +155,12 @@ Platformer.Init = function() {
 	Platformer.Controls = new Platformer.FirstPersonControls(Platformer.Camera);
 
 	// Light
-	light = new THREE.DirectionalLight(0x444444);
-	light.position.set(-0.4, 0.6, -0.4);
+	light = new THREE.DirectionalLight(0x666666);
+	light.position.set(-0.2, 0.6, -0.2);
 	light.target.position.copy(Platformer.Scene.position);
 	Platformer.Scene.add(light);
 
-	var ambLight = new THREE.AmbientLight(0xFFFFFF);
+	var ambLight = new THREE.AmbientLight(0x666666);
 
 	Platformer.Scene.add(ambLight);
 

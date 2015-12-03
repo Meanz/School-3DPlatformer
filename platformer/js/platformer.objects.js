@@ -158,6 +158,7 @@ Platformer.AddScanner = function(positions) {
 	console.log("Scanner created");
 
 	scanner.onRender = function(delta) {
+
 		if (scanner.cooldown <= 0) {
 			scanner.spot.visible = true;
 			var player = Platformer.Scene.getObjectByName("player");

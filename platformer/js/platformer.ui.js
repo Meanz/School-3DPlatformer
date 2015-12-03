@@ -162,7 +162,7 @@ Platformer.UIText = function(text, font, color, position) {
     // Create text thing
     Util.DrawTextToTexture(text, font, color, this.TextTexture);
     this.Geometry = new THREE.PlaneGeometry(this.TextTexture.image.width, this.TextTexture.image.height, 1, 1);
-    this.Material = new THREE.MeshLambertMaterial({
+    this.Material = new THREE.MeshBasicMaterial({
         color : 0xffffff,
         map : this.TextTexture
     });
