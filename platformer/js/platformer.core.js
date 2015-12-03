@@ -11,7 +11,7 @@ Platformer.LogError = function(message) {
 		console.log(message);
 	}
 	console.trace();
-}
+};
 Platformer.NullArgument = function(func, argument) {
 	Platformer.LogError("The supplied argument \"" + argument + "\" in function \"" + func + "\" is null.");
 };
