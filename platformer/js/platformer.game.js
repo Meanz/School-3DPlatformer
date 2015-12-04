@@ -11,7 +11,7 @@ Platformer.LoadLevel = function(levelName) {
 					blending: THREE.AdditiveBlending,
 					shininess: 0
 					// loader.load('images/bg.png')
-				}), 5, // high friction
+				}),.5, // high friction
 				.1 // low restitution
 		);
 
@@ -108,7 +108,15 @@ OnInit = function() {
 
 		SceneManager.Add(new Platformer.MainMenu(false));
 
-		var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), Platformer.DefaultMaterial, 20);
+		var friction = 1.2;
+		var restitution = .5;
+		var mass = 50;
+		var mag = 5;
+		var f = 20;
+
+		var playerMaterial = Physijs.createMaterial(new THREE.MeshBasicMaterial({}), friction, restitution);
+
+		var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), playerMaterial, mass);
 		Platformer.Player = player;
 		player.add(Platformer.audioListener);
 
@@ -121,6 +129,7 @@ OnInit = function() {
 			player.setAngularFactor(v3z());
 			player.LastTimeUpdate = Date.now();
 			player.TimeRemaining = 0;
+			player.InternalJumpCd = 0;
 			console.log("Set angular factor");
 		};
 		player.OnEnd = function() {
@@ -168,12 +177,13 @@ OnInit = function() {
 					}
 				}
 
+				if(player.InternalJumpCd > 0) {
+					player.InternalJumpCd--;
+				}
 				Platformer.Controls.camera.position.x = player.position.x;
-				Platformer.Controls.camera.position.y = player.position.y + 1;
+				Platformer.Controls.camera.position.y = player.position.y;
 				Platformer.Controls.camera.position.z = player.position.z;
 
-				var mag = 20;
-				var f = 40;
 				var lv = player.getLinearVelocity();
 				var hlv = v3(lv.x, 0, lv.z);
 				var len = hlv.length();
@@ -186,8 +196,8 @@ OnInit = function() {
 				for (var i = 0; i < intersections.length; i++) {
 					var intersection = intersections[i];
 					if (intersection.object != player) {
-						// console.log(intersection.distance);
-						if (intersection.distance <= 1.5) {
+						//console.log(intersection.distance);
+						if (intersection.distance <= 2) {
 							player.CanJump = true;
 							player.inAir = false;
 						} else {
@@ -199,10 +209,11 @@ OnInit = function() {
 				}
 
 				var impulse = v3z();
-				if (Platformer.Controls.Jump && player.CanJump) {
-					impulse.y += f * 2;
-					// console.log("jumping motherfuckers.");
+				if (Platformer.Controls.Jump && player.CanJump && player.InternalJumpCd == 0) {
+					impulse.y += f * 20;
+					console.log("jumping motherfuckers.");
 					player.CanJump = false;
+					player.InternalJumpCd = 16; //:D
 				}
 
 				var spd = ((Platformer.Controls.StrafeLeft || Platformer.Controls.StrafeRight)
