@@ -1,7 +1,10 @@
 var Geometry = {};
 
-Geometry.StaticBox = function(pos, dim, material) {
-	var tb = new Physijs.BoxMesh(new THREE.BoxGeometry(dim.x, dim.y, dim.z), material, 0);
+Geometry.StaticBox = function(pos, dim, material, mass) {
+	if(mass == undefined) {
+		mass = 0;
+	}
+	var tb = new Physijs.BoxMesh(new THREE.BoxGeometry(dim.x, dim.y, dim.z), material, mass);
 	Geometry.FancyRotationFunction(tb.geometry, v3(1, 1, 1));
 	//Geometry.UVRelativeToVertices(tb.geometry, v3(1, 1, 1));
 	tb.position.x = pos.x;

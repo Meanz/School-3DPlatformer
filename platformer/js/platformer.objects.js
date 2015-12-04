@@ -59,10 +59,28 @@ Platformer.AddFloor = function(position, dimension, material) {
 	if (material === undefined) {
 		material = Platformer.DefaultMaterial;
 	}
-	var floor = Geometry.StaticBox(position, dimension, material);
+	var floor = Geometry.StaticBox(position, dimension, material, 1);
 	floor.OnStart = function() {
 		this.setCcdMotionThreshold(1);
 		this.setCcdSweptSphereRadius(0.2);
+		this.setLinearFactor(v3z());
+		this.setAngularFactor(v3z());
+	};
+	floor.IsEnding = false;
+	floor.onUpdate = function() {
+		if(Platformer.IsWorldEnding) {
+			if(!this.IsEnding) {
+				var ran = Math.round(Math.random() * 60);
+				if(ran == 50) {
+					console.log("ending tile");
+					//this._physijs.mass = 50;
+					this.setLinearFactor(v3(1.0, 1.0, 1.0));
+					this.setLinearVelocity(v3(0.0, -1.0, 0.0));
+					this.IsEnding = true;
+				}
+			}
+
+		}
 	};
 	SceneManager.AddTile(floor);
 	return floor;

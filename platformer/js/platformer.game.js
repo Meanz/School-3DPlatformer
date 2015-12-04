@@ -144,6 +144,11 @@ OnInit = function() {
 
 			}
 
+			if(Input.IsKeyReleased(KEY_2)) {
+				console.log("Ending world");
+				Platformer.IsWorldEnding = true;
+			}
+
 			if (Platformer.IsPlaying) {
 
 				if (Input.IsKeyReleased(KEY_Q - KEY_LCASE)) {
@@ -261,6 +266,7 @@ OnInit = function() {
 
 Platformer.StartLevel = function(levelName) {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
+	Platformer.IsWorldEnding = false;
 	Platformer.ParseJsonObjects();
 	Platformer.LoadLevel(levelName);
 	Platformer.IsPlaying = true;
