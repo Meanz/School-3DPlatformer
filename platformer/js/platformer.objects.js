@@ -3,34 +3,39 @@
 
 Platformer.AddSysLog = function() {
 
+	Platformer.SysLogPond = [];
+	var file = "data/syslog.txt";
+	$.get(file,function(txt, status){
+		console.log(status);
+		Platformer.SysLogPond = txt.split("\n");
+	});
+
 	Platformer.SysLogLines = [];
 	Platformer.SysLogTexture = new THREE.Texture();
 
 	Platformer.SysLogLines.push("Initializing");
 	Util.DrawSysLog(Platformer.SysLogLines, Platformer.SysLogTexture);
 
-	Platformer.GabenMaterial = new THREE.SpriteMaterial( { map: Platformer.SysLogTexture, color: 0xffffff, fog: true } );
+	Platformer.GabenMaterial = new THREE.SpriteMaterial( { map: Platformer.SysLogTexture, color: 0xffffff, fog: false } );
 	var sprite = new THREE.Sprite( Platformer.GabenMaterial  );
 
 
 	sprite.position.copy(v3(-150, 50, 0));
-	var scale = 80;
+	var scale = 100;
 	sprite.scale.copy(v3(scale, scale, scale));
 	sprite.updateMatrix();
 	sprite.AccumDelta = 0;
 	sprite.thing = 0;
 	sprite.onUpdate = function(delta) {
 		this.AccumDelta += delta;
-		if(this.AccumDelta > 3000) {
-			if(this.thing == 0) {
-				Platformer.SysLogLines.push("PREPARING THE WORLD FOR TERMINATION");
-			} else if (this.thing >= 1 && this.thing != 10) {
-				Platformer.SysLogLines.push("TERMINATING: " + (this.thing * 10) + "%");
-			} else if(this.thing == 10) {
-				Platformer.SysLogLines.push("KAPOOF!!!!");
-			}
+		if(this.AccumDelta > 500) {
 
-			Util.DrawSysLog(Platformer.SysLogLines, Platformer.SysLogTexture);
+			//
+			if(Platformer.SysLogPond.length > 0) {
+				var i = Math.floor(Math.random() * Platformer.SysLogPond.length);
+				Platformer.SysLogLines.push(Platformer.SysLogPond[i]);
+				Util.DrawSysLog(Platformer.SysLogLines, Platformer.SysLogTexture);
+			}
 			this.AccumDelta = 0;
 			this.thing++;
 		}
