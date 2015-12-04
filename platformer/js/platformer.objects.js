@@ -3,13 +3,6 @@
 
 Platformer.AddSysLog = function() {
 
-	Platformer.SysLogPond = [];
-	var file = "data/syslog.txt";
-	$.get(file,function(txt, status){
-		console.log(status);
-		Platformer.SysLogPond = txt.split("\n");
-	});
-
 	Platformer.SysLogLines = [];
 	Platformer.SysLogTexture = new THREE.Texture();
 
@@ -82,7 +75,7 @@ Platformer.AddPlayer = function(position, dimension, material, mass) {
 
 Platformer.AddTestBox = function(position, dimension) {
 	var testMaterial = Physijs.createMaterial(new THREE.MeshLambertMaterial({
-		map : loader.load('images/plywood.jpg')
+		map : Platformer.Textures.Plywood
 	}), .8, // high friction
 	.4 // low restitution
 	);
@@ -162,8 +155,7 @@ Platformer.AddScanner = function(positions) {
 	scannerSpot.target = scanner;
 	scanner.spot = scannerSpot;
 	SceneManager.Add(scannerSpot);
-	scanner.sound = new THREE.Audio(Platformer.audioListener);
-	scanner.sound.load("sounds/160421__bigkahuna360__electrical-shock-zap.wav");
+	scanner.sound = Platformer.Audio.Scannner;
 	scanner.add(scanner.sound);
 	scanner.timePenelty = 15;
 	scanner.cooldownTime = 5000;
@@ -391,23 +383,12 @@ Platformer.ParseJsonObjects = function() {
 	var jumppadParsed = Platformer.jsonLoader.parse(Platformer.jsonModels.GetJumppad());
 	Platformer.Jumppad = {};
 	Platformer.Jumppad.geometry = jumppadParsed.geometry;
-	Platformer.Jumppad.material = new THREE.MeshPhongMaterial();
-	Platformer.textureLoader.load("images/jumppadTex.png", function(texture) {
-		Platformer.Jumppad.material.setValues({
-			map : texture
-		});
-	});
+	Platformer.Jumppad.material = new THREE.MeshPhongMaterial({ map: Platformer.Textures.JumpPad });
 
 	var floppyDiskParsed = Platformer.jsonLoader.parse(Platformer.jsonModels.GetFloppyDisk());
 	Platformer.FloppyDisk = {};
 	Platformer.FloppyDisk.geometry = floppyDiskParsed.geometry;
-	Platformer.FloppyDisk.material = new THREE.MeshPhongMaterial();
-	Platformer.textureLoader.load("images/floppydiskTex.png",
-			function(texture){
-				Platformer.FloppyDisk.material.setValues({map: texture});
-			}
-	);
-
+	Platformer.FloppyDisk.material = new THREE.MeshPhongMaterial({ map: Platformer.Textures.FloppyDisk });
 
 	var teleporterPlatformParsed = Platformer.jsonLoader.parse(Platformer.jsonModels.GetTeleporterPlatform());
 	var teleporterGimbalXParsed = Platformer.jsonLoader.parse(Platformer.jsonModels.GetTeleporterGimbalX());

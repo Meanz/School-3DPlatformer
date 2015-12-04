@@ -7,7 +7,7 @@ Platformer.LoadLevel = function(levelName) {
 
 		var floorMaterial = Physijs.createMaterial(new THREE.MeshPhongMaterial({
 					color: 0xffffff,
-					//map: Platformer.Texture,
+					map: Platformer.Texture,
 					blending: THREE.AdditiveBlending,
 					shininess: 0
 					// loader.load('images/bg.png')
@@ -99,144 +99,149 @@ var raycaster = new THREE.Raycaster();
 OnInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 	// Add main menu object
-	SceneManager.Add(new Platformer.MainMenu(false));
 
-	var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), Platformer.DefaultMaterial, 20);
-	Platformer.audioListener = new THREE.AudioListener();
-	Platformer.Player = player;
-	player.add(Platformer.audioListener);
+	var OnInitComplete = function() {
 
-	player.OnStart = function () {
-		player.name = "player";
-		player.visible = false;
-		player.setCcdMotionThreshold(1);
-		player.setCcdSweptSphereRadius(0.2);
-		player.CanJump = false;
-		player.setAngularFactor(v3z());
-		player.LastTimeUpdate = Date.now();
-		player.TimeRemaining = 0;
-		console.log("Set angular factor");
-	};
-	player.OnEnd = function() {
-		console.log("Player was removed");
-	};
-	player.onUpdate = function() {
+		SceneManager.Add(new Platformer.MainMenu(false));
 
-		if (Input.IsKeyReleased(KEY_1)) {
-			console.log("SceneObjects: " + SceneManager.SceneObjects.length);
-			console.log("LevelObjects: " + SceneManager.LevelObjects.length);
-			console.log("TileObjects: " + SceneManager.TileObjects.length);
+		var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), Platformer.DefaultMaterial, 20);
+		Platformer.Player = player;
+		player.add(Platformer.audioListener);
 
-		}
+		player.OnStart = function () {
+			player.name = "player";
+			player.visible = false;
+			player.setCcdMotionThreshold(1);
+			player.setCcdSweptSphereRadius(0.2);
+			player.CanJump = false;
+			player.setAngularFactor(v3z());
+			player.LastTimeUpdate = Date.now();
+			player.TimeRemaining = 0;
+			console.log("Set angular factor");
+		};
+		player.OnEnd = function() {
+			console.log("Player was removed");
+		};
+		player.onUpdate = function() {
 
-		if (Platformer.IsPlaying) {
+			if (Input.IsKeyReleased(KEY_1)) {
+				console.log("SceneObjects: " + SceneManager.SceneObjects.length);
+				console.log("LevelObjects: " + SceneManager.LevelObjects.length);
+				console.log("TileObjects: " + SceneManager.TileObjects.length);
 
-			if (Input.IsKeyReleased(KEY_Q - KEY_LCASE)) {
-				Platformer.IsPlaying = false;
-				SceneManager.ClearLevel();
-				// Spawn the main menu!
-				SceneManager.Add(new Platformer.MainMenu(false));
-				Platformer.FreeCursor();
-				$("#hud-ingame").hide();
-			}
-			if(Input.IsKeyReleased(KEY_M - KEY_LCASE)) {
-				Platformer.IsPlaying = false;
-				//Spawn the main menu in pause mode!
-				SceneManager.Add(new Platformer.MainMenu(true));
-				SceneManager.HideLevel();
-				Platformer.FreeCursor();
-				$("#hud-ingame").hide();
 			}
 
-			if(Date.now() - player.LastTimeUpdate > 1000) {
-				player.TimeRemaining--;
-				player.LastTimeUpdate = Date.now();
-				$("#hud-time").html("" + player.TimeRemaining);
-				if(player.TimeRemaining < 0) {
+			if (Platformer.IsPlaying) {
+
+				if (Input.IsKeyReleased(KEY_Q - KEY_LCASE)) {
 					Platformer.IsPlaying = false;
 					SceneManager.ClearLevel();
 					// Spawn the main menu!
-					SceneManager.Add(new Platformer.LostMenu());
+					SceneManager.Add(new Platformer.MainMenu(false));
 					Platformer.FreeCursor();
 					$("#hud-ingame").hide();
 				}
-			}
+				if(Input.IsKeyReleased(KEY_M - KEY_LCASE)) {
+					Platformer.IsPlaying = false;
+					//Spawn the main menu in pause mode!
+					SceneManager.Add(new Platformer.MainMenu(true));
+					SceneManager.HideLevel();
+					Platformer.FreeCursor();
+					$("#hud-ingame").hide();
+				}
 
-			Platformer.Controls.camera.position.x = player.position.x;
-			Platformer.Controls.camera.position.y = player.position.y + 1;
-			Platformer.Controls.camera.position.z = player.position.z;
-
-			var mag = 20;
-			var f = 40;
-			var lv = player.getLinearVelocity();
-			var hlv = v3(lv.x, 0, lv.z);
-			var len = hlv.length();
-			var cv = Platformer.Controls.camera.getWorldDirection();
-			var chv = v3(cv.x, 0, cv.z);
-			// console.log(len);
-
-			raycaster.set(Platformer.Controls.camera.position, v3(0.0, -1.0, 0.0));
-			var intersections = raycaster.intersectObjects(SceneManager.TileObjects, true);
-			for (var i = 0; i < intersections.length; i++) {
-				var intersection = intersections[i];
-				if (intersection.object != player) {
-					// console.log(intersection.distance);
-					if (intersection.distance <= 1.5) {
-						player.CanJump = true;
-						player.inAir = false;
-					} else {
-						player.CanJump = false;
-						player.inAir = true;
+				if(Date.now() - player.LastTimeUpdate > 1000) {
+					player.TimeRemaining--;
+					player.LastTimeUpdate = Date.now();
+					$("#hud-time").html("" + player.TimeRemaining);
+					if(player.TimeRemaining < 0) {
+						Platformer.IsPlaying = false;
+						SceneManager.ClearLevel();
+						// Spawn the main menu!
+						SceneManager.Add(new Platformer.LostMenu());
+						Platformer.FreeCursor();
+						$("#hud-ingame").hide();
 					}
-					break;
+				}
+
+				Platformer.Controls.camera.position.x = player.position.x;
+				Platformer.Controls.camera.position.y = player.position.y + 1;
+				Platformer.Controls.camera.position.z = player.position.z;
+
+				var mag = 20;
+				var f = 40;
+				var lv = player.getLinearVelocity();
+				var hlv = v3(lv.x, 0, lv.z);
+				var len = hlv.length();
+				var cv = Platformer.Controls.camera.getWorldDirection();
+				var chv = v3(cv.x, 0, cv.z);
+				// console.log(len);
+
+				raycaster.set(Platformer.Controls.camera.position, v3(0.0, -1.0, 0.0));
+				var intersections = raycaster.intersectObjects(SceneManager.TileObjects, true);
+				for (var i = 0; i < intersections.length; i++) {
+					var intersection = intersections[i];
+					if (intersection.object != player) {
+						// console.log(intersection.distance);
+						if (intersection.distance <= 1.5) {
+							player.CanJump = true;
+							player.inAir = false;
+						} else {
+							player.CanJump = false;
+							player.inAir = true;
+						}
+						break;
+					}
+				}
+
+				var impulse = v3z();
+				if (Platformer.Controls.Jump && player.CanJump) {
+					impulse.y += f * 2;
+					// console.log("jumping motherfuckers.");
+					player.CanJump = false;
+				}
+
+				var spd = ((Platformer.Controls.StrafeLeft || Platformer.Controls.StrafeRight)
+				&& !(Platformer.Controls.StrafeLeft && Platformer.Controls.StrafeRight)
+				&& ((Platformer.Controls.Forward || Platformer.Controls.Backward) && !(Platformer.Controls.Forward && Platformer.Controls.Backward)) ? 0.5 * f
+						: f);
+
+				if (player.inAir) {
+					spd /= 4;
+				}
+
+				if (Platformer.Controls.Forward && (len < mag || hlv.dot(chv) <= 0)) {
+					impulse.x += -spd * Math.cos(Platformer.Controls.Yaw);
+					impulse.z += -spd * Math.sin(Platformer.Controls.Yaw);
+				}
+				if (Platformer.Controls.Backward && (len < mag || hlv.dot(chv) >= 0)) {
+					impulse.x -= -spd * Math.cos(Platformer.Controls.Yaw);
+					impulse.z -= -spd * Math.sin(Platformer.Controls.Yaw);
+				}
+				chv.applyAxisAngle(v3(0, 1, 0), Math.PI / 2);
+				if (Platformer.Controls.StrafeLeft && (len < mag || hlv.dot(chv) <= 0)) {
+					impulse.x += -spd * Math.cos(Platformer.Controls.Yaw - Math.PI / 2);
+					impulse.z += -spd * Math.sin(Platformer.Controls.Yaw - Math.PI / 2);
+				}
+				if (Platformer.Controls.StrafeRight && (len < mag || hlv.dot(chv) >= 0)) {
+					impulse.x += -spd * Math.cos(Platformer.Controls.Yaw + Math.PI / 2);
+					impulse.z += -spd * Math.sin(Platformer.Controls.Yaw + Math.PI / 2);
+				}
+
+				player.applyCentralImpulse(impulse);
+
+				if (player.position.y < -10) {
+					player.position.y = StartPositionY;
+					player.position.x = StartPositionX;
+					player.position.z = StartPositionZ;
+					player.__dirtyPosition = true;
+					player.__dirtyRotation = true;
 				}
 			}
-
-			var impulse = v3z();
-			if (Platformer.Controls.Jump && player.CanJump) {
-				impulse.y += f * 2;
-				// console.log("jumping motherfuckers.");
-				player.CanJump = false;
-			}
-
-			var spd = ((Platformer.Controls.StrafeLeft || Platformer.Controls.StrafeRight)
-					&& !(Platformer.Controls.StrafeLeft && Platformer.Controls.StrafeRight)
-					&& ((Platformer.Controls.Forward || Platformer.Controls.Backward) && !(Platformer.Controls.Forward && Platformer.Controls.Backward)) ? 0.5 * f
-					: f);
-
-			if (player.inAir) {
-				spd /= 4;
-			}
-
-			if (Platformer.Controls.Forward && (len < mag || hlv.dot(chv) <= 0)) {
-				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw);
-				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw);
-			}
-			if (Platformer.Controls.Backward && (len < mag || hlv.dot(chv) >= 0)) {
-				impulse.x -= -spd * Math.cos(Platformer.Controls.Yaw);
-				impulse.z -= -spd * Math.sin(Platformer.Controls.Yaw);
-			}
-			chv.applyAxisAngle(v3(0, 1, 0), Math.PI / 2);
-			if (Platformer.Controls.StrafeLeft && (len < mag || hlv.dot(chv) <= 0)) {
-				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw - Math.PI / 2);
-				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw - Math.PI / 2);
-			}
-			if (Platformer.Controls.StrafeRight && (len < mag || hlv.dot(chv) >= 0)) {
-				impulse.x += -spd * Math.cos(Platformer.Controls.Yaw + Math.PI / 2);
-				impulse.z += -spd * Math.sin(Platformer.Controls.Yaw + Math.PI / 2);
-			}
-
-			player.applyCentralImpulse(impulse);
-
-			if (player.position.y < -10) {
-				player.position.y = StartPositionY;
-				player.position.x = StartPositionX;
-				player.position.z = StartPositionZ;
-				player.__dirtyPosition = true;
-				player.__dirtyRotation = true;
-			}
-		}
+		};
 	};
+
+	LoadResources(OnInitComplete)
 };
 
 Platformer.StartLevel = function(levelName) {
