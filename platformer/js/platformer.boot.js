@@ -144,6 +144,17 @@ Platformer.Init = function() {
 	Platformer.Scene = new Physijs.Scene({
 		fixedTimeStep : 1 / 60
 	});
+
+
+
+	//0000 0001
+	//1000 0000 0000 0000 ....n
+	//1 2 4 8 16
+	//8
+	//0001 0010
+	//0000 1000
+	//two's complement
+
 	Platformer.Scene.setGravity(new THREE.Vector3(0, -15, 0));
 	Platformer.Scene.addEventListener('update', function() {
 		Input.Update();

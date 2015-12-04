@@ -110,7 +110,7 @@ Platformer.MainMenu = function(inPauseMode) {
 
         AddTitle(mainMenu);
 
-        var levels = [ "level1.json", "level2.json", "leveltest.json", "niva1.json", "test.json", "test1.json" ];
+        var levels = [ "level1.json", "level2.json", "level3.json", "leveltest.json", "test.json", "test1.json" ];
 
         for (var i = 0; i < levels.length; i++) {
             var that = SceneManager.Add(mainMenu, new Platformer.UIButton(levels[i], v2(0, 100 - (i * 50)), function() {

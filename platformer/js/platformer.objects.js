@@ -70,7 +70,7 @@ Platformer.AddFloor = function(position, dimension, material) {
 	floor.onUpdate = function() {
 		if(Platformer.IsWorldEnding) {
 			if(!this.IsEnding) {
-				var ran = Math.round(Math.random() * 60);
+				var ran = Math.round(Math.random() * 600);
 				if(ran == 50) {
 					console.log("ending tile");
 					//this._physijs.mass = 50;
@@ -152,7 +152,7 @@ Platformer.AddTracer = function(position) {
 			}
 		} else {
 
-			if (disVec.length() < 20) {
+			if (disVec.length() < 10) {
 				tracer.isActive = true;
 				console.log("Tracer became active");
 			}
@@ -311,7 +311,8 @@ Platformer.AddJumppad = function(position){
 	jumppad.onUpdate = function(delta) {
 		if (jumppad.cooldown <= 0) {
 			if (v3z().subVectors(Platformer.Player.position, jumppad.position).length() < 2) {
-				Platformer.Player.applyCentralImpulse(v3(0, 500, 0));
+				Platformer.Player.setLinearVelocity(v3z());
+				Platformer.Player.applyCentralImpulse(v3(0, 2 * 500, 0));
 				jumppad.cooldown = jumppad.cooldownTime;
 			}
 		} else {

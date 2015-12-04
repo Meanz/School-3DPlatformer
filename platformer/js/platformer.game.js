@@ -256,6 +256,8 @@ OnInit = function() {
 					player.position.z = StartPositionZ;
 					player.__dirtyPosition = true;
 					player.__dirtyRotation = true;
+					player.setLinearVelocity(v3z());
+					player.setAngularVelocity(v3z());
 				}
 			}
 		};

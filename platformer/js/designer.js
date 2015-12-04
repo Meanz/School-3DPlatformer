@@ -127,6 +127,7 @@ Designer.LoadLevel = function() {
 				Designer.Tiles.push(new Tile_Wall(tileX, tileY));
 			} else if (type == TOOL_TRACER) {
 				var tile = new Tile_Tracer(tileX, tileY);
+				tile.TileHeight = obj.TileHeight;
 				tile.WithFloor = obj.WithFloor;
 				Designer.Tiles.push(tile);
 			}else if (type == TOOL_JUMPPAD) {
@@ -570,7 +571,7 @@ Tile_Tracer.prototype.GetHtml = function() {
 }
 Tile_Tracer.prototype.UpdateValues = function() {
 	Tile.prototype.UpdateValues.call(this);
-	this.WithFloor = $("#input_withFloor").checked;
+	this.WithFloor = $("#input_withFloor").is(':checked');
 	this.Text = "Tracer";
 };
 
@@ -598,7 +599,7 @@ Tile_EndFinal.prototype.GetHtml = function() {
 }
 Tile_EndFinal.prototype.UpdateValues = function() {
 	Tile.prototype.UpdateValues.call(this);
-	this.WithFloor = $("#input_withFloor").checked;
+	this.WithFloor = $("#input_withFloor").is(':checked');
 	this.Text = "Efinal";
 };
 
@@ -618,7 +619,7 @@ Tile_FloppyDisk.prototype.GetHtml = function() {
 }
 Tile_FloppyDisk.prototype.UpdateValues = function() {
 	Tile.prototype.UpdateValues.call(this);
-	this.WithFloor = $("#input_withFloor").checked;
+	this.WithFloor = $("#input_withFloor").is(':checked');
 	this.Text = "Disk";
 };
 
