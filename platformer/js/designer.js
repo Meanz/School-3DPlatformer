@@ -8,6 +8,8 @@ var TOOL_SCANNER = "scanner";
 var TOOL_JUMPPAD = "jumppad";
 var TOOL_START = "start";
 var TOOL_END = "end";
+var TOOL_END_FINAL = "end_final";
+var TOOL_DISK = "floppydisk";
 
 Designer.Tool = TOOL_FLOOR;
 Designer.SaveX = 0;
@@ -123,7 +125,22 @@ Designer.LoadLevel = function() {
 				Designer.AddEndTile(tileX, tileY);
 			} else if (type == "wall") {
 				Designer.Tiles.push(new Tile_Wall(tileX, tileY));
-			} else {
+			} else if (type == TOOL_TRACER) {
+				var tile = new Tile_Tracer(tileX, tileY);
+				tile.WithFloor = obj.WithFloor;
+				Designer.Tiles.push(tile);
+			}else if (type == TOOL_JUMPPAD) {
+				var tile = new Tile_JumpPad(tileX, tileY);
+				Designer.Tiles.push(tile);
+			} else if (type == TOOL_DISK) {
+				var tile = new Tile_FloppyDisk(tileX, tileY);
+				tile.WithFloor = obj.WithFloor;
+				Designer.Tiles.push(tile);
+			}else if (type == TOOL_END_FINAL) {
+				var tile = new Tile_EndFinal(tileX, tileY);
+				tile.WithFloor = obj.WithFloor;
+				Designer.Tiles.push(tile);
+			}else {
 				console.log("type: " + type);
 			}
 
@@ -163,6 +180,8 @@ Designer.AddTools = function() {
 	Designer.AddTool(TOOL_JUMPPAD);
 	Designer.AddTool(TOOL_START);
 	Designer.AddTool(TOOL_END);
+	Designer.AddTool(TOOL_END_FINAL);
+	Designer.AddTool(TOOL_DISK);
 	Designer.SelectTool(TOOL_FLOOR);
 };
 
@@ -334,7 +353,15 @@ Designer.Update = function() {
 					Designer.Tiles.push(new Tile_Floor(tileX, tileY));
 				} else if (Designer.Tool == TOOL_WALL) {
 					Designer.Tiles.push(new Tile_Wall(tileX, tileY));
-				} else if (Designer.Tool == TOOL_START) {
+				} else if (Designer.Tool == TOOL_TRACER) {
+					Designer.Tiles.push(new Tile_Tracer(tileX, tileY));
+				}else if (Designer.Tool == TOOL_JUMPPAD) {
+					Designer.Tiles.push(new Tile_JumpPad(tileX, tileY));
+				} else if (Designer.Tool == TOOL_DISK) {
+					Designer.Tiles.push(new Tile_FloppyDisk(tileX, tileY));
+				}else if (Designer.Tool == TOOL_END_FINAL) {
+					Designer.Tiles.push(new Tile_EndFinal(tileX, tileY));
+				}else if (Designer.Tool == TOOL_START) {
 					Designer.AddStartTile(tileX, tileY);
 				} else if (Designer.Tool == TOOL_END) {
 					Designer.AddEndTile(tileX, tileY);
@@ -423,6 +450,7 @@ var Tile = function(tileX, tileY) {
 	this.TileX = tileX;
 	this.TileY = tileY;
 	this.TileType = "unknown";
+	this.TileHeight = 0;
 	this.Color = "#00ff00";
 	this.TextColor = "#000000";
 	this.Font = "bolder 12px Arial";
@@ -474,7 +502,16 @@ Tile.prototype.GetHtml = function() {
 	html += "TileY: " + this.TileY + "<br />";
 	html += "</p>";
 
+	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
+
+	html += "TileHeight: <input id='input_tileHeight' type='text' " + onchange + " value='" + this.TileHeight + "' />";
+
 	return html;
+};
+Tile.prototype.UpdateValues = function() {
+	this.TileHeight = $("#input_tileHeight").val();
+	this.Text = "Floor (" + this.TileHeight + ")";
+	console.log("Value update");
 };
 
 var Tile_Floor = function(tileX, tileY) {
@@ -487,17 +524,10 @@ var Tile_Floor = function(tileX, tileY) {
 Tile_Floor.prototype = Object.create(Tile.prototype);
 Tile_Floor.prototype.GetHtml = function() {
 	var html = Tile.prototype.GetHtml.call(this);
-
-	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
-
-	html += "TileHeight: <input id='input_tileHeight' type='text' " + onchange + " value='" + this.TileHeight + "' />";
-
 	return html;
 }
 Tile_Floor.prototype.UpdateValues = function() {
-	this.TileHeight = $("#input_tileHeight").val();
-	this.Text = "Floor (" + this.TileHeight + ")";
-	console.log("Value update");
+	Tile.prototype.UpdateValues.call(this);
 };
 
 var Tile_Wall = function(tileX, tileY) {
@@ -523,6 +553,74 @@ var Tile_End = function(tileX, tileY) {
 	this.Text = "End";
 }
 Tile_End.prototype = Object.create(Tile.prototype);
+
+var Tile_Tracer = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.TileType = "tracer";
+	this.Color = "#ff00ff";
+	this.Text = "Tracer";
+	this.WithFloor = true;
+}
+Tile_Tracer.prototype = Object.create(Tile.prototype);
+Tile_Tracer.prototype.GetHtml = function() {
+	var html = Tile.prototype.GetHtml.call(this);
+	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
+	html += "<br />WithFloor: <input id='input_withFloor' " + onchange + " type='checkbox' " +(this.WithFloor ? "checked" : "")  +">";
+	return html;
+}
+Tile_Tracer.prototype.UpdateValues = function() {
+	Tile.prototype.UpdateValues.call(this);
+	this.WithFloor = $("#input_withFloor").checked;
+	this.Text = "Tracer";
+};
+
+var Tile_JumpPad = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.TileType = "jumppad";
+	this.Color = "#0f0fff";
+	this.Text = "Jpad";
+}
+Tile_JumpPad.prototype = Object.create(Tile.prototype);
+
+var Tile_EndFinal = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.TileType = "end_final";
+	this.Color = "#00ffff";
+	this.Text = "Efinal";
+	this.WithFloor = true;
+}
+Tile_EndFinal.prototype = Object.create(Tile.prototype);
+Tile_EndFinal.prototype.GetHtml = function() {
+	var html = Tile.prototype.GetHtml.call(this);
+	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
+	html += "<br />WithFloor: <input id='input_withFloor' " + onchange + " type='checkbox' " +(this.WithFloor ? "checked" : "")  +">";
+	return html;
+}
+Tile_EndFinal.prototype.UpdateValues = function() {
+	Tile.prototype.UpdateValues.call(this);
+	this.WithFloor = $("#input_withFloor").checked;
+	this.Text = "Efinal";
+};
+
+var Tile_FloppyDisk = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.TileType = "floppydisk";
+	this.Color = "#0fffff";
+	this.Text = "Disk";
+	this.WithFloor = true;
+}
+Tile_FloppyDisk.prototype = Object.create(Tile.prototype);
+Tile_FloppyDisk.prototype.GetHtml = function() {
+	var html = Tile.prototype.GetHtml.call(this);
+	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
+	html += "<br />WithFloor: <input id='input_withFloor' " + onchange + " type='checkbox' " +(this.WithFloor ? "checked" : "")  +">";
+	return html;
+}
+Tile_FloppyDisk.prototype.UpdateValues = function() {
+	Tile.prototype.UpdateValues.call(this);
+	this.WithFloor = $("#input_withFloor").checked;
+	this.Text = "Disk";
+};
 
 // Tab related
 Designer.SelectTab = function(index) {

@@ -190,8 +190,8 @@ Util.DrawSysLog = function(lines, texture) {
 	var ctx = cnv.getContext("2d");
 	ctx.font = font;
 	ctx.beginPath();
-	//ctx.fillStyle = "#ffffff";
-	//ctx.fillRect(0, 0, cnv.width, cnv.height);
+	ctx.fillStyle = "#00aa0066";
+	ctx.fillRect(0, 0, cnv.width, cnv.height);
 	ctx.stroke();
 	ctx.fillStyle = color;
 	var offset = 0;
