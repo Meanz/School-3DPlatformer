@@ -76,15 +76,14 @@ Platformer.AddTracer = function(position) {
 	tracer.speedVector = v3z();
 
 	tracer.onRender = function(delta) {
-		var player = Platformer.Scene.getObjectByName("player");
 		var disVec = v3z();
-		disVec.subVectors(player.position, tracer.position);
+		disVec.subVectors(Platformer.Player.position, tracer.position);
 
 		if (tracer.isActive) {
 			if (disVec.length() < 3.2) {
 				Platformer.PlayerDied("tracer");
 			} else {
-				tracer.speedVector.subVectors(player.position, tracer.position);
+				tracer.speedVector.subVectors(Platformer.Player.position, tracer.position);
 				tracer.speedVector.normalize();
 				tracer.speedVector.multiplyScalar(delta / 1000 * tracer.speed);
 				tracer.position.add(tracer.speedVector);
@@ -161,8 +160,7 @@ Platformer.AddScanner = function(positions) {
 
 		if (scanner.cooldown <= 0) {
 			scanner.spot.visible = true;
-			var player = Platformer.Scene.getObjectByName("player");
-			var vScanToPlay = v3z().subVectors(scanner.position, player.position);
+			var vScanToPlay = v3z().subVectors(scanner.position, Platformer.Player.position);
 			var angleToY = vScanToPlay.angleTo(v3(0, 1, 0));
 			// console.log("To player angle: " + angleToY);
 			// console.log("Spot angle: " + scanner.spot.angle);
@@ -228,10 +226,9 @@ Platformer.AddTeleporter = function(position) {
 
 
 	teleporter.onUpdate = function() {
-		var player = Platformer.Scene.getObjectByName("player");
-		var difVec = v3z().subVectors(player.position, teleporter.position);
+		var difVec = v3z().subVectors(Platformer.Player.position, teleporter.position);
 		if (difVec.length() < 1
-				&& (player.position.y >= teleporter.position.y && player.position.y < teleporter.position.y + 3)) {
+				&& (Platformer.Player.position.y >= teleporter.position.y && Platformer.Player.position.y < teleporter.position.y + 3)) {
 			Platformer.PlayerReachedEnd();
 		}
 	};
@@ -251,9 +248,8 @@ Platformer.AddJumppad = function(position){
 
 	jumppad.onUpdate = function(delta) {
 		if (jumppad.cooldown <= 0) {
-			var player = Platformer.Scene.getObjectByName("player");
-			if (v3z().subVectors(player.position, jumppad.position).length() < 2) {
-				player.applyCentralImpulse(v3(0, 500, 0));
+			if (v3z().subVectors(Platformer.Player.position, jumppad.position).length() < 2) {
+				Platformer.Player.applyCentralImpulse(v3(0, 500, 0));
 				jumppad.cooldown = jumppad.cooldownTime;
 			}
 		} else {
@@ -268,13 +264,13 @@ Platformer.AddJumppad = function(position){
 };
 
 Platformer.AddFloppyDisk = function(position, extraTime){
-	var floppyDisk = new THREE.Mesh(Platformer.FloppyDisk.geomery, Platformer.FloppyDisk.material);
+	var floppyDisk = new THREE.Mesh(Platformer.FloppyDisk.geometry, Platformer.FloppyDisk.material);
 	floppyDisk.position.copy(position);
 	floppyDisk.scale.set(0.09, 0.09, 0.09);
 	floppyDisk.rotationSpeed = 1;
 
 	if (extraTime === undefined) {
-		extraTime = 10000;
+		extraTime = 10;
 	}
 	floppyDisk.extraTime = extraTime;
 
@@ -284,11 +280,10 @@ Platformer.AddFloppyDisk = function(position, extraTime){
 			.start();
 
 	floppyDisk.onUpdate = function(){
-		var player = Platformer.Scene.getObjectByName ("player");
-		if(floppyDisk.position.distanceTo(player.position) < 2){
-			/*
-			 * TODO: Gjør at spilleren får mer tid Terminer seg selv
-			 */
+		if(floppyDisk.position.distanceTo(Platformer.Player.position) < 2){
+			Platformer.Player.TimeRemaining += floppyDisk.extraTime;
+			SceneManager.Remove(floppyDisk);
+			console.log("Floppydisk picked up by player");
 		}
 	};
 
@@ -312,8 +307,7 @@ Platformer.AddPodium = function(position){
 
 
 	podium.onUpdate = function() {
-		var player = Platformer.Scene.getObjectByName("player");
-		var difVec = v3z().subVectors(player.position, podium.position);
+		var difVec = v3z().subVectors(Platformer.Player.position, podium.position);
 		if (difVec.length() < 2) {
 			Platformer.PlayerReachedEnd();
 		}

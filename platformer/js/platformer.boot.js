@@ -151,7 +151,7 @@ Platformer.Init = function() {
 	});
 
 	// width, height, fov, near, far, orthoNear, orthoFar
-	Platformer.Camera = new THREE.CombinedCamera(Platformer.Width, Platformer.Height, 60, 1, 1000, -10, 10);
+	Platformer.Camera = new THREE.CombinedCamera(window.innerWidth, window.innerHeight, 60, 0.1, 1000, -10, 10);
 	Platformer.Camera.position.set(-10, 10, -10);
 	Platformer.Camera.lookAt(Platformer.Scene.position);
 	Platformer.Scene.add(Platformer.Camera);
