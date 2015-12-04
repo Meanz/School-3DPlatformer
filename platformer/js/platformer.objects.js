@@ -160,6 +160,7 @@ Platformer.AddScanner = function(positions) {
 	scanner.sound = new THREE.Audio(Platformer.audioListener);
 	scanner.sound.load("sounds/160421__bigkahuna360__electrical-shock-zap.wav");
 	scanner.add(scanner.sound);
+	scanner.timePenelty = 15;
 	scanner.cooldownTime = 5000;
 	scanner.cooldown = 0;
 	scanner.speed = 4;
@@ -207,13 +208,13 @@ Platformer.AddScanner = function(positions) {
 			// console.log("To player angle: " + angleToY);
 			// console.log("Spot angle: " + scanner.spot.angle);
 			if (angleToY < scanner.spot.angle && vScanToPlay.length() < scanner.spot.distance) {
-				Platformer.PlayerSeenByScanner(scanner.id);
+				Platformer.Player.TimeRemaining -= scanner.timePenelty;
 				scanner.spot.visible = false;
 				if (scanner.sound.source.buffer instanceof AudioBuffer) {
 					scanner.sound.play();
 				}
-
 				scanner.cooldown = scanner.cooldownTime;
+				console.log("Scanner(id" + scanner.id + ") detected player");
 			}
 		} else {
 			scanner.cooldown -= delta;

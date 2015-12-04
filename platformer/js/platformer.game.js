@@ -9,7 +9,7 @@ Platformer.LoadLevel = function(levelName) {
 					color: 0xffffff,
 					//map: Platformer.Texture,
 					blending: THREE.AdditiveBlending,
-					shininess: 0,
+					shininess: 0
 					// loader.load('images/bg.png')
 				}), 5, // high friction
 				.1 // low restitution
@@ -66,6 +66,8 @@ Platformer.LoadLevel = function(levelName) {
 		//Gaben, syslog
 		Platformer.AddSysLog();
 
+		Platformer.AddSymbolParticleCloud();
+
 	});
 };
 
@@ -77,13 +79,14 @@ OnInit = function() {
 	// Add main menu object
 	SceneManager.Add(new Platformer.MainMenu(false));
 
-	var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1, 1, 1), Platformer.DefaultMaterial, 20);
+	var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), Platformer.DefaultMaterial, 20);
 	Platformer.audioListener = new THREE.AudioListener();
 	Platformer.Player = player;
 	player.add(Platformer.audioListener);
 
 	player.OnStart = function () {
 		player.name = "player";
+		player.visible = false;
 		player.setCcdMotionThreshold(1);
 		player.setCcdSweptSphereRadius(0.2);
 		player.CanJump = false;
@@ -230,8 +233,4 @@ Platformer.PlayerDied = function(killedBy) {
 
 Platformer.PlayerReachedEnd = function() {
 	console.log("Player reached end");
-};
-
-Platformer.PlayerSeenByScanner = function(id) {
-	console.log("Player seen by scanner: " + id);
 };

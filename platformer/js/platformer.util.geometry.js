@@ -19,6 +19,15 @@ Geometry.StaticBoxMass = function(pos, dim, material, mass) {
 	return tb;
 };
 
+Geometry.StaticSphereMass = function(pos, dim, material, mass) {
+	var tb = new Physijs.SphereMesh(new THREE.SphereGeometry(dim), material, mass);
+	tb.position.x = pos.x;
+	tb.position.y = pos.y;
+	tb.position.z = pos.z;
+
+	return tb;
+};
+
 Geometry.DebugBox = function(pos, dim, clr) {
 	var _clr;
 	if (clr === undefined) {
