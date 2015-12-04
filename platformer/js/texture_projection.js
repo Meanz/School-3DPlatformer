@@ -30,10 +30,10 @@ Designer.Init = function() {
 	Designer.OffsetY = Math.ceil(Designer.Canvas.height / 2);
 
 	// Setup stuff
-	MInput.PreventRightClickMenu = true;
+	Input.PreventRightClickMenu = true;
 
 	// Event listeners
-	MInput.AddListeners(Designer.FinalCanvas);
+	Input.AddListeners(Designer.FinalCanvas);
 
 	// Render our frame
 	Designer.Render();
@@ -82,18 +82,18 @@ Designer.FrameRefresh = function(timestamp) {
 
 Designer.Update = function() {
 	// Update Input
-	MInput.Update();
+	Input.Update();
 
 	// Move!
-	if (MInput.IsMouseKeyPressed(MOUSE_MMB)) {
+	if (Input.IsMouseKeyPressed(MOUSE_MMB)) {
 		Designer.IsDragging = true;
 	}
-	if (MInput.IsMouseKeyReleased(MOUSE_MMB)) {
+	if (Input.IsMouseKeyReleased(MOUSE_MMB)) {
 		Designer.IsDragging = false;
 	}
 
-	if (MInput.WheelDelta != 0) {
-		Designer.TileSize += Math.ceil(Math.ceil(MInput.WheelDelta / 120) * 2);
+	if (Input.WheelDelta != 0) {
+		Designer.TileSize += Math.ceil(Math.ceil(Input.WheelDelta / 120) * 2);
 		if (Designer.TileSize < 16) {
 			Designer.TileSize = 16;
 		} else if (Designer.TileSize > 128) {
@@ -101,7 +101,7 @@ Designer.Update = function() {
 		}
 	}
 	
-	if(MInput.IsKeyReleased(KEY_1))
+	if(Input.IsKeyReleased(KEY_1))
 	{
 		
 		var minX = 100000, minY = 100000;
@@ -138,7 +138,7 @@ Designer.Update = function() {
 		
 	}
 	
-	if(MInput.IsKeyReleased(KEY_2))
+	if(Input.IsKeyReleased(KEY_2))
 	{
 		//
 		var a = Triangle.a;
@@ -173,7 +173,7 @@ Designer.Update = function() {
 	}
 
 	// Flush input
-	MInput.Flush();
+	Input.Flush();
 
 	//
 	Designer.Render();

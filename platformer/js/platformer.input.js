@@ -44,164 +44,164 @@ var MOUSE_RMB = 2;
 
 // Input handle
 
-var MInput = {};
+var Input = {};
 
-MInput.F_MouseKeysPressed = [];
-MInput.F_MouseKeysReleased = [];
-MInput.F_KeysPressed = [];
-MInput.F_KeysReleased = [];
+Input.F_MouseKeysPressed = [];
+Input.F_MouseKeysReleased = [];
+Input.F_KeysPressed = [];
+Input.F_KeysReleased = [];
 
-MInput.MouseX = 0;
-MInput.MouseY = 0;
-MInput.LastMouseX = 0;
-MInput.LastMouseY = 0;
-MInput.DeltaMouseX = 0;
-MInput.DeltaMouseY = 0;
-MInput.WheelDelta = 0;
-MInput.KeysDown = [];
-MInput.MouseKeysDown = [];
-MInput.PreventRightClickMenu = false;
-MInput.IsListenersAdded = false;
+Input.MouseX = 0;
+Input.MouseY = 0;
+Input.LastMouseX = 0;
+Input.LastMouseY = 0;
+Input.DeltaMouseX = 0;
+Input.DeltaMouseY = 0;
+Input.WheelDelta = 0;
+Input.KeysDown = [];
+Input.MouseKeysDown = [];
+Input.PreventRightClickMenu = false;
+Input.IsListenersAdded = false;
 
-MInput.AddListeners = function(who) {
-	if (MInput.IsListenersAdded) {
-		console.log("MInput::AddListeners() Error: Listeners is already added!");
+Input.AddListeners = function(who) {
+	if (Input.IsListenersAdded) {
+		console.log("Input::AddListeners() Error: Listeners is already added!");
 	} else {
 		//ARGH
-		document.addEventListener("keyup", MInput.OnKeyUp, false);
-		document.addEventListener("keydown", MInput.OnKeyDown, false);
-		who.addEventListener("mouseup", MInput.OnMouseUp, false);
-		who.addEventListener("mousedown", MInput.OnMouseDown, false);
-		who.addEventListener("mousemove", MInput.OnMouseMove, false);
-		who.addEventListener("mousewheel", MInput.OnMouseWheelChange, false);
+		document.addEventListener("keyup", Input.OnKeyUp, false);
+		document.addEventListener("keydown", Input.OnKeyDown, false);
+		who.addEventListener("mouseup", Input.OnMouseUp, false);
+		who.addEventListener("mousedown", Input.OnMouseDown, false);
+		who.addEventListener("mousemove", Input.OnMouseMove, false);
+		who.addEventListener("mousewheel", Input.OnMouseWheelChange, false);
 
-		if (MInput.PreventRightClickMenu) {
+		if (Input.PreventRightClickMenu) {
 			who.addEventListener("contextmenu", function(event) {
 				event.preventDefault();
 			}, false);
 		}
-		MInput.IsListenersAdded = true;
+		Input.IsListenersAdded = true;
 	}
 };
 
-MInput.Update = function() {
+Input.Update = function() {
 
 	// Calculate mouse values
-	MInput.DeltaMouseX = MInput.MouseX - MInput.LastMouseX;
-	MInput.DeltaMouseY = MInput.MouseY - MInput.LastMouseY;
+	Input.DeltaMouseX = Input.MouseX - Input.LastMouseX;
+	Input.DeltaMouseY = Input.MouseY - Input.LastMouseY;
 
 };
 
-MInput.Flush = function() {
+Input.Flush = function() {
 
 	// Next frame, update states
-	MInput.F_MouseKeysPressed = [];
-	MInput.F_MouseKeysReleased = [];
-	MInput.F_KeysPressed = [];
-	MInput.F_KeysReleased = [];
+	Input.F_MouseKeysPressed = [];
+	Input.F_MouseKeysReleased = [];
+	Input.F_KeysPressed = [];
+	Input.F_KeysReleased = [];
 
 	//
-	MInput.LastMouseX = MInput.MouseX;
-	MInput.LastMouseY = MInput.MouseY;
+	Input.LastMouseX = Input.MouseX;
+	Input.LastMouseY = Input.MouseY;
 	
 	//
-	MInput.WheelDelta = 0;
+	Input.WheelDelta = 0;
 
 };
 
-MInput.OnKeyDown = function(event) {
+Input.OnKeyDown = function(event) {
 	var key = event.which;
-	MInput.KeysDown[key] = true;
-	MInput.F_KeysPressed.push(key);
+	Input.KeysDown[key] = true;
+	Input.F_KeysPressed.push(key);
 };
 
-MInput.OnKeyUp = function(event) {
+Input.OnKeyUp = function(event) {
 	var key = event.which;
-	MInput.KeysDown[key] = false;
-	MInput.F_KeysReleased.push(key);
+	Input.KeysDown[key] = false;
+	Input.F_KeysReleased.push(key);
 };
 
-MInput.IsKeyDown = function(which) {
-	if (MInput.KeysDown[which] == undefined) {
+Input.IsKeyDown = function(which) {
+	if (Input.KeysDown[which] == undefined) {
 		return false;
 	}
-	return MInput.KeysDown[which];
+	return Input.KeysDown[which];
 };
 
-MInput.IsKeyPressed = function(which) {
-	for (var i = 0; i < MInput.F_KeysPressed.length; i++) {
-		if (MInput.F_KeysPressed[i] == which) {
+Input.IsKeyPressed = function(which) {
+	for (var i = 0; i < Input.F_KeysPressed.length; i++) {
+		if (Input.F_KeysPressed[i] == which) {
 			return true;
 		}
 	}
 	return false;
 }
 
-MInput.IsKeyReleased = function(which) {
-	for (var i = 0; i < MInput.F_KeysReleased.length; i++) {
-		if (MInput.F_KeysReleased[i] == which) {
+Input.IsKeyReleased = function(which) {
+	for (var i = 0; i < Input.F_KeysReleased.length; i++) {
+		if (Input.F_KeysReleased[i] == which) {
 			return true;
 		}
 	}
 	return false;
 }
 
-MInput.OnMouseDown = function(event) {
+Input.OnMouseDown = function(event) {
 	
 	event.preventDefault();
 	event.stopPropagation();
 	
-	MInput.MouseKeysDown[event.button] = true;
-	MInput.F_MouseKeysPressed.push(event.button);
+	Input.MouseKeysDown[event.button] = true;
+	Input.F_MouseKeysPressed.push(event.button);
 };
 
-MInput.OnMouseUp = function(event) {
+Input.OnMouseUp = function(event) {
 
 	event.preventDefault();
 	event.stopPropagation();
 	
-	MInput.MouseKeysDown[event.button] = false;
-	MInput.F_MouseKeysReleased.push(event.button);
+	Input.MouseKeysDown[event.button] = false;
+	Input.F_MouseKeysReleased.push(event.button);
 };
 
-MInput.OnMouseWheelChange = function(event) {
+Input.OnMouseWheelChange = function(event) {
 	
 	event.preventDefault();
 	event.stopPropagation();
 	
 	var delta = event.wheelDelta;
 	
-	MInput.WheelDelta = delta;
+	Input.WheelDelta = delta;
 	
 };
 
-MInput.IsMouseKeyDown = function(which) {
-	if (MInput.MouseKeysDown[which] == undefined) {
+Input.IsMouseKeyDown = function(which) {
+	if (Input.MouseKeysDown[which] == undefined) {
 		return false;
 	}
-	return MInput.MouseKeysDown[which];
+	return Input.MouseKeysDown[which];
 };
 
-MInput.IsMouseKeyPressed = function(which) {
-	for (var i = 0; i < MInput.F_MouseKeysPressed.length; i++) {
-		if (MInput.F_MouseKeysPressed[i] == which) {
+Input.IsMouseKeyPressed = function(which) {
+	for (var i = 0; i < Input.F_MouseKeysPressed.length; i++) {
+		if (Input.F_MouseKeysPressed[i] == which) {
 			return true;
 		}
 	}
 	return false;
 }
 
-MInput.IsMouseKeyReleased = function(which) {
-	for (var i = 0; i < MInput.F_MouseKeysReleased.length; i++) {
-		if (MInput.F_MouseKeysReleased[i] == which) {
+Input.IsMouseKeyReleased = function(which) {
+	for (var i = 0; i < Input.F_MouseKeysReleased.length; i++) {
+		if (Input.F_MouseKeysReleased[i] == which) {
 			return true;
 		}
 	}
 	return false;
 }
 
-MInput.OnMouseMove = function(event) {
-	MInput.MouseX = event.pageX;
-	MInput.MouseY = event.pageY;
+Input.OnMouseMove = function(event) {
+	Input.MouseX = event.pageX;
+	Input.MouseY = event.pageY;
 
 };

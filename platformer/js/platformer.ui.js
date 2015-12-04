@@ -207,7 +207,7 @@ Platformer.UIButton = function(text, position, onClick) {
                 this.SetText(this.Text, this.Font, hoverColor);
                 this.IsHovering = true;
             }
-            if (MInput.IsMouseKeyReleased(0)) {
+            if (Input.IsMouseKeyReleased(0)) {
                 this.onClick();
             }
         } else {

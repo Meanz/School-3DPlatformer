@@ -63,15 +63,8 @@ Platformer.LoadLevel = function(levelName) {
 		Platformer.AddPodium(v3(15, 1, 0));
 		Platformer.AddFloppyDisk(v3(10, 1, -5));
 
-		//Gaben
-		var map = THREE.ImageUtils.loadTexture( "images/gaben.jpg" );
-		var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff, fog: true } );
-		var sprite = new THREE.Sprite( material );
-		sprite.position.copy(v3(-150, 50, 0));
-		var scale = 80;
-		sprite.scale.copy(v3(scale * 1.77, scale, scale));
-		sprite.updateMatrix();
-		SceneManager.Add( sprite );
+		//Gaben, syslog
+		Platformer.AddSysLog();
 
 	});
 };
@@ -104,7 +97,7 @@ OnInit = function() {
 	};
 	player.onUpdate = function() {
 
-		if (MInput.IsKeyReleased(KEY_1)) {
+		if (Input.IsKeyReleased(KEY_1)) {
 			console.log("SceneObjects: " + SceneManager.SceneObjects.length);
 			console.log("LevelObjects: " + SceneManager.LevelObjects.length);
 			console.log("TileObjects: " + SceneManager.TileObjects.length);
@@ -113,19 +106,21 @@ OnInit = function() {
 
 		if (Platformer.IsPlaying) {
 
-			if (MInput.IsKeyReleased(KEY_Q - KEY_LCASE)) {
+			if (Input.IsKeyReleased(KEY_Q - KEY_LCASE)) {
 				Platformer.IsPlaying = false;
 				SceneManager.ClearLevel();
 				// Spawn the main menu!
 				SceneManager.Add(new Platformer.MainMenu(false));
 				Platformer.FreeCursor();
+				$("#hud-ingame").hide();
 			}
-			if(MInput.IsKeyReleased(KEY_M - KEY_LCASE)) {
+			if(Input.IsKeyReleased(KEY_M - KEY_LCASE)) {
 				Platformer.IsPlaying = false;
 				//Spawn the main menu in pause mode!
 				SceneManager.Add(new Platformer.MainMenu(true));
 				SceneManager.HideLevel();
 				Platformer.FreeCursor();
+				$("#hud-ingame").hide();
 			}
 
 			if(Date.now() - player.LastTimeUpdate > 1000) {

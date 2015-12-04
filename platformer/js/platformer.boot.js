@@ -126,14 +126,14 @@ Platformer.Init = function() {
 			|| canvas.webkitRequestPointerLock;
 	canvas.exitPointerLock = canvas.exitPointerLock || canvas.mozExitPointerLock || canvas.webkitExitPointerLock;
 
-	MInput.AddListeners(canvas);
+	Input.AddListeners(canvas);
 
 	Platformer.Scene = new Physijs.Scene({
 		fixedTimeStep : 1 / 60
 	});
 	Platformer.Scene.setGravity(new THREE.Vector3(0, -15, 0));
 	Platformer.Scene.addEventListener('update', function() {
-		MInput.Update();
+		Input.Update();
 
 		// update timing
 		var ctime = Date.now();
@@ -147,7 +147,7 @@ Platformer.Init = function() {
 		if (SceneManager.OnSimulation !== undefined) {
 			SceneManager.OnSimulation(delta);
 		}
-		MInput.Flush();
+		Input.Flush();
 	});
 
 	// width, height, fov, near, far, orthoNear, orthoFar

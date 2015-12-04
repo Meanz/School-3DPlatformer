@@ -1,3 +1,45 @@
+
+
+
+Platformer.AddSysLog = function() {
+
+	Platformer.SysLogLines = [];
+	Platformer.SysLogTexture = new THREE.Texture();
+
+	Platformer.SysLogLines.push("Initializing");
+	Util.DrawSysLog(Platformer.SysLogLines, Platformer.SysLogTexture);
+
+	Platformer.GabenMaterial = new THREE.SpriteMaterial( { map: Platformer.SysLogTexture, color: 0xffffff, fog: true } );
+	var sprite = new THREE.Sprite( Platformer.GabenMaterial  );
+
+
+	sprite.position.copy(v3(-150, 50, 0));
+	var scale = 80;
+	sprite.scale.copy(v3(scale, scale, scale));
+	sprite.updateMatrix();
+	sprite.AccumDelta = 0;
+	sprite.thing = 0;
+	sprite.onUpdate = function(delta) {
+		this.AccumDelta += delta;
+		if(this.AccumDelta > 3000) {
+			if(this.thing == 0) {
+				Platformer.SysLogLines.push("PREPARING THE WORLD FOR TERMINATION");
+			} else if (this.thing >= 1 && this.thing != 10) {
+				Platformer.SysLogLines.push("TERMINATING: " + (this.thing * 10) + "%");
+			} else if(this.thing == 10) {
+				Platformer.SysLogLines.push("KAPOOF!!!!");
+			}
+
+			Util.DrawSysLog(Platformer.SysLogLines, Platformer.SysLogTexture);
+			this.AccumDelta = 0;
+			this.thing++;
+		}
+
+	}
+	SceneManager.Add( sprite );
+
+};
+
 Platformer.AddPlane = function(size, color, position) {
 	this.Color = color;
 	this.Position = position;

@@ -42,10 +42,10 @@ Designer.Init = function() {
 	Designer.OffsetY = Math.ceil(Designer.Canvas.height / 2);
 
 	// Setup stuff
-	MInput.PreventRightClickMenu = true;
+	Input.PreventRightClickMenu = true;
 
 	// Event listeners
-	MInput.AddListeners(Designer.FinalCanvas);
+	Input.AddListeners(Designer.FinalCanvas);
 
 	// Render our frame
 	Designer.Render();
@@ -258,18 +258,18 @@ Designer.AddEndTile = function(tileX, tileY) {
 
 Designer.Update = function() {
 	// Update Input
-	MInput.Update();
+	Input.Update();
 
 	// Move!
-	if (MInput.IsMouseKeyPressed(MOUSE_MMB)) {
+	if (Input.IsMouseKeyPressed(MOUSE_MMB)) {
 		Designer.IsDragging = true;
 	}
-	if (MInput.IsMouseKeyReleased(MOUSE_MMB)) {
+	if (Input.IsMouseKeyReleased(MOUSE_MMB)) {
 		Designer.IsDragging = false;
 	}
 
-	if (MInput.WheelDelta != 0) {
-		Designer.TileSize += Math.ceil(Math.ceil(MInput.WheelDelta / 120) * 2);
+	if (Input.WheelDelta != 0) {
+		Designer.TileSize += Math.ceil(Math.ceil(Input.WheelDelta / 120) * 2);
 		if (Designer.TileSize < 16) {
 			Designer.TileSize = 16;
 		} else if (Designer.TileSize > 128) {
@@ -277,38 +277,38 @@ Designer.Update = function() {
 		}
 	}
 
-	if (MInput.IsKeyReleased(KEY_1)) {
+	if (Input.IsKeyReleased(KEY_1)) {
 		Designer.Tool = TOOL_FLOOR;
 	}
-	if (MInput.IsKeyReleased(KEY_2)) {
+	if (Input.IsKeyReleased(KEY_2)) {
 		Designer.Tool = TOOL_REMOVE;
 	}
-	if (MInput.IsKeyReleased(KEY_3)) {
+	if (Input.IsKeyReleased(KEY_3)) {
 		Designer.Tool = TOOL_WALL;
 	}
-	if (MInput.IsKeyReleased(KEY_4)) {
+	if (Input.IsKeyReleased(KEY_4)) {
 		Designer.Tool = TOOL_TRACER;
 	}
-	if (MInput.IsKeyReleased(KEY_5)) {
+	if (Input.IsKeyReleased(KEY_5)) {
 		Designer.Tool = TOOL_SCANNER;
 	}
-	if (MInput.IsKeyReleased(KEY_6)) {
+	if (Input.IsKeyReleased(KEY_6)) {
 		Designer.Tool = TOOL_JUMPPAD;
 	}
-	if (MInput.IsKeyReleased(KEY_7)) {
+	if (Input.IsKeyReleased(KEY_7)) {
 		Designer.Tool = TOOL_START;
 	}
-	if (MInput.IsKeyReleased(KEY_8)) {
+	if (Input.IsKeyReleased(KEY_8)) {
 		Designer.Tool = TOOL_END;
 	}
 
-	if (MInput.IsMouseKeyReleased(MOUSE_RMB) || MInput.IsMouseKeyReleased(MOUSE_LMB)) {
+	if (Input.IsMouseKeyReleased(MOUSE_RMB) || Input.IsMouseKeyReleased(MOUSE_LMB)) {
 
 		var tileX = Math
-				.floor((MInput.MouseX - (Math.floor(Designer.OffsetX) % Designer.TileSize)) / Designer.TileSize)
+				.floor((Input.MouseX - (Math.floor(Designer.OffsetX) % Designer.TileSize)) / Designer.TileSize)
 				- Math.floor(Designer.OffsetX / Designer.TileSize);
 		var tileY = Math
-				.floor((MInput.MouseY - (Math.floor(Designer.OffsetY) % Designer.TileSize)) / Designer.TileSize)
+				.floor((Input.MouseY - (Math.floor(Designer.OffsetY) % Designer.TileSize)) / Designer.TileSize)
 				- Math.floor(Designer.OffsetY / Designer.TileSize);
 		// Do we have a tile at this position?
 		var hasTile = false;
@@ -324,11 +324,11 @@ Designer.Update = function() {
 			}
 		}
 
-		if (MInput.IsMouseKeyReleased(MOUSE_LMB)) {
+		if (Input.IsMouseKeyReleased(MOUSE_LMB)) {
 			if (hasTile) {
 				Designer.SelectTile(tile);
 			}
-		} else if (MInput.IsMouseKeyReleased(MOUSE_RMB)) {
+		} else if (Input.IsMouseKeyReleased(MOUSE_RMB)) {
 			if (!hasTile) {
 				if (Designer.Tool == TOOL_FLOOR) {
 					Designer.Tiles.push(new Tile_Floor(tileX, tileY));
@@ -351,13 +351,13 @@ Designer.Update = function() {
 		}
 	}
 
-	if ((MInput.DeltaMouseX != 0 || MInput.DeltaMouseY != 0) && Designer.IsDragging) {
-		Designer.OffsetX += MInput.DeltaMouseX;
-		Designer.OffsetY += MInput.DeltaMouseY;
+	if ((Input.DeltaMouseX != 0 || Input.DeltaMouseY != 0) && Designer.IsDragging) {
+		Designer.OffsetX += Input.DeltaMouseX;
+		Designer.OffsetY += Input.DeltaMouseY;
 	}
 
 	// Flush input
-	MInput.Flush();
+	Input.Flush();
 
 	//
 	Designer.Render();
