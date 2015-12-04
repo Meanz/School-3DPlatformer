@@ -67,7 +67,10 @@ Platformer.LoadLevel = function(levelName) {
 		var map = THREE.ImageUtils.loadTexture( "images/gaben.jpg" );
 		var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff, fog: true } );
 		var sprite = new THREE.Sprite( material );
-		sprite.position.copy(v3(0, 15, 0));
+		sprite.position.copy(v3(-150, 50, 0));
+		var scale = 80;
+		sprite.scale.copy(v3(scale * 1.77, scale, scale));
+		sprite.updateMatrix();
 		SceneManager.Add( sprite );
 
 	});
