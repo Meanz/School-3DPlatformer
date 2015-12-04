@@ -20,6 +20,10 @@ var PARTICLE_AMOUNT_INSANE = 500000;
 Platformer.Settings = {};
 Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_LOW;
 
+//
+Platformer.Textures = {};
+Platformer.Audio = {};
+
 var OnInit;
 
 var canvas;
@@ -215,6 +219,7 @@ Platformer.Init = function() {
 
 	Platformer.jsonLoader = new THREE.JSONLoader();
 	Platformer.textureLoader = new THREE.TextureLoader();
+	Platformer.audioListener = new THREE.AudioListener();
 
 	if(SceneManager !== undefined && SceneManager.Init !== undefined) {
 		SceneManager.Init();
