@@ -62,6 +62,14 @@ Platformer.LoadLevel = function(levelName) {
 		Platformer.AddJumppad(v3(-10, 1, -5));
 		Platformer.AddPodium(v3(15, 1, 0));
 		Platformer.AddFloppyDisk(v3(10, 1, -5));
+
+		//Gaben
+		var map = THREE.ImageUtils.loadTexture( "images/gaben.jpg" );
+		var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff, fog: true } );
+		var sprite = new THREE.Sprite( material );
+		sprite.position.copy(v3(0, 15, 0));
+		SceneManager.Add( sprite );
+
 	});
 };
 
