@@ -116,7 +116,11 @@ Platformer.Init = function() {
 	Platformer.Renderer = new THREE.WebGLRenderer({
 		antialias : true
 	});
-	Platformer.Renderer.setSize(window.innerWidth, window.innerHeight);
+
+	Platformer.Width = window.innerWidth - 4;
+	Platformer.Height = window.innerHeight - 4;
+
+	Platformer.Renderer.setSize(Platformer.Width, Platformer.Height);
 	canvas = document.getElementById('viewport').appendChild(Platformer.Renderer.domElement);
 	canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock
 			|| canvas.webkitRequestPointerLock;
@@ -147,7 +151,7 @@ Platformer.Init = function() {
 	});
 
 	// width, height, fov, near, far, orthoNear, orthoFar
-	Platformer.Camera = new THREE.CombinedCamera(window.innerWidth, window.innerHeight, 60, 1, 1000, -10, 10);
+	Platformer.Camera = new THREE.CombinedCamera(Platformer.Width, Platformer.Height, 60, 1, 1000, -10, 10);
 	Platformer.Camera.position.set(-10, 10, -10);
 	Platformer.Camera.lookAt(Platformer.Scene.position);
 	Platformer.Scene.add(Platformer.Camera);

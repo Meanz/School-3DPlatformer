@@ -10,8 +10,8 @@ function AddTitle(p) {
 
 function OrthoCamera() {
     // Switch camera
-    Platformer.Camera.toOrthographic2(-window.innerWidth / 2, window.innerWidth / 2, window.innerHeight / 2,
-        -window.innerHeight / 2);
+    Platformer.Camera.toOrthographic2(-Platformer.Width / 2, Platformer.Width / 2, Platformer.Height / 2,
+        -Platformer.Height / 2);
     Platformer.Camera.toFrontView();
 }
 
@@ -162,7 +162,7 @@ Platformer.UIText = function(text, font, color, position) {
     // Create text thing
     Util.DrawTextToTexture(text, font, color, this.TextTexture);
     this.Geometry = new THREE.PlaneGeometry(this.TextTexture.image.width, this.TextTexture.image.height, 1, 1);
-    this.Material = new THREE.MeshBasicMaterial({
+    this.Material = new THREE.Mesha({
         color : 0xffffff,
         map : this.TextTexture
     });
