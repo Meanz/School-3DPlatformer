@@ -11,6 +11,15 @@ Platformer.Texture = null;
 Platformer.Camera = null;
 Platformer.IsPointerLocked = false;
 Platformer.IsPlaying = false;
+
+var PARTICLE_AMOUNT_LOW = 5000;
+var PARTICLE_AMOUNT_MEDIUM = 10000;
+var PARTICLE_AMOUNT_HIGH = 25000;
+var PARTICLE_AMOUNT_ULTRA = 50000;
+var PARTICLE_AMOUNT_INSANE = 500000;
+Platformer.Settings = {};
+Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_LOW;
+
 var OnInit;
 
 var canvas;

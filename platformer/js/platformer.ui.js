@@ -50,8 +50,8 @@ Platformer.MainMenu = function(inPauseMode) {
 
         AddTitle(mainMenu);
 
-        SceneManager.Add(mainMenu, new Platformer.UIText("In dis game there is no halp!", "24px Arial", "#ff0000", v3z(
-            0.0, -10.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("I dette spillet må du nå slutten ved å ", "24px Arial", "#ff0000", v2(0.0, 80.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("overkomme forskjellige hinder før tiden renner ut", "24px Arial", "#ff0000", v2(0.0, 50.0)));
 
         this.startButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -50), function() {
             mainMenu.Clear();
@@ -64,10 +64,42 @@ Platformer.MainMenu = function(inPauseMode) {
 
         AddTitle(mainMenu);
 
-        SceneManager.Add(mainMenu, new Platformer.UIText("You set me? NOOO, I SET YOU!", "24px Arial", "#ff0000", v3z(
-            0.0, -10.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("Particle Amount (" + Platformer.Settings.ParticleAmount + ")", "24px Arial", "#ff0000", v2(
+            0.0, 100.0
+        )));
 
-        this.startButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -50), function() {
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Low", v2(-260, 60), function() {
+            mainMenu.Clear();
+            Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_LOW;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Medium", v2(-130, 60), function() {
+            mainMenu.Clear();
+            Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_MEDIUM;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton("High", v2(10, 60), function() {
+            mainMenu.Clear();
+            Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_HIGH;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Ultra", v2(120, 60), function() {
+            mainMenu.Clear();
+            Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_ULTRA;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Insane", v2(240, 60), function() {
+            mainMenu.Clear();
+            Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_INSANE;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -100), function() {
             mainMenu.Clear();
             mainMenu.DisplayMainMenu();
         }));
@@ -153,20 +185,25 @@ Platformer.MainMenu = function(inPauseMode) {
 Platformer.MainMenu.prototype = Object.create(THREE.Object3D.prototype);
 Platformer.MainMenu.constructor = Platformer.MainMenu;
 
-Platformer.UIText = function(text, font, color, position) {
+Platformer.UIText = function(text, font, color, inPosition) {
     this.Text = text;
     this.Font = font;
     this.Color = color;
-    this.Position = position;
     this.TextTexture = new THREE.Texture(null);
     // Create text thing
     Util.DrawTextToTexture(text, font, color, this.TextTexture);
     this.Geometry = new THREE.PlaneGeometry(this.TextTexture.image.width, this.TextTexture.image.height, 1, 1);
     this.Material = new THREE.MeshBasicMaterial({
         color : 0xffffff,
-        map : this.TextTexture
+        map : this.TextTexture,
+        transparent : true
     });
     THREE.Mesh.call(this, this.Geometry, this.Material);
+    if(inPosition instanceof THREE.Vector2) {
+        this.position.copy(v3(inPosition.x, inPosition.y, 0.0));
+    } else if(inPosition instanceof THREE.Vector3) {
+        this.position.copy(inPosition);
+    }
     this.SetText = function(text, font, color) {
         this.Text = text;
         this.Font = font;
@@ -174,16 +211,15 @@ Platformer.UIText = function(text, font, color, position) {
         Util.DrawTextToTexture(text, font, color, this.TextTexture);
     };
     this.GetWidth = function() {
-        return this.TextTexture.image.width;
+        return Util.GetTextWidth(this.Text, this.Font);
     };
     this.GetHeight = function() {
-        return this.TextTexture.image.height;
+        return this.TextTexture.image.height; //5 is to offset
     };
     this.SetPosition = function(x, y) {
         var v = v3(x, y, 0);
         this.position.copy(v);
-    };
-    this.position.copy(position);
+    }
 };
 Platformer.UIText.prototype = Object.create(THREE.Mesh.prototype);
 Platformer.UIText.constructor = Platformer.UIText;
@@ -199,10 +235,12 @@ Platformer.UIButton = function(text, position, onClick) {
         // console.log("" + Platformer.MouseX + " / " + Platformer.MouseY + " --
         // " + this.width + " / " + this.height);
         // Get mouse coordinates
-        if (Platformer.MouseX >= (this.position.x - (this.GetWidth() / 2))
-            && Platformer.MouseX <= (this.position.x + (this.GetWidth() / 2))
-            && Platformer.MouseY >= (-this.position.y - (this.GetHeight() / 2))
-            && Platformer.MouseY <= (-this.position.y + (this.GetHeight() / 2))) {
+        var posX = this.position.x + 5;
+        var posY = this.position.y;
+        if (Platformer.MouseX >= (posX - (this.GetWidth() / 2))
+            && Platformer.MouseX <= (posX + (this.GetWidth() / 2))
+            && Platformer.MouseY >= (-posY - (this.GetHeight() / 2))
+            && Platformer.MouseY <= (-posY + (this.GetHeight() / 2))) {
             if (!this.IsHovering) {
                 this.SetText(this.Text, this.Font, hoverColor);
                 this.IsHovering = true;

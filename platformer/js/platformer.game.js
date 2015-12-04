@@ -7,7 +7,7 @@ Platformer.LoadLevel = function(levelName) {
 
 		var floorMaterial = Physijs.createMaterial(new THREE.MeshPhongMaterial({
 					color: 0xffffff,
-					//map: Platformer.Texture,
+					map: Platformer.Texture,
 					blending: THREE.AdditiveBlending,
 					shininess: 0
 					// loader.load('images/bg.png')
