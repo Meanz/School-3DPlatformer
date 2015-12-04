@@ -24,9 +24,10 @@ Platformer.LoadLevel = function(levelName) {
 			var tileX = obj.TileX;
 			var tileY = obj.TileY;
 			var type = obj.TileType;
+			var tileHeight = obj.TileHeight;
 
 			if (type == "floor" || type == "start") {
-				var tileHeight = obj.TileHeight;
+
 				var dimension = scale;
 				var position = v3(dimension.x * tileX, dimension.y * tileHeight, dimension.z * tileY);
 
@@ -45,10 +46,31 @@ Platformer.LoadLevel = function(levelName) {
 				var position = v3(dimension.x * tileX, 1, dimension.z * tileY);
 				Platformer.AddFloor(position, dimension);
 			} else if (type == "end") {
+				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
+				Platformer.AddFloor(position, scale, floorMaterial);
 				Platformer.AddTeleporter(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
+			}else if (type == "end_final") {
+				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
+				Platformer.AddFloor(position, scale, floorMaterial);
+				Platformer.AddPodium(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
 			} else if (type == "tracer") {
-				Platformer.AddTracer(v3(0, 2, -20));
+				if(obj.WithFloor = "true"){
+					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
+					Platformer.AddFloor(position, scale, floorMaterial);
+				}
+				Platformer.AddTracer(v3(scale.x * tileX, scale.y * 0.5 + 1, scale.z * tileY));
 			} else if (type == "scanner") {
+				if(obj.WithFloor = "true"){
+					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
+					Platformer.AddFloor(position, scale, floorMaterial);
+				}
+				Platformer.AddScanner(v3(scale.x * tileX, scale.y * 0.5 + 4, scale.z * tileY))
+			} else if (type == "floppydisk") {
+				if(obj.WithFloor = "true"){
+					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
+					Platformer.AddFloor(position, scale, floorMaterial);
+				}
+				Platformer.AddFloppyDisk(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY))
 			} else {
 				console.log("type: " + type);
 			}
