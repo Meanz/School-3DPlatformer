@@ -68,32 +68,31 @@ Platformer.MainMenu = function(inPauseMode) {
             0.0, 100.0
         )));
 
-
-        SceneManager.Add(mainMenu, new Platformer.UIButton("Low", v2(-260, 60), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Settings.ParticleAmount == PARTICLE_AMOUNT_LOW ? "<Low>" : "Low", v2(-260, 60), function() {
             mainMenu.Clear();
             Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_LOW;
             mainMenu.DisplaySettings();
         }));
 
-        SceneManager.Add(mainMenu, new Platformer.UIButton("Medium", v2(-130, 60), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Settings.ParticleAmount == PARTICLE_AMOUNT_MEDIUM ? "<Medium>" : "Medium", v2(-130, 60), function() {
             mainMenu.Clear();
             Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_MEDIUM;
             mainMenu.DisplaySettings();
         }));
 
-        SceneManager.Add(mainMenu, new Platformer.UIButton("High", v2(10, 60), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Settings.ParticleAmount == PARTICLE_AMOUNT_HIGH ? "<High>" : "High", v2(10, 60), function() {
             mainMenu.Clear();
             Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_HIGH;
             mainMenu.DisplaySettings();
         }));
 
-        SceneManager.Add(mainMenu, new Platformer.UIButton("Ultra", v2(120, 60), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Settings.ParticleAmount == PARTICLE_AMOUNT_ULTRA ? "<Ultra>" : "Ultra", v2(120, 60), function() {
             mainMenu.Clear();
             Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_ULTRA;
             mainMenu.DisplaySettings();
         }));
 
-        SceneManager.Add(mainMenu, new Platformer.UIButton("Insane", v2(240, 60), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Settings.ParticleAmount == PARTICLE_AMOUNT_INSANE ? "<Insane>" : "Insane", v2(240, 60), function() {
             mainMenu.Clear();
             Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_INSANE;
             mainMenu.DisplaySettings();

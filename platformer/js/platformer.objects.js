@@ -60,6 +60,10 @@ Platformer.AddFloor = function(position, dimension, material) {
 		material = Platformer.DefaultMaterial;
 	}
 	var floor = Geometry.StaticBox(position, dimension, material);
+	floor.OnStart = function() {
+		this.setCcdMotionThreshold(1);
+		this.setCcdSweptSphereRadius(0.2);
+	};
 	SceneManager.AddTile(floor);
 	return floor;
 };
@@ -68,9 +72,9 @@ Platformer.AddPlayer = function(position, dimension, material, mass) {
 	if (material === undefined) {
 		material = Platformer.DefaultMaterial;
 	}
-	var floor = Geometry.StaticBoxMass(position, dimension, material, mass);
-	SceneManager.AddBase(floor);
-	return floor;
+	var sphere = Geometry.StaticSphereMass(position, dimension, material, mass);
+	SceneManager.AddBase(sphere);
+	return sphere;
 };
 
 Platformer.AddTestBox = function(position, dimension) {

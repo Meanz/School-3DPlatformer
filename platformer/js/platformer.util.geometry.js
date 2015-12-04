@@ -12,19 +12,13 @@ Geometry.StaticBox = function(pos, dim, material) {
 
 Geometry.StaticBoxMass = function(pos, dim, material, mass) {
 	var tb = new Physijs.BoxMesh(new THREE.BoxGeometry(dim.x, dim.y, dim.z), material, mass);
-	tb.position.x = pos.x;
-	tb.position.y = pos.y;
-	tb.position.z = pos.z;
-
+	tb.position.copy(pos);
 	return tb;
 };
 
 Geometry.StaticSphereMass = function(pos, dim, material, mass) {
-	var tb = new Physijs.SphereMesh(new THREE.SphereGeometry(dim), material, mass);
-	tb.position.x = pos.x;
-	tb.position.y = pos.y;
-	tb.position.z = pos.z;
-
+	var tb = new Physijs.CapsuleMesh(new THREE.SphereGeometry(dim.x), material, mass);
+	tb.position.copy(pos);
 	return tb;
 };
 
