@@ -54,19 +54,19 @@ Platformer.LoadLevel = function(levelName) {
 				Platformer.AddFloor(position, scale, floorMaterial);
 				Platformer.AddPodium(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
 			} else if (type == "tracer") {
-				if(obj.WithFloor = "true"){
+				if(obj.WithFloor == "true"){
 					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 					Platformer.AddFloor(position, scale, floorMaterial);
 				}
 				Platformer.AddTracer(v3(scale.x * tileX, scale.y * 0.5 + 1, scale.z * tileY));
 			} else if (type == "scanner") {
-				if(obj.WithFloor = "true"){
+				if(obj.WithFloor == "true"){
 					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 					Platformer.AddFloor(position, scale, floorMaterial);
 				}
 				Platformer.AddScanner(v3(scale.x * tileX, scale.y * 0.5 + 4, scale.z * tileY))
 			} else if (type == "floppydisk") {
-				if(obj.WithFloor = "true"){
+				if(obj.WithFloor == true){
 					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 					Platformer.AddFloor(position, scale, floorMaterial);
 				}
@@ -74,23 +74,23 @@ Platformer.LoadLevel = function(levelName) {
 			}else if (type == "jumppad") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
-				Platformer.AddFloppyDisk(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY))
+				Platformer.AddJumppad(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY))
 			} else {
 				console.log("type: " + type);
 			}
 
 		}
-		Platformer.AddTracer(v3(0, 2, -20));
+	//	Platformer.AddTracer(v3(0, 2, -20));
 
 		//Hardcode scanners =D?
-		Platformer.AddScanner([ v3(5, 5, 0), v3(10, 5, 0), v3(-5, 5, -20) ]);
-		Platformer.AddTeleporter(v3(10, 1, 0));
-		Platformer.AddJumppad(v3(-10, 1, -5));
-		Platformer.AddPodium(v3(15, 1, 0));
-		Platformer.AddFloppyDisk(v3(10, 1, -5));
+	//	Platformer.AddScanner([ v3(5, 5, 0), v3(10, 5, 0), v3(-5, 5, -20) ]);
+	//	Platformer.AddTeleporter(v3(10, 1, 0));
+	//	Platformer.AddJumppad(v3(-10, 1, -5));
+	//	Platformer.AddPodium(v3(15, 1, 0));
+	//	Platformer.AddFloppyDisk(v3(10, 1, -5));
 
 		//Gaben, syslog
-		Platformer.AddSysLog();
+		//Platformer.AddSysLog();
 
 		Platformer.AddSymbolParticleCloud();
 
@@ -162,7 +162,7 @@ OnInit = function() {
 						Platformer.IsPlaying = false;
 						SceneManager.ClearLevel();
 						// Spawn the main menu!
-						SceneManager.Add(new Platformer.LostMenu());
+						SceneManager.Add(new Platformer.LostMenu("You ran out of time!"));
 						Platformer.FreeCursor();
 						$("#hud-ingame").hide();
 					}
@@ -260,6 +260,12 @@ Platformer.StartLevel = function(levelName) {
 
 Platformer.PlayerDied = function(killedBy) {
 	console.log("Player killed by " + killedBy);
+	Platformer.IsPlaying = false;
+	SceneManager.ClearLevel();
+	// Spawn the main menu!
+	SceneManager.Add(new Platformer.LostMenu("Player killed by " + killedBy));
+	Platformer.FreeCursor();
+	$("#hud-ingame").hide();
 };
 
 Platformer.PlayerReachedEnd = function() {

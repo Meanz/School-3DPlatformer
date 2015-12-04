@@ -15,14 +15,14 @@ function OrthoCamera() {
     Platformer.Camera.toFrontView();
 }
 
-Platformer.LostMenu = function() {
+Platformer.LostMenu = function(deathMessage) {
     THREE.Object3D.call(this);
 
     this.OnStart = function() {
         OrthoCamera();
         AddTitle(this);
         var lostMenu = this;
-        SceneManager.Add(lostMenu, new Platformer.UIText("You ran out of time!", "24px Arial", "#ff0000", v3z(
+        SceneManager.Add(lostMenu, new Platformer.UIText(deathMessage, "24px Arial", "#ff0000", v3z(
             0.0, -10.0)));
         lostMenu.toMainMenu = SceneManager.Add(lostMenu, new Platformer.UIButton("OK :(", v2(0, -50), function() {
             SceneManager.ClearLevel();

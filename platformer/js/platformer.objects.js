@@ -13,8 +13,8 @@ Platformer.AddSysLog = function() {
 	var sprite = new THREE.Sprite( Platformer.GabenMaterial  );
 
 
-	sprite.position.copy(v3(-150, 50, 0));
-	var scale = 100;
+	sprite.position.copy(v3(0, 1, 0));
+	var scale = 5;
 	sprite.scale.copy(v3(scale, scale, scale));
 	sprite.updateMatrix();
 	sprite.AccumDelta = 0;
