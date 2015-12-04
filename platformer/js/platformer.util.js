@@ -167,7 +167,7 @@ Util.GetTextWidth = function(text, font)
 	return txtWidth;
 };
 
-Util.GetTextHeight = function(text, font)
+Util.GetTextHeight = function(font)
 {
 	// Check size
 	var ctx = Platformer.Canvas.getContext("2d");
@@ -177,36 +177,34 @@ Util.GetTextHeight = function(text, font)
 };
 
 Util.DrawSysLog = function(lines, texture) {
-
-	var maxLines = 20;
-	var fontSize = "48px";
-	var fontType = "arial";
+	var maxLines = 29;
+	var fontSize = "bold 48px";
+	var fontType = "courier new";
 	var color = "#00aa00";
 	var font = fontSize + " " + fontType;
-	var lineHeight = Util.GetTextHeight("", font);
-
+	var lineHeight = Util.GetTextHeight("", font) + 4;
 	// Create new canvas
 	var cnv = document.createElement("canvas");
 	cnv.width = Util.NearestPowerOfTwo(maxLines * lineHeight);
 	cnv.height = Util.NearestPowerOfTwo(maxLines * lineHeight);
 	var ctx = cnv.getContext("2d");
 	ctx.font = font;
-
-	console.log("w: " + cnv.width);
-
 	ctx.beginPath();
-
 	//ctx.fillStyle = "#ffffff";
 	//ctx.fillRect(0, 0, cnv.width, cnv.height);
 	ctx.stroke();
 	ctx.fillStyle = color;
-	for(var i=0; i < lines.length; i++) {
-		ctx.fillText(lines[i], 10, (i + 1) * lineHeight);
-		console.log("drawing: "  + lines[i] + " at: " + (lineHeight * i));
+	var offset = 0;
+	if(lines.length > maxLines) { //40 - 20 = 20 [20, 40]
+		offset = lines.length - maxLines - 1;
+	}
+	for(var i=0; i < (lines.length > 20 ? 20 : lines.length); i++) {
+		var line = lines[i + offset];
+		var y = (i + 1) * lineHeight;
+		ctx.fillText(line, 10, y);
 	}
 	ctx.stroke();
 	ctx.closePath();
-
 	texture.image = cnv;
 	texture.needsUpdate = true;
 	return texture;
@@ -215,7 +213,7 @@ Util.DrawSysLog = function(lines, texture) {
 Util.DrawTextToTexture = function(text, font, color, texture) {
 	// Check size
 	var txtWidth = Util.GetTextWidth(text, font);
-	var txtHeight = Util.GetTextHeight(text, font);
+	var txtHeight = Util.GetTextHeight(font);
 
 	// Create new canvas
 	var cnv = document.createElement("canvas");

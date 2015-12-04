@@ -1,0 +1,498 @@
+OS Kernel: Linux version 2.4.20-28.7 (bhcompile@porky.devel.redhat.com) (gcc version 2.96 20000731 (Red Hat Linux 7.3 2.96-126)) #1 Thu Dec 18 11:31:59 EST 2003
+Markers: (--) probed, (**) from config file, (==) default setting,
+ (++) from command line, (!!) notice, (II) informational,
+ (WW) warning, (EE) error, (NI) not implemented, (??) unknown.
+(==) Log file: "/var/log/XFree86.0.log", Time: Tue Feb 10 16:40:03 2004
+(==) Using config file: "/etc/X11/XF86Config-4"
+(==) ServerLayout "XFree86 Configured"
+(**) |-->Screen "Screen0" (0)
+(**) | |-->Monitor "PHILIPS 107S"
+(**) | |-->Device "My Video Card"
+(**) |-->Input Device "Mouse0"
+(**) |-->Input Device "Keyboard0"
+(**) Option "XkbLayout" "us"
+(**) XKB: layout: "us"
+(==) Keyboard: CustomKeycode disabled
+(**) FontPath set to "unix/:7100"
+(==) RgbPath set to "/usr/X11R6/lib/X11/rgb"
+(==) ModulePath set to "/usr/X11R6/lib/modules"
+(--) using VT number 7
+
+(II) Open APM successful
+(II) Module ABI versions:
+ XFree86 ANSI C Emulation: 0.1
+ XFree86 Video Driver: 0.5
+ XFree86 XInput driver : 0.3
+ XFree86 Server Extension : 0.1
+ XFree86 Font Renderer : 0.3
+(II) Loader running on linux
+(II) LoadModule: "bitmap"
+(II) Loading /usr/X11R6/lib/modules/fonts/libbitmap.a
+(II) Module bitmap: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ Module class: XFree86 Font Renderer
+ ABI class: XFree86 Font Renderer, version 0.3
+(II) Loading font Bitmap
+(II) LoadModule: "pcidata"
+(II) Loading /usr/X11R6/lib/modules/libpcidata.a
+(II) Module pcidata: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 0.1.0
+ ABI class: XFree86 Video Driver, version 0.5
+(II) PCI: Probing config type using method 1
+(II) PCI: Config type is 1
+(II) PCI: stages = 0x03, oldVal1 = 0x80000090, mode1Res1 = 0x80000000
+(II) PCI: PCI scan (all values are in hex)
+(II) PCI: 00:00:0: chip 8086,2560 card 174b,174b rev 03 class 06,00,00 hdr 00
+(II) PCI: 00:02:0: chip 8086,2562 card 174b,174b rev 03 class 03,00,00 hdr 00
+(II) PCI: 00:1d:0: chip 8086,24c2 card 174b,174b rev 02 class 0c,03,00 hdr 80
+(II) PCI: 00:1d:1: chip 8086,24c4 card 174b,174b rev 02 class 0c,03,00 hdr 00
+(II) PCI: 00:1d:2: chip 8086,24c7 card 174b,174b rev 02 class 0c,03,00 hdr 00
+(II) PCI: 00:1d:7: chip 8086,24cd card 174b,174b rev 02 class 0c,03,20 hdr 00
+(II) PCI: 00:1e:0: chip 8086,244e card 0000,0000 rev 82 class 06,04,00 hdr 01
+(II) PCI: 00:1f:0: chip 8086,24c0 card 0000,0000 rev 02 class 06,01,00 hdr 80
+(II) PCI: 00:1f:1: chip 8086,24cb card 174b,174b rev 02 class 01,01,8a hdr 00
+(II) PCI: 00:1f:3: chip 8086,24c3 card 174b,174b rev 02 class 0c,05,00 hdr 00
+(II) PCI: 00:1f:5: chip 8086,24c5 card 414c,4730 rev 02 class 04,01,00 hdr 00
+(II) PCI: 01:0a:0: chip 8086,1008 card 8086,1107 rev 02 class 02,00,00 hdr 00
+(II) PCI: 01:0c:0: chip 9005,0080 card 9005,e2a0 rev 02 class 01,00,00 hdr 00
+(II) PCI: End of PCI scan
+(II) LoadModule: "scanpci"
+(II) Loading /usr/X11R6/lib/modules/libscanpci.a
+(II) Module scanpci: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 0.1.0
+ ABI class: XFree86 Video Driver, version 0.5
+(II) UnloadModule: "scanpci"
+(II) Unloading /usr/X11R6/lib/modules/libscanpci.a
+(II) Host-to-PCI bridge:
+(II) PCI-to-ISA bridge:
+(II) PCI-to-PCI bridge:
+(II) Bus 0: bridge is at (0:0:0), (-1,0,0), BCTRL: 0x08 (VGA_EN is set)
+(II) Bus 0 I/O range:
+ [0] -1 0x00000000 - 0x0000ffff (0x10000) IX[B]
+(II) Bus 0 non-prefetchable memory range:
+ [0] -1 0x00000000 - 0xffffffff (0x0) MX[B]
+(II) Bus 0 prefetchable memory range:
+ [0] -1 0x00000000 - 0xffffffff (0x0) MX[B]
+(II) Bus 1: bridge is at (0:30:0), (0,1,1), BCTRL: 0x06 (VGA_EN is cleared)
+(II) Bus 1 I/O range:
+ [0] -1 0x0000c000 - 0x0000c0ff (0x100) IX[B]
+ [1] -1 0x0000c400 - 0x0000c4ff (0x100) IX[B]
+ [2] -1 0x0000c800 - 0x0000c8ff (0x100) IX[B]
+ [3] -1 0x0000cc00 - 0x0000ccff (0x100) IX[B]
+(II) Bus 1 non-prefetchable memory range:
+ [0] -1 0xec000000 - 0xedffffff (0x2000000) MX[B]
+(II) Bus 1 prefetchable memory range:
+(II) Bus -1: bridge is at (0:31:0), (0,-1,0), BCTRL: 0x08 (VGA_EN is set)
+(II) Bus -1 I/O range:
+(II) Bus -1 non-prefetchable memory range:
+(II) Bus -1 prefetchable memory range:
+(--) PCI:*(0:2:0) Intel unknown chipset (0x2562) rev 3, Mem @ 0xe0000000/27, 0xee000000/19
+(II) Addressable bus resource ranges are
+ [0] -1 0x00000000 - 0xffffffff (0x0) MX[B]
+ [1] -1 0x00000000 - 0x0000ffff (0x10000) IX[B]
+(II) OS-reported resource ranges:
+ [0] -1 0xffe00000 - 0xffffffff (0x200000) MX[B](B)
+ [1] -1 0x00100000 - 0x3fffffff (0x3ff00000) MX[B]E(B)
+ [2] -1 0x000f0000 - 0x000fffff (0x10000) MX[B]
+ [3] -1 0x000c0000 - 0x000effff (0x30000) MX[B]
+ [4] -1 0x00000000 - 0x0009ffff (0xa0000) MX[B]
+ [5] -1 0x0000ffff - 0x0000ffff (0x1) IX[B]
+ [6] -1 0x00000000 - 0x000000ff (0x100) IX[B]
+(II) Active PCI resource ranges:
+ [0] -1 0xed000000 - 0xed01ffff (0x20000) MX[B]
+ [1] -1 0xed020000 - 0xed03ffff (0x20000) MX[B]
+ [2] -1 0xee082000 - 0xee0820ff (0x100) MX[B]
+ [3] -1 0xee081000 - 0xee0811ff (0x200) MX[B]
+ [4] -1 0x7f800000 - 0x7f8003ff (0x400) MX[B]
+ [5] -1 0xee080000 - 0xee0803ff (0x400) MX[B]
+ [6] -1 0xe8000000 - 0xebffffff (0x4000000) MX[B]
+ [7] -1 0xee000000 - 0xee07ffff (0x80000) MX[B](B)
+ [8] -1 0xe0000000 - 0xe7ffffff (0x8000000) MX[B](B)
+ [9] -1 0x0000c400 - 0x0000c4ff (0x100) IX[B]
+ [10] -1 0x0000c000 - 0x0000c01f (0x20) IX[B]
+ [11] -1 0x0000e400 - 0x0000e43f (0x40) IX[B]
+ [12] -1 0x0000e000 - 0x0000e0ff (0x100) IX[B]
+ [13] -1 0x00000500 - 0x0000051f (0x20) IX[B]
+ [14] -1 0x0000f000 - 0x0000f00f (0x10) IX[B]
+ [15] -1 0x0000d400 - 0x0000d41f (0x20) IX[B]
+ [16] -1 0x0000d000 - 0x0000d01f (0x20) IX[B]
+ [17] -1 0x0000d800 - 0x0000d81f (0x20) IX[B]
+(II) Active PCI resource ranges after removing overlaps:
+ [0] -1 0xed000000 - 0xed01ffff (0x20000) MX[B]
+ [1] -1 0xed020000 - 0xed03ffff (0x20000) MX[B]
+ [2] -1 0xee082000 - 0xee0820ff (0x100) MX[B]
+ [3] -1 0xee081000 - 0xee0811ff (0x200) MX[B]
+ [4] -1 0x7f800000 - 0x7f8003ff (0x400) MX[B]
+ [5] -1 0xee080000 - 0xee0803ff (0x400) MX[B]
+ [6] -1 0xe8000000 - 0xebffffff (0x4000000) MX[B]
+ [7] -1 0xee000000 - 0xee07ffff (0x80000) MX[B](B)
+ [8] -1 0xe0000000 - 0xe7ffffff (0x8000000) MX[B](B)
+ [9] -1 0x0000c400 - 0x0000c4ff (0x100) IX[B]
+ [10] -1 0x0000c000 - 0x0000c01f (0x20) IX[B]
+ [11] -1 0x0000e400 - 0x0000e43f (0x40) IX[B]
+ [12] -1 0x0000e000 - 0x0000e0ff (0x100) IX[B]
+ [13] -1 0x00000500 - 0x0000051f (0x20) IX[B]
+ [14] -1 0x0000f000 - 0x0000f00f (0x10) IX[B]
+ [15] -1 0x0000d400 - 0x0000d41f (0x20) IX[B]
+ [16] -1 0x0000d000 - 0x0000d01f (0x20) IX[B]
+ [17] -1 0x0000d800 - 0x0000d81f (0x20) IX[B]
+(II) OS-reported resource ranges after removing overlaps with PCI:
+ [0] -1 0xffe00000 - 0xffffffff (0x200000) MX[B](B)
+ [1] -1 0x00100000 - 0x3fffffff (0x3ff00000) MX[B]E(B)
+ [2] -1 0x000f0000 - 0x000fffff (0x10000) MX[B]
+ [3] -1 0x000c0000 - 0x000effff (0x30000) MX[B]
+ [4] -1 0x00000000 - 0x0009ffff (0xa0000) MX[B]
+ [5] -1 0x0000ffff - 0x0000ffff (0x1) IX[B]
+ [6] -1 0x00000000 - 0x000000ff (0x100) IX[B]
+(II) All system resource ranges:
+ [0] -1 0xffe00000 - 0xffffffff (0x200000) MX[B](B)
+ [1] -1 0x00100000 - 0x3fffffff (0x3ff00000) MX[B]E(B)
+ [2] -1 0x000f0000 - 0x000fffff (0x10000) MX[B]
+ [3] -1 0x000c0000 - 0x000effff (0x30000) MX[B]
+ [4] -1 0x00000000 - 0x0009ffff (0xa0000) MX[B]
+ [5] -1 0xed000000 - 0xed01ffff (0x20000) MX[B]
+ [6] -1 0xed020000 - 0xed03ffff (0x20000) MX[B]
+ [7] -1 0xee082000 - 0xee0820ff (0x100) MX[B]
+ [8] -1 0xee081000 - 0xee0811ff (0x200) MX[B]
+ [9] -1 0x7f800000 - 0x7f8003ff (0x400) MX[B]
+ [10] -1 0xee080000 - 0xee0803ff (0x400) MX[B]
+ [11] -1 0xe8000000 - 0xebffffff (0x4000000) MX[B]
+ [12] -1 0xee000000 - 0xee07ffff (0x80000) MX[B](B)
+ [13] -1 0xe0000000 - 0xe7ffffff (0x8000000) MX[B](B)
+ [14] -1 0x0000ffff - 0x0000ffff (0x1) IX[B]
+ [15] -1 0x00000000 - 0x000000ff (0x100) IX[B]
+ [16] -1 0x0000c400 - 0x0000c4ff (0x100) IX[B]
+ [17] -1 0x0000c000 - 0x0000c01f (0x20) IX[B]
+ [18] -1 0x0000e400 - 0x0000e43f (0x40) IX[B]
+ [19] -1 0x0000e000 - 0x0000e0ff (0x100) IX[B]
+ [20] -1 0x00000500 - 0x0000051f (0x20) IX[B]
+ [21] -1 0x0000f000 - 0x0000f00f (0x10) IX[B]
+ [22] -1 0x0000d400 - 0x0000d41f (0x20) IX[B]
+ [23] -1 0x0000d000 - 0x0000d01f (0x20) IX[B]
+ [24] -1 0x0000d800 - 0x0000d81f (0x20) IX[B]
+(II) LoadModule: "dbe"
+(II) Loading /usr/X11R6/lib/modules/extensions/libdbe.a
+(II) Module dbe: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ Module class: XFree86 Server Extension
+ ABI class: XFree86 Server Extension, version 0.1
+(II) Loading extension DOUBLE-BUFFER
+(II) LoadModule: "GLcore"
+(II) Loading /usr/X11R6/lib/modules/extensions/libGLcore.a
+(II) Module GLcore: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 Server Extension, version 0.1
+(II) LoadModule: "dri"
+(II) Loading /usr/X11R6/lib/modules/extensions/libdri.a
+(II) Module dri: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 Server Extension, version 0.1
+(II) Loading sub module "drm"
+(II) LoadModule: "drm"
+(II) Loading /usr/X11R6/lib/modules/linux/libdrm.a
+(II) Module drm: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 Server Extension, version 0.1
+(II) Loading extension XFree86-DRI
+(II) LoadModule: "glx"
+(II) Loading /usr/X11R6/lib/modules/extensions/libglx.a
+(II) Module glx: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 Server Extension, version 0.1
+(II) Loading sub module "GLcore"
+(II) LoadModule: "GLcore"
+(II) Reloading /usr/X11R6/lib/modules/extensions/libGLcore.a
+(II) Loading extension GLX
+(II) LoadModule: "extmod"
+(II) Loading /usr/X11R6/lib/modules/extensions/libextmod.a
+(II) Module extmod: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ Module class: XFree86 Server Extension
+ ABI class: XFree86 Server Extension, version 0.1
+(II) Loading extension SHAPE
+(II) Loading extension MIT-SUNDRY-NONSTANDARD
+(II) Loading extension BIG-REQUESTS
+(II) Loading extension SYNC
+(II) Loading extension MIT-SCREEN-SAVER
+(II) Loading extension XC-MISC
+(II) Loading extension XFree86-VidModeExtension
+(II) Loading extension XFree86-Misc
+(II) Loading extension XFree86-DGA
+(II) Loading extension DPMS
+(II) Loading extension FontCache
+(II) Loading extension TOG-CUP
+(II) Loading extension Extended-Visual-Information
+(II) Loading extension XVideo
+(II) Loading extension XVideo-MotionCompensation
+(II) Loading extension X-Resource
+(II) LoadModule: "v4l"
+(II) Loading /usr/X11R6/lib/modules/drivers/linux/v4l_drv.o
+(II) Module v4l: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 0.0.1
+ ABI class: XFree86 Video Driver, version 0.5
+(II) LoadModule: "i810"
+(II) Loading /usr/X11R6/lib/modules/drivers/i810_drv.o
+(II) Module i810: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.1.0
+ Module class: XFree86 Video Driver
+ ABI class: XFree86 Video Driver, version 0.5
+(II) LoadModule: "mouse"
+(II) Loading /usr/X11R6/lib/modules/input/mouse_drv.o
+(II) Module mouse: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ Module class: XFree86 XInput Driver
+ ABI class: XFree86 XInput driver, version 0.3
+(II) v4l driver for Video4Linux
+(II) I810: Driver for Intel i810 chipset: i810, i810-dc100, i810e, i815,
+ i830M, 845G
+(II) Primary Device is: PCI 00:02:0
+(--) Assigning device section with no busID to primary device
+(--) Chipset 845G found
+(II) resource ranges after xf86ClaimFixedResources() call:
+ [0] -1 0xffe00000 - 0xffffffff (0x200000) MX[B](B)
+ [1] -1 0x00100000 - 0x3fffffff (0x3ff00000) MX[B]E(B)
+ [2] -1 0x000f0000 - 0x000fffff (0x10000) MX[B]
+ [3] -1 0x000c0000 - 0x000effff (0x30000) MX[B]
+ [4] -1 0x00000000 - 0x0009ffff (0xa0000) MX[B]
+ [5] -1 0xed000000 - 0xed01ffff (0x20000) MX[B]
+ [6] -1 0xed020000 - 0xed03ffff (0x20000) MX[B]
+ [7] -1 0xee082000 - 0xee0820ff (0x100) MX[B]
+ [8] -1 0xee081000 - 0xee0811ff (0x200) MX[B]
+ [9] -1 0x7f800000 - 0x7f8003ff (0x400) MX[B]
+ [10] -1 0xee080000 - 0xee0803ff (0x400) MX[B]
+ [11] -1 0xe8000000 - 0xebffffff (0x4000000) MX[B]
+ [12] -1 0xee000000 - 0xee07ffff (0x80000) MX[B](B)
+ [13] -1 0xe0000000 - 0xe7ffffff (0x8000000) MX[B](B)
+ [14] -1 0x0000ffff - 0x0000ffff (0x1) IX[B]
+ [15] -1 0x00000000 - 0x000000ff (0x100) IX[B]
+ [16] -1 0x0000c400 - 0x0000c4ff (0x100) IX[B]
+ [17] -1 0x0000c000 - 0x0000c01f (0x20) IX[B]
+ [18] -1 0x0000e400 - 0x0000e43f (0x40) IX[B]
+ [19] -1 0x0000e000 - 0x0000e0ff (0x100) IX[B]
+ [20] -1 0x00000500 - 0x0000051f (0x20) IX[B]
+ [21] -1 0x0000f000 - 0x0000f00f (0x10) IX[B]
+ [22] -1 0x0000d400 - 0x0000d41f (0x20) IX[B]
+ [23] -1 0x0000d000 - 0x0000d01f (0x20) IX[B]
+ [24] -1 0x0000d800 - 0x0000d81f (0x20) IX[B]
+(II) resource ranges after probing:
+ [0] -1 0xffe00000 - 0xffffffff (0x200000) MX[B](B)
+ [1] -1 0x00100000 - 0x3fffffff (0x3ff00000) MX[B]E(B)
+ [2] -1 0x000f0000 - 0x000fffff (0x10000) MX[B]
+ [3] -1 0x000c0000 - 0x000effff (0x30000) MX[B]
+ [4] -1 0x00000000 - 0x0009ffff (0xa0000) MX[B]
+ [5] -1 0xed000000 - 0xed01ffff (0x20000) MX[B]
+ [6] -1 0xed020000 - 0xed03ffff (0x20000) MX[B]
+ [7] -1 0xee082000 - 0xee0820ff (0x100) MX[B]
+ [8] -1 0xee081000 - 0xee0811ff (0x200) MX[B]
+ [9] -1 0x7f800000 - 0x7f8003ff (0x400) MX[B]
+ [10] -1 0xee080000 - 0xee0803ff (0x400) MX[B]
+ [11] -1 0xe8000000 - 0xebffffff (0x4000000) MX[B]
+ [12] -1 0xee000000 - 0xee07ffff (0x80000) MX[B](B)
+ [13] -1 0xe0000000 - 0xe7ffffff (0x8000000) MX[B](B)
+ [14] 0 0x000a0000 - 0x000affff (0x10000) MS[B]
+ [15] 0 0x000b0000 - 0x000b7fff (0x8000) MS[B]
+ [16] 0 0x000b8000 - 0x000bffff (0x8000) MS[B]
+ [17] -1 0x0000ffff - 0x0000ffff (0x1) IX[B]
+ [18] -1 0x00000000 - 0x000000ff (0x100) IX[B]
+ [19] -1 0x0000c400 - 0x0000c4ff (0x100) IX[B]
+ [20] -1 0x0000c000 - 0x0000c01f (0x20) IX[B]
+ [21] -1 0x0000e400 - 0x0000e43f (0x40) IX[B]
+ [22] -1 0x0000e000 - 0x0000e0ff (0x100) IX[B]
+ [23] -1 0x00000500 - 0x0000051f (0x20) IX[B]
+ [24] -1 0x0000f000 - 0x0000f00f (0x10) IX[B]
+ [25] -1 0x0000d400 - 0x0000d41f (0x20) IX[B]
+ [26] -1 0x0000d000 - 0x0000d01f (0x20) IX[B]
+ [27] -1 0x0000d800 - 0x0000d81f (0x20) IX[B]
+ [28] 0 0x000003b0 - 0x000003bb (0xc) IS[B]
+ [29] 0 0x000003c0 - 0x000003df (0x20) IS[B]
+(II) Setting vga for screen 0.
+(II) Loading sub module "vgahw"
+(II) LoadModule: "vgahw"
+(II) Loading /usr/X11R6/lib/modules/libvgahw.a
+(II) Module vgahw: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 0.1.0
+ ABI class: XFree86 Video Driver, version 0.5
+(II) Loading sub module "int10"
+(II) LoadModule: "int10"
+(II) Loading /usr/X11R6/lib/modules/linux/libint10.a
+(II) Module int10: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 Video Driver, version 0.5
+(**) I810(0): Depth 16, (--) framebuffer bpp 16
+(==) I810(0): RGB weight 565
+(==) I810(0): Default visual is TrueColor
+(WW) I810(0): Bad V_BIOS checksum
+(II) I810(0): Primary V_BIOS segment is: 0xc000
+(--) I810(0): Chipset: "845G"
+(--) I810(0): Linear framebuffer at 0xE0000000
+(--) I810(0): IO registers at addr 0xEE000000
+(II) I810(0): detected 8192K stolen memory.
+(II) I810(0): I810CheckAvailableMemory: 1956860k available
+(==) I810(0): Will alloc AGP framebuffer: 16384 kByte
+(==) I810(0): Using gamma correction (1.0, 1.0, 1.0)
+(II) I810(0): Currently active displays on Pipe A:
+(II) I810(0): CRT
+(II) Loading sub module "vbe"
+(II) LoadModule: "vbe"
+(II) Loading /usr/X11R6/lib/modules/libvbe.a
+(II) Module vbe: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 Video Driver, version 0.5
+(II) VESA BIOS detected
+(II) VESA VBE Version 3.0
+(II) VESA VBE Total Mem: 8000 kB
+(II) VESA VBE OEM: Brookdale-G Graphics Chip Accelerated VGA BIOS
+(II) VESA VBE OEM Software Rev: 1.0
+(II) VESA VBE OEM Vendor: Intel Corporation
+(II) VESA VBE OEM Product: Brookdale-G Graphics Controller
+(II) VESA VBE OEM Product Rev: Hardware Version 0.0
+(II) Loading sub module "ddc"
+(II) LoadModule: "ddc"
+(II) Loading /usr/X11R6/lib/modules/libddc.a
+(II) Module ddc: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 Video Driver, version 0.5
+(II) I810(0): VESA VBE DDC supported
+(II) I810(0): VESA VBE DDC Level 2
+(II) I810(0): VESA VBE DDC transfer in appr. 1 sec.
+(II) I810(0): VESA VBE DDC read successfully
+(II) I810(0): Manufacturer: PHL Model: e005 Serial#: 64202319
+(II) I810(0): Year: 2001 Week: 31
+(II) I810(0): EDID Version: 1.1
+(II) I810(0): Analog Display Input, Input Voltage Level: 0.700/0.700 V
+(II) I810(0): Sync: Separate
+(II) I810(0): Max H-Image Size [cm]: horiz.: 31 vert.: 23
+(II) I810(0): Gamma: 2.87
+(II) I810(0): DPMS capabilities: StandBy Suspend Off; RGB/Color Display
+(II) I810(0): redX: 0.620 redY: 0.345 greenX: 0.290 greenY: 0.610
+(II) I810(0): blueX: 0.155 blueY: 0.065 whiteX: 0.283 whiteY: 0.297
+(II) I810(0): Supported VESA Video Modes:
+(II) I810(0): 720x400@70Hz
+(II) I810(0): 640x480@60Hz
+(II) I810(0): 640x480@72Hz
+(II) I810(0): 640x480@75Hz
+(II) I810(0): 800x600@60Hz
+(II) I810(0): 800x600@72Hz
+(II) I810(0): 800x600@75Hz
+(II) I810(0): 832x624@75Hz
+(II) I810(0): 1024x768@60Hz
+(II) I810(0): 1024x768@70Hz
+(II) I810(0): 1024x768@75Hz
+(II) I810(0): Manufacturer's mask: 0
+(II) I810(0): Supported Future Video Modes:
+(II) I810(0): #0: hsize: 640 vsize 480 refresh: 85 vid: 22833
+(II) I810(0): #1: hsize: 800 vsize 600 refresh: 85 vid: 22853
+(II) I810(0): #2: hsize: 1024 vsize 768 refresh: 85 vid: 22881
+(II) I810(0): #3: hsize: 1280 vsize 1024 refresh: 60 vid: 32897
+(II) I810(0): #4: hsize: 640 vsize 480 refresh: 100 vid: 26673
+(II) I810(0): #5: hsize: 800 vsize 600 refresh: 100 vid: 26693
+(II) I810(0): #6: hsize: 1280 vsize 960 refresh: 60 vid: 16513
+(II) I810(0): #7: hsize: 1152 vsize 864 refresh: 75 vid: 20337
+(II) I810(0): Supported additional Video Mode:
+(II) I810(0): clock: 25.2 MHz Image Size: 306 x 230 mm
+(II) I810(0): h_active: 640 h_sync: 656 h_sync_end 752 h_blank_end 800 h_border: 0
+(II) I810(0): v_active: 350 v_sync: 387 v_sync_end 389 v_blanking: 449 v_border: 0
+(II) I810(0): Serial No: YA 64202319
+(II) I810(0): Monitor name: PHILIPS 107S
+(II) I810(0): Ranges: V min: 50 V max: 160 Hz, H min: 30 H max: 71 kHz, PixClock max 110 MHz
+(==) I810(0): DPI set to (75, 75)
+(--) I810(0): Virtual size is 1024x768 (pitch 1024)
+(**) I810(0): Default mode "1024x768": 94.5 MHz (scaled from 0.0 MHz), 68.7 kHz, 85.0 Hz
+(II) I810(0): Modeline "1024x768" 94.50 1024 1072 1168 1376 768 769 772 808 +hsync +vsync
+(**) I810(0): Default mode "800x600"
+(II) Loading sub module "fb"
+(II) LoadModule: "fb"
+(II) Loading /usr/X11R6/lib/modules/libfb.a
+(II) Module fb: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 ANSI C Emulation, version 0.1
+(II) Loading sub module "xaa"
+(II) LoadModule: "xaa"
+(II) Loading /usr/X11R6/lib/modules/libxaa.a
+(II) Module xaa: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 1.0.0
+ ABI class: XFree86 Video Driver, version 0.5
+(II) Loading sub module "ramdac"
+(II) LoadModule: "ramdac"
+(II) Loading /usr/X11R6/lib/modules/libramdac.a
+(II) Module ramdac: vendor="The XFree86 Project"
+ compiled for 4.2.1, module version = 0.1.0
+ ABI class: XFree86 Video Driver, version 0.5
+(II) do I need RAC? No, I don't.
+(II) resource ranges after preInit:
+ [0] 0 0xee000000 - 0xee07ffff (0x80000) MS[B]
+ [1] 0 0xe0000000 - 0xe7ffffff (0x8000000) MS[B]
+ [2] -1 0xffe00000 - 0xffffffff (0x200000) MX[B](B)
+ [3] -1 0x00100000 - 0x3fffffff (0x3ff00000) MX[B]E(B)
+ [4] -1 0x000f0000 - 0x000fffff (0x10000) MX[B]
+ [5] -1 0x000c0000 - 0x000effff (0x30000) MX[B]
+ [6] -1 0x00000000 - 0x0009ffff (0xa0000) MX[B]
+ [7] -1 0xed000000 - 0xed01ffff (0x20000) MX[B]
+ [8] -1 0xed020000 - 0xed03ffff (0x20000) MX[B]
+ [9] -1 0xee082000 - 0xee0820ff (0x100) MX[B]
+ [10] -1 0xee081000 - 0xee0811ff (0x200) MX[B]
+ [11] -1 0x7f800000 - 0x7f8003ff (0x400) MX[B]
+ [12] -1 0xee080000 - 0xee0803ff (0x400) MX[B]
+ [13] -1 0xe8000000 - 0xebffffff (0x4000000) MX[B]
+ [14] -1 0xee000000 - 0xee07ffff (0x80000) MX[B](B)
+ [15] -1 0xe0000000 - 0xe7ffffff (0x8000000) MX[B](B)
+ [16] 0 0x000a0000 - 0x000affff (0x10000) MS[B](OprD)
+ [17] 0 0x000b0000 - 0x000b7fff (0x8000) MS[B](OprD)
+ [18] 0 0x000b8000 - 0x000bffff (0x8000) MS[B](OprD)
+ [19] -1 0x0000ffff - 0x0000ffff (0x1) IX[B]
+ [20] -1 0x00000000 - 0x000000ff (0x100) IX[B]
+ [21] -1 0x0000c400 - 0x0000c4ff (0x100) IX[B]
+ [22] -1 0x0000c000 - 0x0000c01f (0x20) IX[B]
+ [23] -1 0x0000e400 - 0x0000e43f (0x40) IX[B]
+ [24] -1 0x0000e000 - 0x0000e0ff (0x100) IX[B]
+ [25] -1 0x00000500 - 0x0000051f (0x20) IX[B]
+ [26] -1 0x0000f000 - 0x0000f00f (0x10) IX[B]
+ [27] -1 0x0000d400 - 0x0000d41f (0x20) IX[B]
+ [28] -1 0x0000d000 - 0x0000d01f (0x20) IX[B]
+ [29] -1 0x0000d800 - 0x0000d81f (0x20) IX[B]
+ [30] 0 0x000003b0 - 0x000003bb (0xc) IS[B](OprU)
+ [31] 0 0x000003c0 - 0x000003df (0x20) IS[B](OprU)
+(==) I810(0): Default visual is TrueColor
+(==) I810(0): Write-combining range (0xe0000000,0x8000000)
+(II) I810(0): vgaHWGetIOBase: hwp->IOBase is 0x03d0, hwp->PIOOffset is 0x0000
+(II) I810(0): Adding 768 scanlines for pixmap caching
+(II) I810(0): Allocated Scratch Memory
+(II) I810(0): Using XFree86 Acceleration Architecture (XAA)
+ Screen to screen bit blits
+ Solid filled rectangles
+ 8x8 mono pattern filled rectangles
+ Indirect CPU to Screen color expansion
+ Solid Horizontal and Vertical Lines
+ Offscreen Pixmaps
+ Setting up tile and stipple cache:
+ 24 128x128 slots
+ 6 256x256 slots
+(==) I810(0): Backing store disabled
+(==) I810(0): Silken mouse enabled
+(II) I810(0): Initializing HW Cursor
+(**) Option "dpms"
+(**) I810(0): DPMS enabled
+(II) I810(0): direct rendering: Disabled
+(II) Initializing built-in extension MIT-SHM
+(II) Initializing built-in extension XInputExtension
+(II) Initializing built-in extension XTEST
+(II) Initializing built-in extension XKEYBOARD
+(II) Initializing built-in extension LBX
+(II) Initializing built-in extension XC-APPGROUP
+(II) Initializing built-in extension SECURITY
+(II) Initializing built-in extension XINERAMA
+(II) Initializing built-in extension XFree86-Bigfont
+(II) Initializing built-in extension RENDER
+(**) Option "Protocol" "PS/2"
+(**) Mouse0: Protocol: "PS/2"
+(**) Option "CorePointer"
+(**) Mouse0: Core Pointer
+(**) Option "Device" "/dev/mouse"
+(**) Option "Emulate3Buttons" "on"
+(**) Mouse0: Emulate3Buttons, Emulate3Timeout: 50
+(**) Option "ZAxisMapping" "4 5"
+(**) Mouse0: ZAxisMapping: buttons 4 and 5
+(**) Mouse0: Buttons: 5
+(II) Keyboard "Keyboard0" handled by legacy driver
+(II) XINPUT: Adding extended input device "Mouse0" (type: MOUSE)
+(II) Got reinsert event: reinitializing PS/2 mouse
