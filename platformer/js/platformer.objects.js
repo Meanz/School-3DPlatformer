@@ -155,7 +155,7 @@ Platformer.AddScanner = function(positions) {
 	scannerSpot.target = scanner;
 	scanner.spot = scannerSpot;
 	SceneManager.Add(scannerSpot);
-	scanner.sound = Platformer.Audio.Scannner;
+	scanner.sound = Platformer.Audio.Scanner;
 	scanner.add(scanner.sound);
 	scanner.timePenelty = 15;
 	scanner.cooldownTime = 5000;
