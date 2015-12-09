@@ -1,7 +1,7 @@
 /**
- * Created by Meanzie on 03.12.2015.
+ * Adds the title UIText to the supplied parameter
+ * @param p The object to attach the UIText to
  */
-
 function AddTitle(p) {
     var text = SceneManager.Add(p, new Platformer.UIText("Inside the Mainframe", "48px Arial", "#ff0000",
         v3z()));
@@ -9,14 +9,20 @@ function AddTitle(p) {
     text.SetPosition(0, Platformer.Camera.top - (text.GetHeight() / 2));
 }
 
+/**
+ * Set's the active camera to Orthographic mode
+ */
 function OrthoCamera() {
-    // Switch camera
     Platformer.Camera.position.copy(v3z());
     Platformer.Camera.toFrontView();
     Platformer.Camera.toOrthographic2(-Platformer.Width / 2, Platformer.Width / 2, Platformer.Height / 2,
         -Platformer.Height / 2);
 }
 
+/**
+ * Menu Base
+ * @constructor
+ */
 Platformer.Menu = function() {
     THREE.Object3D.call(this);
 };
@@ -28,6 +34,10 @@ Platformer.Menu.prototype.Clear = function() {
 };
 Platformer.Menu.constructor = Platformer.Menu;
 
+/**
+ * Victory Menu
+ * @constructor
+ */
 Platformer.VictoryMenu = function() {
     Platformer.Menu.call(this);
     this.name = "VictoryMenu";
@@ -51,6 +61,10 @@ Platformer.VictoryMenu = function() {
 Platformer.VictoryMenu.prototype = Object.create(Platformer.Menu.prototype);
 Platformer.VictoryMenu.constructor = Platformer.VictoryMenu;
 
+/**
+ * Continue Menu
+ * @constructor
+ */
 Platformer.ContinueMenu = function() {
     Platformer.Menu.call(this);
     this.name = "ContinueMenu";
@@ -78,6 +92,11 @@ Platformer.ContinueMenu = function() {
 Platformer.ContinueMenu.prototype = Object.create(Platformer.Menu.prototype);
 Platformer.ContinueMenu.constructor = Platformer.ContinueMenu;
 
+/**
+ * Lost Menu
+ * @param deathMessage
+ * @constructor
+ */
 Platformer.LostMenu = function(deathMessage) {
     Platformer.Menu.call(this);
     this.name = "LostMenu";
@@ -106,6 +125,11 @@ Platformer.LostMenu = function(deathMessage) {
 Platformer.LostMenu.prototype = Object.create(Platformer.Menu.prototype);
 Platformer.LostMenu.constructor = Platformer.LostMenu;
 
+/**
+ * Main Menu
+ * @param inPauseMode
+ * @constructor
+ */
 Platformer.MainMenu = function(inPauseMode) {
     Platformer.Menu.call(this);
     // Base is THREE.Object3D
@@ -231,7 +255,7 @@ Platformer.MainMenu = function(inPauseMode) {
 
         AddTitle(mainMenu);
 
-        var levels = [ "level1.json", "level2.json", "level3.json", "level4.json" ];
+        var levels = [ "level1.json", "level2.json", "level3.json" ];
 
         for (var i = 0; i < levels.length; i++) {
             var that = SceneManager.Add(mainMenu, new Platformer.UIButton(levels[i], v2(0, 100 - (i * 50)), function() {
@@ -301,6 +325,14 @@ Platformer.MainMenu = function(inPauseMode) {
 Platformer.MainMenu.prototype = Object.create(Platformer.Menu.prototype);
 Platformer.MainMenu.constructor = Platformer.MainMenu;
 
+/**
+ * A Text Label
+ * @param text
+ * @param font
+ * @param color
+ * @param inPosition
+ * @constructor
+ */
 Platformer.UIText = function(text, font, color, inPosition) {
     this.Text = text;
     this.Font = font;
@@ -341,6 +373,13 @@ Platformer.UIText = function(text, font, color, inPosition) {
 Platformer.UIText.prototype = Object.create(THREE.Mesh.prototype);
 Platformer.UIText.constructor = Platformer.UIText;
 
+/**
+ * A Button
+ * @param text
+ * @param position
+ * @param onClick
+ * @constructor
+ */
 Platformer.UIButton = function(text, position, onClick) {
     var normalColor = "#ff0000";
     var hoverColor = "#00ff00";

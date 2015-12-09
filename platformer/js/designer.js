@@ -147,6 +147,7 @@ Designer.LoadLevel = function() {
 				Designer.Tiles.push(tile);
 			} else if (type == TOOL_DISK) {
 				var tile = new Tile_FloppyDisk(tileX, tileY);
+				tile.TileHeight = obj.TileHeight;
 				tile.WithFloor = obj.WithFloor;
 				Designer.Tiles.push(tile);
 			} else if (type == TOOL_SCANNER) {

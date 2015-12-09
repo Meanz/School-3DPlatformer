@@ -1,9 +1,19 @@
 //For debugging
 Platformer.AlertOnError = true;
+/**
+ * Log a message to the console
+ * @param message
+ * @constructor
+ */
 Platformer.Log = function(message) {
 	// =D
 	console.log(message);
 };
+/**
+ * Log an error message or use alert if Platformer.AlertOnError is true
+ * @param message
+ * @constructor
+ */
 Platformer.LogError = function(message) {
 	if (Platformer.AlertOnError) {
 		alert(message);
@@ -12,6 +22,13 @@ Platformer.LogError = function(message) {
 	}
 	console.trace();
 };
+
+/**
+ * Log a null argument error message @see Platformer.LogError for information about error messages
+ * @param func
+ * @param argument
+ * @constructor
+ */
 Platformer.NullArgument = function(func, argument) {
 	Platformer.LogError("The supplied argument \"" + argument + "\" in function \"" + func + "\" is null.");
 };
@@ -264,11 +281,13 @@ SceneManager.ClearScene = function() {
 	}
 };
 
-/**
- * 
- */
 var AccumDelta = 0;
 var AccumThing = 0;
+
+/**
+ * Called by platformer.boot.js loop every frame
+ * @param delta The amount of milliseconds since last frame
+ */
 SceneManager.OnRender = function(delta) {
 	SceneManager.IsInsideLoop = true;
 	if (Platformer.IsPlaying) {
@@ -283,7 +302,6 @@ SceneManager.OnRender = function(delta) {
 		}
 	}
 	SceneManager.IsInsideLoop = false;
-
 	AccumDelta += delta;
 	if (AccumDelta > 100) {
 		AccumThing += 1;
@@ -298,7 +316,9 @@ SceneManager.OnRender = function(delta) {
 };
 
 /**
- * 
+ * Called every simulation step by platformer.boot.js
+ * Also handles adding and removing scene objects
+ * @param delta The amount of milliseconds since last simulation step
  */
 SceneManager.OnSimulation = function(delta) {
 	// Do all adds

@@ -63,6 +63,10 @@ function WaitForResources() {
     }
 }
 
+/**
+ * Loads all the required resources and calls the supplied function when the resources are loaded
+ * @param fn The function to call
+ */
 function LoadResources(fn)
 {
     ResourceCompleteFn = fn;
