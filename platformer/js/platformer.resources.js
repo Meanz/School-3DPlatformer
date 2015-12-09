@@ -5,21 +5,16 @@
 var ResourceWaitCount = 0;
 var ResourceCompleteFn = null;
 var ResourceLock = true;
+var ResourceWaitSounds = [];
 
 function ResourceLog(msg) {
-    $("hud-loading-msg").append(msg + "<br />");
+    $("#hud-loading-msg").append(msg + "<br />");
+    console.log(msg);
 }
 
 function OnResourceLoaded(name) {
     ResourceWaitCount--;
     ResourceLog("Resource " + name + " loaded.");
-    if(ResourceWaitCount == 0 && ResourceLock == false) {
-        if(ResourceCompleteFn != null) {
-            ResourceCompleteFn();
-        } else {
-            ResourceLog("No resource complete function.");
-        }
-    }
 }
 
 function WaitForResource() {
@@ -29,19 +24,49 @@ function WaitForResource() {
 function LoadAudio(fn) {
     var audio = new THREE.Audio(Platformer.audioListener);
     audio.load(fn);
+    ResourceWaitSounds.push(audio);
     return audio;
 }
 
 function LoadStaticAudio(fn) {
     var audio = LoadAudio(fn);
+    audio.name = fn;
     audio.position.z = -1;
     return audio;
+}
+
+function WaitForResources() {
+    var donzo = true;
+    if(ResourceWaitSounds.length > 0) {
+        var toRemove = [];
+        for(var i=0; i < ResourceWaitSounds.length; i++) {
+            if(ResourceWaitSounds[i].IsLoaded()) {
+                ResourceLog("Resource " + ResourceWaitSounds[i].name + " loaded.");
+                toRemove.push(ResourceWaitSounds[i]);
+            }
+        }
+        for(var i=0; i < toRemove.length; i++) {
+            ResourceWaitSounds.splice(ResourceWaitSounds.indexOf(toRemove[i]), 1);
+        }
+        donzo = false;
+    } else {
+        if(ResourceWaitCount != 0) {
+            //We are donzo
+            donzo = false;
+        }
+    }
+    if(!donzo) {
+        requestAnimationFrame(WaitForResources);
+    } else {
+        $("#hud-loading").fadeOut();
+        ResourceCompleteFn();
+    }
 }
 
 function LoadResources(fn)
 {
     ResourceCompleteFn = fn;
-    $("hud-loading").show();
+    $("#hud-loading").fadeIn();
 
     //Load all resources
 
@@ -95,13 +120,8 @@ function LoadResources(fn)
     //CyberWind
     Platformer.Audio.CyberWind = LoadStaticAudio("sounds/92029__urupin__digital-wind.mp3");
 
+    //Menu loopp
+    Platformer.Audio.MenuLoop = LoadStaticAudio("sounds/329130__dodgyloops__digitaltribal-dodgyloops-dodgy-c.wav");
     //Unlock
-    ResourceLock = false;
-    if(ResourceWaitCount == 0) {
-        if(ResourceCompleteFn != null) {
-            ResourceCompleteFn();
-        } else {
-            ResourceLog("No resource complete function.");
-        }
-    }
+    requestAnimationFrame(WaitForResources);
 };

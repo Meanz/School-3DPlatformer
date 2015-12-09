@@ -152,6 +152,7 @@ Designer.LoadLevel = function() {
 			} else if (type == TOOL_SCANNER) {
 				var tile = new Tile_Scanner(tileX, tileY);
 				tile.Targets = obj.Targets;
+				tile.WithFloor = obj.WithFloor;
 				Designer.Tiles.push(tile);
 			} else if (type == TOOL_END_FINAL) {
 				var tile = new Tile_EndFinal(tileX, tileY);
@@ -681,11 +682,13 @@ Tile_Scanner.prototype.GetHtml = function() {
 	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
 
 	json = JSON.stringify(this.Targets);
+	html += "<br />WithFloor: <input id='input_withFloor' " + onchange + " type='checkbox' " +(this.WithFloor ? "checked" : "")  +">";
 	html += "<br />Targets: <textarea id='input_Targets' " + onchange + " type='checkbox' " +(this.WithFloor ? "checked" : "")  +">" + json + "</textarea>";
 	return html;
 }
 Tile_Scanner.prototype.UpdateValues = function() {
 	Tile.prototype.UpdateValues.call(this);
+	this.WithFloor = $("#input_withFloor").is(':checked');
 	this.Targets = JSON.parse($("#input_Targets").val());
 	this.Text = "Scanner";
 };

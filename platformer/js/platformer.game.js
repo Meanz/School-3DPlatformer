@@ -6,7 +6,7 @@ Platformer.LoadLevel = function(levelName) {
 	$.getJSON("levels/" + levelName, function(data) {
 
 		var floorMaterial = Physijs.createMaterial(new THREE.MeshPhongMaterial({
-					color: 0xffffff,
+					color: 0x666666,
 					map: Platformer.Texture,
 					blending: THREE.AdditiveBlending,
 					shininess: 0
@@ -61,7 +61,9 @@ Platformer.LoadLevel = function(levelName) {
 				Platformer.AddTracer(v3(scale.x * tileX, (scale.y * tileHeight) + 2.5, scale.z * tileY));
 			} else if (type == "scanner") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
-				Platformer.AddFloor(position, scale, floorMaterial);
+				if(obj.WithFloor == "true") {
+					Platformer.AddFloor(position, scale, floorMaterial);
+				}
 				//Convert all targets into v3's
 				if(obj.Targets.length > 0) {
 					var targets = [];
@@ -161,7 +163,7 @@ OnInit = function() {
 		player.OnUpdate = function() {
 
 			//Sound
-			var isPlayingAnything = Platformer.Audio.Intro.isPlaying || Platformer.Audio.End.isPlaying;
+			var isPlayingAnything = (Platformer.EinsteinSound != null && Platformer.EinsteinSound.isPlaying) || (Platformer.EinsteinEndSound != null && Platformer.EinsteinEndSound.isPlaying);
 			if(!isPlayingAnything && Platformer.IsShowingEinstein)  {
 				Platformer.ShowEinstein(false);
 			}
@@ -306,28 +308,31 @@ OnInit = function() {
 };
 
 Platformer.IsShowingEinstein = false;
+Platformer.EinsteinSound = null;
+Platformer.EinsteinEndSound = null;
 Platformer.ShowEinstein = function(visible) {
 	var einstein = $("#hud-einstein");
 	if(visible) {
 		Platformer.IsShowingEinstein = true;
-		einstein.show();
+		einstein.fadeIn();
 	} else {
 		Platformer.IsShowingEinstein = false;
-		einstein.hide();
+		einstein.fadeOut();
 	}
 };
 Platformer.StartLevel = function(levelName) {
 	if(Platformer.Player.Level == 1) {
 		console.log("Playing supposed audio");
-		Platformer.PlaySoundOnObject(Platformer.Camera ,Platformer.Audio.Intro);
-		Platformer.ShowEinstein(true);
+		var einsteinSound = Platformer.PlaySoundOnObject(Platformer.Camera ,Platformer.Audio.Intro);
+		if(einsteinSound != null) {
+			Platformer.EinsteinSound = einsteinSound;
+			Platformer.ShowEinstein(true);
+		}
 	}
 
-
-	Platformer.Audio.CyberWind.position.z = -10;
-	Platformer.Audio.CyberWind.setLoop(true);
-	Platformer.PlaySoundOnObject(Platformer.Camera ,Platformer.Audio.CyberWind);
-
+	var snd = Platformer.PlaySoundOnObject(Platformer.Camera ,Platformer.Audio.CyberWind);
+	snd.setLoop(true);
+	snd.position.z = -10;
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 	Platformer.IsWorldEnding = false;
 	Platformer.ParseJsonObjects();
@@ -369,16 +374,6 @@ Platformer.PlayerDied = function(killedBy) {
 };
 
 Platformer.EndLevel = function() {
-
-	//Just because
-	if(Platformer.Audio.Intro.isPlaying) {
-		Platformer.Audio.Intro.stop();
-	}
-	//Just because
-	if(Platformer.Audio.End.isPlaying) {
-		Platformer.Audio.End.stop();
-	}
-
 	Platformer.IsPlaying = false;
 	SceneManager.ClearLevel();
 	Platformer.FreeCursor();
@@ -390,11 +385,12 @@ Platformer.PlayerReachedEnd = function() {
 	Platformer.EndLevel();
 	// Spawn the continue menu
 	SceneManager.Add(new Platformer.ContinueMenu());
+	Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.MenuLoop).setLoop(true);
 };
 
 Platformer.PlayerReachedPodium = function() {
 	console.log("Playing End Sound");
-	Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.End);
+	Platformer.EinsteinEndSound = Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.End);
 	// End level
 	Platformer.EndLevel();
 	// Spawn the victory menu

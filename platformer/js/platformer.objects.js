@@ -11,10 +11,10 @@ THREE.Audio.prototype.IsLoaded = function () {
 
 //
 Platformer.PlaySoundOnObject = function(attachTo, sound) {
-
+	var audioObject = null;
 	if(Platformer.Settings.IsSoundEnabled) {
 			//Create audio object
-		var audioObject = sound.Duplicate();
+		audioObject = sound.Duplicate();
 		audioObject.position.copy(sound.position);
 		audioObject.Tag = TAG_LEVEL;
 		audioObject.GC = false;
@@ -37,7 +37,8 @@ Platformer.PlaySoundOnObject = function(attachTo, sound) {
 			}
 		};
 		SceneManager.Add(attachTo, audioObject);
-		}
+	}
+	return audioObject;
 };
 
 /**
