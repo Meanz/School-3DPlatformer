@@ -1,4 +1,14 @@
 
+THREE.Audio.prototype.dupl = function ( other ) {
+	var audio = new THREE.Audio(Platformer.audioListener);
+	audio.load(fn);
+	var scope = audio;
+	scope.context.decodeAudioData( other.source.buffer, function ( buffer ) {
+		scope.source.buffer = buffer;
+		if ( scope.autoplay ) scope.play();
+	} );
+	return audio;
+};
 
 //Helper function for audio
 Platformer.PlayStaticSound = function(sound) {
