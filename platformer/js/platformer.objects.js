@@ -5,20 +5,22 @@ THREE.Audio.prototype.dupl = function () {
 	return audio;
 };
 
+THREE.Audio.prototype.IsLoaded = function () {
+	return this.source.buffer instanceof AudioBuffer;
+};
+
 //
 Platformer.PlaySoundOnObject = function(attachTo, sound) {
-
 	//Create audio object
 	var audioObject = sound.dupl();
 	audioObject.Tag = TAG_LEVEL;
 	audioObject.GC = false;
 	audioObject.OnStart = function() {
 		//Playes the audio of loaded
-		if (audioObject.source.buffer instanceof AudioBuffer) {
+		if (this.IsLoaded()) {
 			audioObject.play();
 		}
 	};
-
 	audioObject.onUpdate = function() {
 		//Assume that it will always be playing
 		if(!this.isPlaying && !this.GC) {
@@ -26,14 +28,11 @@ Platformer.PlaySoundOnObject = function(attachTo, sound) {
 			this.GC = true;
 		}
 	};
-
-	audioObject.onEnd = function(){
-		if (audioObject.source.buffer instanceof AudioBuffer) {
+	audioObject.OnEnd = function(){
+		if (this.isPlaying && this.IsLoaded()) {
 			this.stop();
 		}
 	};
-
-
 	SceneManager.Add(attachTo, audioObject);
 };
 
