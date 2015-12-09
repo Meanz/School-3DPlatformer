@@ -132,7 +132,7 @@ OnInit = function() {
 		var playerMaterial = Physijs.createMaterial(new THREE.MeshBasicMaterial({}), friction, restitution);
 
 		//add fog
-		Platformer.Scene.fog = new THREE.Fog(0xaaaaaa, 0.1, 20);
+		Platformer.Scene.fog = new THREE.Fog(Platformer.FogColor, 0.1, 20);
 
 		var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), playerMaterial, mass);
 		Platformer.Player = player;

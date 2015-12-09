@@ -30,6 +30,7 @@ var SENSITIVITY_HIGH = 0.01;
 var SENSITIVITY_ULTRA = 0.1;
 var SENSITIVITY_INSANE = 0.5;
 
+Platformer.FogColor = 0x000000;
 Platformer.Settings = {};
 Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_HIGH;
 Platformer.Settings.IsSoundEnabled = true;
@@ -144,7 +145,7 @@ Platformer.Init = function() {
 		antialias : true,
 
 	});
-	Platformer.Renderer.setClearColor( 0xaaaaaa );
+	Platformer.Renderer.setClearColor( Platformer.FogColor );
 	Platformer.Width = window.innerWidth - 4;
 	Platformer.Height = window.innerHeight - 4;
 
