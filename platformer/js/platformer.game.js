@@ -274,13 +274,7 @@ OnInit = function() {
 				player.applyCentralImpulse(impulse);
 
 				if (player.position.y < -15 && !Platformer.IsWorldEnding) {
-					player.position.x = StartPositionX;
-					player.position.y = StartPositionY;
-					player.position.z = StartPositionZ;
-					player.__dirtyPosition = true;
-					player.__dirtyRotation = true;
-					player.setLinearVelocity(v3z());
-					player.setAngularVelocity(v3z());
+					Platformer.PlayerDied("Fell off the world.");
 				}
 			}
 		};
@@ -313,6 +307,14 @@ Platformer.StartLevel = function(levelName) {
 	Platformer.IsPlaying = true;
 	Platformer.Player.TimeRemaining = 100;
 	Platformer.Player.LastTimeUpdate = Date.now();
+
+	Platformer.Player.position.x = StartPositionX;
+	Platformer.Player.position.y = StartPositionY;
+	Platformer.Player.position.z = StartPositionZ;
+	Platformer.Player.__dirtyPosition = true;
+	Platformer.Player.__dirtyRotation = true;
+	Platformer.Player.setLinearVelocity(v3z());
+	Platformer.Player.setAngularVelocity(v3z());
 	$("#hud-ingame").show();
 };
 
