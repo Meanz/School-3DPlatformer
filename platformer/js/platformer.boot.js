@@ -74,6 +74,9 @@ function renderScene(timestamp) {
 	Platformer.Renderer.render(Platformer.Scene, Platformer.Camera);
 }
 
+/**
+ * Called by index.html to boot up the game
+ */
 Platformer.Init = function() {
 
 	Platformer.Renderer = new THREE.WebGLRenderer({

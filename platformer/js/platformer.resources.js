@@ -1,26 +1,38 @@
-/**
- * Created by Meanzie on 04.12.2015.
- */
-
 var ResourceWaitCount = 0;
 var ResourceCompleteFn = null;
-var ResourceLock = true;
 var ResourceWaitSounds = [];
 
+/**
+ * Logs the given message to the screen and the console
+ * @param msg
+ * @constructor
+ */
 function ResourceLog(msg) {
     $("#hud-loading-msg").append(msg + "<br />");
     console.log(msg);
 }
 
+/**
+ * Decrement wait for count
+ * @param name The name of the resources that was loaded
+ */
 function OnResourceLoaded(name) {
     ResourceWaitCount--;
     ResourceLog("Resource " + name + " loaded.");
 }
 
+/**
+ * Increments wait for count
+ */
 function WaitForResource() {
     ResourceWaitCount++;
 }
 
+/**
+ * Loads an audio object
+ * @param fn The audio filename
+ * @returns {THREE.Audio} The audio object
+ */
 function LoadAudio(fn) {
     var audio = new THREE.Audio(Platformer.audioListener);
     audio.load(fn);
@@ -28,6 +40,11 @@ function LoadAudio(fn) {
     return audio;
 }
 
+/**
+ * Loads a static audio object
+ * @param fn The audio filename
+ * @returns {THREE.Audio} The audio object
+ */
 function LoadStaticAudio(fn) {
     var audio = LoadAudio(fn);
     audio.name = fn;
@@ -35,6 +52,9 @@ function LoadStaticAudio(fn) {
     return audio;
 }
 
+/**
+ * Waits for all resources to be loaded
+ */
 function WaitForResources() {
     var donzo = true;
     if(ResourceWaitSounds.length > 0) {

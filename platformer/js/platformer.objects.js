@@ -1,5 +1,5 @@
 /**
- *
+ * Duplicate the given audio source (Does not duplicate variables only data source)
  * @returns {THREE.Audio}
  */
 THREE.Audio.prototype.Duplicate = function () {
@@ -7,9 +7,10 @@ THREE.Audio.prototype.Duplicate = function () {
 	audio.source.buffer = this.source.buffer;
 	return audio;
 };
+
 /**
- *
- * @returns {boolean}
+ * Check whether the sound is loaded or not
+ * @returns {boolean} Whether or not the sound is loaded
  */
 THREE.Audio.prototype.IsLoaded = function () {
 	return this.source.buffer instanceof AudioBuffer;
@@ -53,44 +54,8 @@ Platformer.PlaySoundOnObject = function(attachTo, sound) {
 };
 
 /**
- * @deprecated Do not use
- */
-Platformer.PlaySound = function(sound, where) {
-	if(where == undefined) {
-		where = v3z().copy(Platformer.Player.position);
-	}
-
-	//Also update listener position
-	//Platformer.audioListener.position.copy(Platformer.Player.position);
-	//Platformer.audioListener.updateMatrixWorld(true);
-	//Update sound position
-	//sound.position.copy(where);
-	//sound.updateMatrixWorld(true);
-
-	//Distance between two points
-	var dist = where.distanceTo(Platformer.Player.position) + 0.1;
-	sound.setRefDistance(dist);
-
-	if (sound.source.buffer instanceof AudioBuffer) {
-
-/*
-		var position = new THREE.Vector3();
-		var quaternion = new THREE.Quaternion();
-		var scale = new THREE.Vector3();
-		sound.matrixWorld.decompose( position, quaternion, scale );
-
-		console.log("position: " + position);
-
-		Platformer.audioListener.matrixWorld.decompose( position, quaternion, scale );
-
-
-		console.log("audioListener: " + position);
-*/
-		sound.play();
-	}
-};
-/**
- *
+ * A Sprite the shows the syslog.txt text randomly
+ * @constructor
  */
 Platformer.AddSysLog = function() {
 
@@ -130,6 +95,14 @@ Platformer.AddSysLog = function() {
 
 };
 
+/**
+ * A Plane
+ * @param size
+ * @param color
+ * @param position
+ * @returns {Platformer.AddPlane}
+ * @constructor
+ */
 Platformer.AddPlane = function(size, color, position) {
 	this.Color = color;
 	this.Position = position;
@@ -148,6 +121,13 @@ Platformer.AddPlane = function(size, color, position) {
 	return this;
 };
 
+/**
+ * A Floor
+ * @param position
+ * @param dimension
+ * @param material
+ * @constructor
+ */
 Platformer.AddFloor = function(position, dimension, material) {
 	if (material === undefined) {
 		material = Platformer.DefaultMaterial;
@@ -180,6 +160,13 @@ Platformer.AddFloor = function(position, dimension, material) {
 	return floor;
 };
 
+/**
+ * A Pendulum
+ * @param position
+ * @param dimension
+ * @param material
+ * @constructor
+ */
 Platformer.AddPendulum = function(position, dimension, material) {
 	//Geometry
 	//pos, dim, material, mass
@@ -212,6 +199,13 @@ Platformer.AddPendulum = function(position, dimension, material) {
 	SceneManager.Add(geom);
 };
 
+/**
+ * A Rotating Cube
+ * @param position
+ * @param dimension
+ * @param material
+ * @constructor
+ */
 Platformer.AddRotatingCube = function(position, dimension, material) {
 	//Geometry
 	//pos, dim, material, mass
@@ -243,6 +237,14 @@ Platformer.AddRotatingCube = function(position, dimension, material) {
 	SceneManager.AddTile(geom);
 };
 
+/**
+ * A Player
+ * @param position
+ * @param dimension
+ * @param material
+ * @param mass
+ * @constructor
+ */
 Platformer.AddPlayer = function(position, dimension, material, mass) {
 	if (material === undefined) {
 		material = Platformer.DefaultMaterial;
@@ -253,6 +255,13 @@ Platformer.AddPlayer = function(position, dimension, material, mass) {
 	return sphere;
 };
 
+/**
+ * A Wire Plane
+ * @param position
+ * @param width
+ * @param height
+ * @constructor
+ */
 Platformer.AddWirePlane = function(position, width, height){
 	var plane = Geometry.Plane(position, width, height);
 	plane.rotation.x = Math.PI/2;
@@ -260,6 +269,12 @@ Platformer.AddWirePlane = function(position, width, height){
 	return plane;
 };
 
+/**
+ * A Test Box
+ * @param position
+ * @param dimension
+ * @constructor
+ */
 Platformer.AddTestBox = function(position, dimension) {
 	var testMaterial = Physijs.createMaterial(new THREE.MeshLambertMaterial({
 		map : Platformer.Textures.Plywood
@@ -293,6 +308,12 @@ Platformer.AddTestBox = function(position, dimension) {
 	SceneManager.Add(box);
 };
 
+/**
+ * A Tracer
+ * @param position
+ * @returns {THREE.Mesh}
+ * @constructor
+ */
 Platformer.AddTracer = function(position) {
 	var tracer = new THREE.Mesh(Platformer.Tracer.geometry, Platformer.Tracer.material);
 	tracer.position.set(position.x, position.y, position.z);
@@ -331,6 +352,12 @@ Platformer.AddTracer = function(position) {
 
 };
 
+/**
+ * A Scanner
+ * @param positions
+ * @returns {THREE.Mesh}
+ * @constructor
+ */
 Platformer.AddScanner = function(positions) {
 	var scanner = new THREE.Mesh(Platformer.Scanner.geometry, Platformer.Scanner.material);
 	scanner.position.set(positions[0].x, positions[0].y, positions[0].z);
@@ -421,6 +448,12 @@ Platformer.AddScanner = function(positions) {
 
 };
 
+/**
+ * A Teleporter
+ * @param position
+ * @returns {THREE.Object3D}
+ * @constructor
+ */
 Platformer.AddTeleporter = function(position) {
 	var teleporter = new THREE.Object3D();
 	var telePlatform = new THREE.Mesh(Platformer.Teleporter.geometryPlatform, Platformer.Teleporter.materialPlatform);
@@ -477,6 +510,12 @@ Platformer.AddTeleporter = function(position) {
 	return teleporter;
 };
 
+/**
+ * A JumpPad
+ * @param position
+ * @returns {THREE.Mesh}
+ * @constructor
+ */
 Platformer.AddJumppad = function(position){
 	//var jumppad = new Physijs.ConvexMesh(Platformer.Jumppad.geometry, Platformer.Jumppad.material, 0);
 	var jumppad = new THREE.Mesh(Platformer.Jumppad.geometry, Platformer.Jumppad.material);

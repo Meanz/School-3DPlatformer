@@ -2,6 +2,10 @@ var StartPositionX = 0;
 var StartPositionY = 5;
 var StartPositionZ = 0;
 
+/**
+ * Load the specified level, Platformer.EndLevel must be called to end a level before calling this function
+ * @param levelName
+ */
 Platformer.LoadLevel = function(levelName) {
 	$.getJSON("levels/" + levelName, function(data) {
 
@@ -104,10 +108,16 @@ Platformer.LoadLevel = function(levelName) {
 	});
 };
 var raycaster = new THREE.Raycaster();
+/**
+ * Called when platformer.boot.js has booted up the THREE/PHYSIJS system
+ */
 OnInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 	// Add main menu object
 
+	/**
+	 * Called when all the resources has been loaded
+	 */
 	var OnInitComplete = function() {
 
 		SceneManager.Add(new Platformer.MainMenu(false));
@@ -298,6 +308,10 @@ OnInit = function() {
 Platformer.IsShowingEinstein = false;
 Platformer.EinsteinSound = null;
 Platformer.EinsteinEndSound = null;
+/**
+ * Set whether or not the einstein image should be displayed
+ * @param visible
+ */
 Platformer.ShowEinstein = function(visible) {
 	var einstein = $("#hud-einstein");
 	if(visible) {
@@ -308,6 +322,11 @@ Platformer.ShowEinstein = function(visible) {
 		einstein.hide();
 	}
 };
+
+/**
+ * Starts the level with the specified name
+ * @param levelName
+ */
 Platformer.StartLevel = function(levelName) {
 	if(Platformer.Player.Level == 1) {
 		console.log("Playing supposed audio");
@@ -353,6 +372,10 @@ Platformer.StartLevel = function(levelName) {
 
 };
 
+/**
+ * Called when the player is killed by something
+ * @param killedBy A text message that explains the reason of death
+ */
 Platformer.PlayerDied = function(killedBy) {
 	console.log("Playing death sound?");
 	Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.Death);
@@ -363,6 +386,9 @@ Platformer.PlayerDied = function(killedBy) {
 	SceneManager.Add(new Platformer.LostMenu("Player killed by " + killedBy));
 };
 
+/**
+ * Called to end the level
+ */
 Platformer.EndLevel = function() {
 	Platformer.IsPlaying = false;
 	SceneManager.ClearLevel();
@@ -370,6 +396,9 @@ Platformer.EndLevel = function() {
 	$("#hud-ingame").hide();
 };
 
+/**
+ * Called when the player has reached the goal of a level
+ */
 Platformer.PlayerReachedEnd = function() {
 	// End level
 	Platformer.EndLevel();
@@ -381,6 +410,9 @@ Platformer.PlayerReachedEnd = function() {
 	}
 };
 
+/**
+ * Called when the player has finished the last level
+ */
 Platformer.PlayerReachedPodium = function() {
 	console.log("Playing End Sound");
 	Platformer.EinsteinEndSound = Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.End);

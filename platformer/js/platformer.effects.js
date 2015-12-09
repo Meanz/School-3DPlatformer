@@ -1,3 +1,6 @@
+/**
+ * Adds the symbol particle clouds to the game
+ */
 Platformer.AddSymbolParticleCloud = function(){
 
     SceneManager.Add(Platformer.GetSymbolCloud('1', 200, Platformer.Settings.ParticleAmount/3));
@@ -6,6 +9,13 @@ Platformer.AddSymbolParticleCloud = function(){
 
 };
 
+/**
+ * Creates a Symbol cloud using the given parameters
+ * @param symbol The character that the symbol cloud will consist of
+ * @param range The extents of the symbol cloud ( real value )
+ * @param amount The number of particles in the cloud ( integer value )
+ * @returns {THREE.Points} The Point Cloud object
+ */
 Platformer.GetSymbolCloud = function(symbol, range, amount){
     var geom = new THREE.Geometry();
     var material = new THREE.PointsMaterial({
@@ -37,6 +47,11 @@ Platformer.GetSymbolCloud = function(symbol, range, amount){
     return cloud;
 };
 
+/**
+ * Constructs the texture for the Symbol Cloud
+ * @param symbol
+ * @returns {THREE.Texture}
+ */
 Platformer.GetSymbolCloudTexture = function(symbol){
     var canvas = document.createElement('canvas');
     canvas.width = 32;
