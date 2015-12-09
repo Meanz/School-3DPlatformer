@@ -89,6 +89,8 @@ Platformer.LoadLevel = function(levelName) {
 	//	Platformer.AddPodium(v3(15, 1, 0));
 	//	Platformer.AddFloppyDisk(v3(10, 1, -5));
 
+		Platformer.AddRotatingCube(v3(-3, 0, -3), v3(5, 1, 1), floorMaterial);
+
 		//Gaben, syslog
 		//Platformer.AddSysLog();
 
@@ -130,7 +132,7 @@ OnInit = function() {
 			player.LastTimeUpdate = Date.now();
 			player.TimeRemaining = 0;
 			player.InternalJumpCd = 0;
-			console.log("Set angular factor");
+			player.Level = 1;
 		};
 		player.OnEnd = function() {
 			console.log("Player was removed");
@@ -158,12 +160,9 @@ OnInit = function() {
 			if (Platformer.IsPlaying) {
 
 				if (Input.IsKeyReleased(KEY_Q - KEY_LCASE)) {
-					Platformer.IsPlaying = false;
-					SceneManager.ClearLevel();
+					Platformer.EndLevel();
 					// Spawn the main menu!
 					SceneManager.Add(new Platformer.MainMenu(false));
-					Platformer.FreeCursor();
-					$("#hud-ingame").hide();
 				}
 				if(Input.IsKeyReleased(KEY_M - KEY_LCASE)) {
 					Platformer.IsPlaying = false;
@@ -179,12 +178,9 @@ OnInit = function() {
 					player.LastTimeUpdate = Date.now();
 					$("#hud-time").html("" + player.TimeRemaining);
 					if(player.TimeRemaining < 0) {
-						Platformer.IsPlaying = false;
-						SceneManager.ClearLevel();
+						Platformer.EndLevel();
 						// Spawn the main menu!
 						SceneManager.Add(new Platformer.LostMenu("You ran out of time!"));
-						Platformer.FreeCursor();
-						$("#hud-ingame").hide();
 					}
 				}
 
@@ -278,7 +274,7 @@ Platformer.StartLevel = function(levelName) {
 	Platformer.ParseJsonObjects();
 	Platformer.LoadLevel(levelName);
 	Platformer.IsPlaying = true;
-	Platformer.Player.TimeRemaining = 300;
+	Platformer.Player.TimeRemaining = 100;
 	Platformer.Player.LastTimeUpdate = Date.now();
 	$("#hud-ingame").show();
 };
@@ -293,6 +289,24 @@ Platformer.PlayerDied = function(killedBy) {
 	$("#hud-ingame").hide();
 };
 
+Platformer.EndLevel = function() {
+	Platformer.IsPlaying = false;
+	SceneManager.ClearLevel();
+	Platformer.FreeCursor();
+	$("#hud-ingame").hide();
+};
+
 Platformer.PlayerReachedEnd = function() {
-	console.log("Player reached end");
+	Platformer.Player.Level++;
+	// End level
+	Platformer.EndLevel();
+	// Spawn the continue menu
+	SceneManager.Add(new Platformer.ContinueMenu());
+};
+
+Platformer.PlayerReachedPodium = function() {
+	// End level
+	Platformer.EndLevel();
+	// Spawn the victory menu
+	SceneManager.Add(new Platformer.VictoryMenu());
 };

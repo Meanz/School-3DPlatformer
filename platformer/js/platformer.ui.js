@@ -17,6 +17,52 @@ function OrthoCamera() {
         -Platformer.Height / 2);
 }
 
+Platformer.VictoryMenu = function() {
+    THREE.Object3D.call(this);
+    this.name = "LostMenu";
+    this.OnStart = function() {
+        OrthoCamera();
+        AddTitle(this);
+        var menu = this;
+        SceneManager.Add(menu, new Platformer.UIText("You completed the game!!!", "24px Arial", "#ff0000", v3z(
+            0.0, -10.0)));
+        menu.toMainMenu = SceneManager.Add(menu, new Platformer.UIButton("OK!!!", v2(0, -50), function() {
+            //Clear
+            SceneManager.ClearLevel();
+            SceneManager.Remove(menu);
+            // Soooo... Do stuff here?
+            SceneManager.Add(new Platformer.MainMenu(false));
+        }));
+    };
+
+};
+Platformer.VictoryMenu.prototype = Object.create(THREE.Object3D.prototype);
+Platformer.VictoryMenu.constructor = Platformer.ContinueMenu;
+
+Platformer.ContinueMenu = function() {
+    THREE.Object3D.call(this);
+    this.name = "LostMenu";
+    this.OnStart = function() {
+        OrthoCamera();
+        AddTitle(this);
+        var menu = this;
+        SceneManager.Add(menu, new Platformer.UIText("You completed the level", "24px Arial", "#ff0000", v3z(
+            0.0, -10.0)));
+        menu.toMainMenu = SceneManager.Add(menu, new Platformer.UIButton("Continue", v2(0, -50), function() {
+            //Clear
+            SceneManager.ClearLevel();
+            SceneManager.Remove(menu);
+            // Fix camera
+            Platformer.Camera.toPerspective();
+            Platformer.StartLevel("level" + Platformer.Player.Level + ".json");
+            Platformer.LockCursor();
+        }));
+    };
+
+};
+Platformer.ContinueMenu.prototype = Object.create(THREE.Object3D.prototype);
+Platformer.ContinueMenu.constructor = Platformer.ContinueMenu;
+
 Platformer.LostMenu = function(deathMessage) {
     THREE.Object3D.call(this);
     this.name = "LostMenu";
@@ -40,7 +86,6 @@ Platformer.MainMenu = function(inPauseMode) {
     THREE.Object3D.call(this);
     // Base is THREE.Object3D
     this.name = "MainMenu";
-    this.Menu = "main";
     this.InPauseMode = inPauseMode;
     this.Clear = function() {
         for (var i = 0; i < this.children.length; i++) {
@@ -56,7 +101,7 @@ Platformer.MainMenu = function(inPauseMode) {
         SceneManager.Add(mainMenu, new Platformer.UIText("I dette spillet må du nå slutten ved å ", "24px Arial", "#ff0000", v2(0.0, 80.0)));
         SceneManager.Add(mainMenu, new Platformer.UIText("overkomme forskjellige hinder før tiden renner ut", "24px Arial", "#ff0000", v2(0.0, 50.0)));
 
-        this.startButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -50), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -50), function() {
             mainMenu.Clear();
             mainMenu.DisplayMainMenu();
         }));
@@ -151,7 +196,7 @@ Platformer.MainMenu = function(inPauseMode) {
                 Platformer.LockCursor();
             }));
         } else {
-            this.startButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Start", v2(0, 60), function() {
+            SceneManager.Add(mainMenu, new Platformer.UIButton("Start", v2(0, 60), function() {
 
                 // Remove everything from zhe scene
                 // alert("You clicked buttan");
@@ -161,11 +206,11 @@ Platformer.MainMenu = function(inPauseMode) {
             }));
         }
 
-        this.settingsButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Innstillinger", v2(0, 0), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Innstillinger", v2(0, 0), function() {
             mainMenu.Clear();
             mainMenu.DisplaySettings();
         }));
-        this.helpButton = SceneManager.Add(mainMenu, new Platformer.UIButton("Hjelp", v2(0, -60), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Hjelp", v2(0, -60), function() {
             mainMenu.Clear();
             mainMenu.DisplayHelp();
         }));
@@ -174,17 +219,9 @@ Platformer.MainMenu = function(inPauseMode) {
 
     this.OnStart = function() {
         // Switch camera
-        console.log("MainMenu on start");
-
         OrthoCamera();
-
         this.DisplayMainMenu();
     };
-
-    this.onUpdate = function() {
-        // set camera to ortho
-    };
-
 };
 Platformer.MainMenu.prototype = Object.create(THREE.Object3D.prototype);
 Platformer.MainMenu.constructor = Platformer.MainMenu;
