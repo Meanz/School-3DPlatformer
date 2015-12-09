@@ -339,7 +339,7 @@ Platformer.StartLevel = function(levelName) {
 	Platformer.LoadLevel(levelName);
 	Platformer.IsPlaying = true;
 	if(Platformer.Player.Level == 1){
-		Platformer.Player.TimeRemaining = 30;
+		Platformer.Player.TimeRemaining = 45;
 	}else if(Platformer.Player.Level == 2){
 		Platformer.Player.TimeRemaining = 30;
 	}else if(Platformer.Player.Level == 3){
