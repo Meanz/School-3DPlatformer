@@ -149,7 +149,11 @@ Designer.LoadLevel = function() {
 				var tile = new Tile_FloppyDisk(tileX, tileY);
 				tile.WithFloor = obj.WithFloor;
 				Designer.Tiles.push(tile);
-			}else if (type == TOOL_END_FINAL) {
+			} else if (type == TOOL_SCANNER) {
+				var tile = new Tile_FloppyDisk(tileX, tileY);
+				tile.Targets = obj.Targets;
+				Designer.Tiles.push(tile);
+			} else if (type == TOOL_END_FINAL) {
 				var tile = new Tile_EndFinal(tileX, tileY);
 				tile.WithFloor = obj.WithFloor;
 				Designer.Tiles.push(tile);
@@ -374,7 +378,9 @@ Designer.Update = function() {
 					Designer.Tiles.push(new Tile_JumpPad(tileX, tileY));
 				} else if (Designer.Tool == TOOL_DISK) {
 					Designer.Tiles.push(new Tile_FloppyDisk(tileX, tileY));
-				}else if (Designer.Tool == TOOL_END_FINAL) {
+				} else if (Designer.Tool == TOOL_SCANNER) {
+					Designer.Tiles.push(new Tile_Scanner(tileX, tileY));
+				} else if (Designer.Tool == TOOL_END_FINAL) {
 					Designer.Tiles.push(new Tile_EndFinal(tileX, tileY));
 				}else if (Designer.Tool == TOOL_START) {
 					Designer.AddStartTile(tileX, tileY);
@@ -646,7 +652,7 @@ var Tile_FloppyDisk = function(tileX, tileY) {
 	this.Color = "#0fffff";
 	this.Text = "Disk";
 	this.WithFloor = true;
-}
+};
 Tile_FloppyDisk.prototype = Object.create(Tile.prototype);
 Tile_FloppyDisk.prototype.GetHtml = function() {
 	var html = Tile.prototype.GetHtml.call(this);
@@ -658,6 +664,30 @@ Tile_FloppyDisk.prototype.UpdateValues = function() {
 	Tile.prototype.UpdateValues.call(this);
 	this.WithFloor = $("#input_withFloor").is(':checked');
 	this.Text = "Disk";
+};
+
+// Scanner
+var Tile_Scanner = function(tileX, tileY) {
+	Tile.call(this, tileX, tileY);
+	this.TileType = "scanner";
+	this.Color = "#0affaf";
+	this.Text = "Scanner";
+	this.WithFloor = true;
+	this.Targets = [ { x: tileX, y: 0, z: tileY } ];
+};
+Tile_Scanner.prototype = Object.create(Tile.prototype);
+Tile_Scanner.prototype.GetHtml = function() {
+	var html = Tile.prototype.GetHtml.call(this);
+	var onchange = "onchange=\"javascript:Designer.SelectedTile.UpdateValues();\"";
+
+	json = JSON.stringify(this.Targets);
+	html += "<br />Targets: <textarea id='input_Targets' " + onchange + " type='checkbox' " +(this.WithFloor ? "checked" : "")  +">" + json + "</textarea>";
+	return html;
+}
+Tile_Scanner.prototype.UpdateValues = function() {
+	Tile.prototype.UpdateValues.call(this);
+	this.Targets = JSON.parse($("#input_Targets").val());
+	this.Text = "Scanner";
 };
 
 // Tab related

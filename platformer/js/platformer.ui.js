@@ -116,8 +116,8 @@ Platformer.MainMenu = function(inPauseMode) {
 
         AddTitle(mainMenu);
 
-        SceneManager.Add(mainMenu, new Platformer.UIText("I dette spillet må du nå slutten ved å ", "24px Arial", "#ff0000", v2(0.0, 80.0)));
-        SceneManager.Add(mainMenu, new Platformer.UIText("overkomme forskjellige hinder før tiden renner ut", "24px Arial", "#ff0000", v2(0.0, 50.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("In this game you have to get past ", "24px Arial", "#ff0000", v2(0.0, 80.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("different kinds of obstacles to complete the game.", "24px Arial", "#ff0000", v2(0.0, 50.0)));
 
         SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -50), function() {
             mainMenu.Clear();
@@ -261,11 +261,11 @@ Platformer.MainMenu = function(inPauseMode) {
             }));
         }
 
-        SceneManager.Add(mainMenu, new Platformer.UIButton("Innstillinger", v2(0, 0), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Settings", v2(0, 0), function() {
             mainMenu.Clear();
             mainMenu.DisplaySettings();
         }));
-        SceneManager.Add(mainMenu, new Platformer.UIButton("Hjelp", v2(0, -60), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Help", v2(0, -60), function() {
             mainMenu.Clear();
             mainMenu.DisplayHelp();
         }));

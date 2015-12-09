@@ -17,7 +17,7 @@ Markers: (--) probed, (**) from config file, (==) default setting,
 (==) RgbPath set to "/usr/X11R6/lib/X11/rgb"
 (==) ModulePath set to "/usr/X11R6/lib/modules"
 (--) using VT number 7
-
+THIS IS AN EASTER EGG, Hello Werner!
 (II) Open APM successful
 (II) Module ABI versions:
  XFree86 ANSI C Emulation: 0.1

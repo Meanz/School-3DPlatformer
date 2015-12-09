@@ -55,16 +55,23 @@ Platformer.LoadLevel = function(levelName) {
 				Platformer.AddPodium(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
 			} else if (type == "tracer") {
 				if(obj.WithFloor == "true"){
-					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
+					var position = v3(scale.x * tileX, scale.y, scale.z * tileY);
 					Platformer.AddFloor(position, scale, floorMaterial);
 				}
-				Platformer.AddTracer(v3(scale.x * tileX, scale.y * 0.5 + 1, scale.z * tileY));
+				Platformer.AddTracer(v3(scale.x * tileX, (scale.y * tileHeight) + 2.5, scale.z * tileY));
 			} else if (type == "scanner") {
-				if(obj.WithFloor == "true"){
-					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
-					Platformer.AddFloor(position, scale, floorMaterial);
+				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
+				Platformer.AddFloor(position, scale, floorMaterial);
+				//Convert all targets into v3's
+				if(obj.Targets.length > 0) {
+					var targets = [];
+					for(var j=0; j < obj.Targets.length; j++) {
+						targets.push(v3(obj.Targets[j].x * scale.x, obj.Targets[j].y * scale.y + 10, obj.Targets[j].z * scale.z));
+					}
+					Platformer.AddScanner(targets);
+				} else {
+					console.log("could not add targets");
 				}
-				Platformer.AddScanner(v3(scale.x * tileX, scale.y * 0.5 + 4, scale.z * tileY));
 			} else if (type == "floppydisk") {
 				if(obj.WithFloor == true){
 					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
@@ -98,7 +105,7 @@ Platformer.LoadLevel = function(levelName) {
 	//	Platformer.AddRotatingCube(v3(-3, 0, -3), v3(5, 1, 1), floorMaterial);
 
 		//Gaben, syslog
-		//Platformer.AddSysLog();
+		Platformer.AddSysLog();
 
 		//Platformer.AddSymbolParticleCloud();
 
@@ -227,7 +234,7 @@ OnInit = function() {
 					var intersection = intersections[i];
 					if (intersection.object != player) {
 						//console.log(intersection.distance);
-						if (intersection.distance <= 1) {
+						if (intersection.distance <= 1.01) {
 							if(player.CanJump == false) {
 								//console.log("CanJump :: " + intersection.distance);
 							}
@@ -287,7 +294,7 @@ OnInit = function() {
 		};
 	};
 
-	LoadResources(OnInitComplete)
+	LoadResources(OnInitComplete);
 };
 
 Platformer.IsShowingEinstein = false;

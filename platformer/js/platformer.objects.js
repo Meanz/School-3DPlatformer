@@ -309,7 +309,7 @@ Platformer.AddTracer = function(position) {
 
 Platformer.AddScanner = function(positions) {
 	var scanner = new THREE.Mesh(Platformer.Scanner.geometry, Platformer.Scanner.material);
-	scanner.position.set(positions[0].y, positions[0].x, positions[0].z);
+	scanner.position.set(positions[0].x, positions[0].y, positions[0].z);
 	scanner.scale.set(0.05, 0.05, 0.05);
 	scanner.rotation.z = -Math.PI / 2;
 	scanner.speed = 3;
@@ -322,7 +322,7 @@ Platformer.AddScanner = function(positions) {
 	SceneManager.Add(scannerSpot);
 	scanner.sound = Platformer.Audio.Scanner;
 	scanner.add(scanner.sound);
-	scanner.timePenelty = 15;
+	scanner.TimePenalty = 15;
 	scanner.cooldownTime = 5000;
 	scanner.cooldown = 0;
 	scanner.speed = 4;
@@ -370,7 +370,7 @@ Platformer.AddScanner = function(positions) {
 			// console.log("To player angle: " + angleToY);
 			// console.log("Spot angle: " + scanner.spot.angle);
 			if (angleToY < scanner.spot.angle && vScanToPlay.length() < scanner.spot.distance) {
-				Platformer.Player.TimeRemaining -= scanner.timePenelty;
+				Platformer.Player.TimeRemaining -= scanner.TimePenalty;
 				scanner.spot.visible = false;
 				Platformer.PlaySoundOnObject(scanner, scanner.sound);
 				scanner.cooldown = scanner.cooldownTime;
