@@ -292,6 +292,7 @@ SceneManager.OnRender = function(delta) {
 		var rang = Math.floor(Math.random() * 255);
 		var ranb = 255;
 		// TextureCreate(ranr, rang, ranb, AccumThing);
+        Util.DrawMatrixTexture(ranr, rang, ranb, AccumThing);
 		AccumDelta = 0;
 	}
 };

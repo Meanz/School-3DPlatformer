@@ -176,6 +176,69 @@ Util.GetTextHeight = function(font)
 	return txtHeight;
 };
 
+Util.DrawMatrixTexture = function(clrx, clry, clrz, delta) {
+	var x, y;
+	// Do some fancy magic
+	var ctx = Platformer.Canvas.getContext("2d");
+	// Make some data
+	var blockX = 0;
+	var blockY = 0;
+	var w = 512;
+	var h = 512;
+	/*
+	 * for (x = 0; x < w; x++) { for (y = 0; y < h; y++) { blockX = Math.floor(x /
+	 * 32); blockY = Math.floor(y / 32);
+	 *
+	 * //var r = 255; var r = clrx; var g = clry; var b = clrz;
+	 *
+	 * if (blockY % 2 == 0) { if (blockX % 2 == 0) { r = 0; b = 0; } } else if
+	 * (blockY % 2 == 1) { if (blockX % 2 == 1) { r = 0; b = 0; } }
+	 *
+	 * var idx = (x + (y * w)) * 4; imgd.data[idx] = r; imgd.data[idx + 1] = g;
+	 * imgd.data[idx + 2] = b; imgd.data[idx + 3] = 255; } }
+	 * ctx.putImageData(imgd, 0, 0);
+	 */
+
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(0, 0, w, h);
+	ctx.font = "48px matrixcode";
+	ctx.fillStyle = "#00aa00";
+
+	var txtwidth = Math.ceil(ctx.measureText("9").width);
+	var txtheight = Math.ceil(ctx.measureText("M").width);
+
+	var elems = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+		'u', 'v', 'w', 'x', 'y', 'z' ];
+
+	for (var i = 0; i < Math.floor(w / txtwidth) + 1; i++) {
+		for (var j = 0; j < Math.ceil(h / txtheight) + 1; j++) {
+			// var ran = Math.floor(Math.random() * 2);
+			// var ran = Math.round((noise.simplex2(i, j - delta) + 1) / 2);
+			var ran = Math.round(((noise.simplex2(i, j - delta) + 1) / 2) * elems.length);
+			// 0.111
+			// -1, 1
+			// +1
+			// 0, 2
+
+			ctx.fillText("" + elems[ran], i * txtwidth, j * txtheight);
+		}
+	}
+
+	ctx.lineWidth = 5;
+	ctx.strokeStyle = "#ff0000";
+	ctx.beginPath();
+
+	ctx.moveTo(0, 0);
+	ctx.lineTo(0, h);
+	ctx.lineTo(w, h);
+
+	ctx.stroke();
+	ctx.closePath();
+
+	Platformer.Texture.needsUpdate = true;
+	return Platformer.Texture;
+};
+
 Util.DrawSysLog = function(lines, texture) {
 	var maxLines = 29;
 	var fontSize = "bold 48px";

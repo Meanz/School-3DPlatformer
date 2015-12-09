@@ -154,6 +154,7 @@ OnInit = function() {
 			player.InternalJumpCd = 0;
 			player.Level = 1;
 			player.IsShowingEinstein = false;
+			player.GodMode = false;
 		};
 
 		player.OnEnd = function() {
@@ -199,6 +200,10 @@ OnInit = function() {
 					SceneManager.Add(new Platformer.MainMenu(false));
 				}
 
+				if (Input.IsKeyReleased(KEY_G - KEY_LCASE)) {
+					player.GodMode = !player.GodMode;
+				}
+
 				if(Input.IsKeyReleased(KEY_M - KEY_LCASE)) {
 					Platformer.IsPlaying = false;
 					//Spawn the main menu in pause mode!
@@ -222,10 +227,11 @@ OnInit = function() {
 				if(player.InternalJumpCd > 0) {
 					player.InternalJumpCd--;
 				}
-				Platformer.Controls.camera.position.x = player.position.x;
-				Platformer.Controls.camera.position.y = player.position.y + 0.5;
-				Platformer.Controls.camera.position.z = player.position.z;
-
+				if(!player.GodMode) {
+					Platformer.Controls.camera.position.x = player.position.x;
+					Platformer.Controls.camera.position.y = player.position.y + 0.5;
+					Platformer.Controls.camera.position.z = player.position.z;
+				}
 				var lv = player.getLinearVelocity();
 				var hlv = v3(lv.x, 0, lv.z);
 				var len = hlv.length();
