@@ -12,7 +12,7 @@ Platformer.LoadLevel = function(levelName) {
 					shininess: 0
 					// loader.load('images/bg.png')
 				}),.5, // high friction
-				.1 // low restitution
+				.0 // low restitution
 		);
 
 		var scale = v3(2, 2, 2);
@@ -111,10 +111,11 @@ OnInit = function() {
 		SceneManager.Add(new Platformer.MainMenu(false));
 
 		var friction = 1.2;
-		var restitution = .25;
+		var restitution = .0;
 		var mass = 50;
 		var mag = 5;
 		var f = 20;
+		var jumpStrength = 21;
 
 		var playerMaterial = Physijs.createMaterial(new THREE.MeshBasicMaterial({}), friction, restitution);
 
@@ -167,12 +168,20 @@ OnInit = function() {
 				}
 			}
 
+			if(Input.IsKeyReleased(KEY_4)) {
+				if(Platformer.Audio.Intro.isPlaying) {
+					Platformer.Audio.Intro.stop();
+				}
+			}
+
 			if (Platformer.IsPlaying) {
+
 				if (Input.IsKeyReleased(KEY_Q - KEY_LCASE)) {
 					Platformer.EndLevel();
 					// Spawn the main menu!
 					SceneManager.Add(new Platformer.MainMenu(false));
 				}
+
 				if(Input.IsKeyReleased(KEY_M - KEY_LCASE)) {
 					Platformer.IsPlaying = false;
 					//Spawn the main menu in pause mode!
@@ -197,7 +206,7 @@ OnInit = function() {
 					player.InternalJumpCd--;
 				}
 				Platformer.Controls.camera.position.x = player.position.x;
-				Platformer.Controls.camera.position.y = player.position.y;
+				Platformer.Controls.camera.position.y = player.position.y + 0.5;
 				Platformer.Controls.camera.position.z = player.position.z;
 
 				var lv = player.getLinearVelocity();
@@ -207,7 +216,7 @@ OnInit = function() {
 				var chv = v3(cv.x, 0, cv.z);
 				// console.log(len);
 
-				raycaster.set(Platformer.Controls.camera.position, v3(0.0, -1.0, 0.0));
+				raycaster.set(player.position, v3(0.0, -1.0, 0.0));
 				var intersections = raycaster.intersectObjects(SceneManager.TileObjects, true);
 				for (var i = 0; i < intersections.length; i++) {
 					var intersection = intersections[i];
@@ -229,8 +238,8 @@ OnInit = function() {
 
 				var impulse = v3z();
 				if (Platformer.Controls.Jump && player.CanJump && player.InternalJumpCd == 0) {
-					impulse.y += f * 20;
-					console.log("jumping motherfuckers.");
+					player.setLinearVelocity(v3(lv.x, 0.1, lv.z));
+					impulse.y += f * jumpStrength;
 					player.CanJump = false;
 					Platformer.PlaySound(Platformer.Audio.Jump);
 					player.InternalJumpCd = 32; //:D
@@ -346,6 +355,7 @@ Platformer.PlayerReachedEnd = function() {
 };
 
 Platformer.PlayerReachedPodium = function() {
+	console.log("Playing End Sound");
 	Platformer.PlayStaticSound(Platformer.Audio.End);
 	// End level
 	Platformer.EndLevel();
