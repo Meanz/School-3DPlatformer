@@ -35,7 +35,7 @@ Platformer.VictoryMenu = function() {
         OrthoCamera();
         AddTitle(this);
         var menu = this;
-        SceneManager.Add(menu, new Platformer.UIText("You completed the game!!!", "24px Arial", "#ff0000", v3z(
+        SceneManager.Add(menu, new Platformer.UIText("You completed the game  with " + Platformer.Player.TimeRemaining + " seconds left!!!", "24px Arial", "#ff0000", v3z(
             0.0, -10.0)));
         menu.toMainMenu = SceneManager.Add(menu, new Platformer.UIButton("OK!!!", v2(0, -50), function() {
             //Clear
@@ -58,7 +58,7 @@ Platformer.ContinueMenu = function() {
         OrthoCamera();
         AddTitle(this);
         var menu = this;
-        SceneManager.Add(menu, new Platformer.UIText("You completed the level", "24px Arial", "#ff0000", v3z(
+        SceneManager.Add(menu, new Platformer.UIText("You completed the level with " + Platformer.Player.TimeRemaining + " seconds left.", "24px Arial", "#ff0000", v3z(
             0.0, -10.0)));
         menu.toMainMenu = SceneManager.Add(menu, new Platformer.UIButton("Continue", v2(0, -50), function() {
             //
