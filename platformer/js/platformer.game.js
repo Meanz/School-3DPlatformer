@@ -48,11 +48,11 @@ Platformer.LoadLevel = function(levelName) {
 			} else if (type == "end") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
-				Platformer.AddTeleporter(v3(scale.x * tileX, scale.y * tileHeight - 0.5, scale.z * tileY));
+				Platformer.AddTeleporter(v3(scale.x * tileX, scale.y * tileHeight + 1, scale.z * tileY));
 			}else if (type == "end_final") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
-				Platformer.AddPodium(v3(scale.x * tileX, scale.y * tileHeight - 0.5, scale.z * tileY));
+				Platformer.AddPodium(v3(scale.x * tileX, scale.y * tileHeight - 1.5, scale.z * tileY));
 			} else if (type == "tracer") {
 				if(obj.WithFloor == "true"){
 					var position = v3(scale.x * tileX, scale.y, scale.z * tileY);
@@ -317,7 +317,7 @@ Platformer.ShowEinstein = function(visible) {
 		einstein.fadeIn();
 	} else {
 		Platformer.IsShowingEinstein = false;
-		einstein.fadeOut();
+		einstein.hide();
 	}
 };
 Platformer.StartLevel = function(levelName) {
