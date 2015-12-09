@@ -92,9 +92,9 @@ Platformer.LoadLevel = function(levelName) {
 		Platformer.AddRotatingCube(v3(-3, 0, -3), v3(5, 1, 1), floorMaterial);
 
 		//Gaben, syslog
-		//Platformer.AddSysLog();
+		Platformer.AddSysLog();
 
-		//Platformer.AddSymbolParticleCloud();
+		Platformer.AddSymbolParticleCloud();
 
 	});
 };
@@ -120,7 +120,8 @@ OnInit = function() {
 
 		var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), playerMaterial, mass);
 		Platformer.Player = player;
-		player.add(Platformer.audioListener);
+		//player.add(Platformer.audioListener);
+		Platformer.Scene.add(Platformer.audioListener);
 
 		player.OnStart = function () {
 			player.name = "player";
@@ -272,6 +273,10 @@ OnInit = function() {
 };
 
 Platformer.StartLevel = function(levelName) {
+	if(Platformer.Player.Level == 1) {
+		console.log("Playing supposed audio");
+		Platformer.PlayStaticSound(Platformer.Audio.Intro);
+	}
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 	Platformer.IsWorldEnding = false;
 	Platformer.ParseJsonObjects();
@@ -295,6 +300,16 @@ Platformer.PlayerDied = function(killedBy) {
 };
 
 Platformer.EndLevel = function() {
+
+	//Just because
+	if(Platformer.Audio.Intro.isPlaying) {
+		Platformer.Audio.Intro.stop();
+	}
+	//Just because
+	if(Platformer.Audio.End.isPlaying) {
+		Platformer.Audio.End.stop();
+	}
+
 	Platformer.IsPlaying = false;
 	SceneManager.ClearLevel();
 	Platformer.FreeCursor();
@@ -310,6 +325,7 @@ Platformer.PlayerReachedEnd = function() {
 };
 
 Platformer.PlayerReachedPodium = function() {
+	Platformer.PlayStaticSound(Platformer.Audio.End);
 	// End level
 	Platformer.EndLevel();
 	// Spawn the victory menu

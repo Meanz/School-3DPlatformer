@@ -1,25 +1,44 @@
 
 
 //Helper function for audio
+Platformer.PlayStaticSound = function(sound) {
+	var zero = v3z();
+/*
+	//Also update listener position
+	Platformer.audioListener.position.copy(zero);
+	Platformer.audioListener.updateMatrixWorld(true);
+	//Update sound position
+	sound.position.copy(zero);
+	sound.updateMatrixWorld(true);
+*/
+	sound.setRefDistance(0.1);
+
+	if (sound.source.buffer instanceof AudioBuffer) {
+		sound.play();
+	}
+};
+
+
 Platformer.PlaySound = function(sound, where) {
 	if(where == undefined) {
 		where = v3z().copy(Platformer.Player.position);
-		//Why do we have to multiply it? this is insane :(
-		where.x *= 2;
-		where.y *= 2;
-		where.z *= 2;
 	}
 
 	//Also update listener position
-	Platformer.audioListener.position.copy(Platformer.Player.position);
-	Platformer.audioListener.updateMatrixWorld(true);
+	//Platformer.audioListener.position.copy(Platformer.Player.position);
+	//Platformer.audioListener.updateMatrixWorld(true);
 	//Update sound position
-	sound.position.copy(where);
+	//sound.position.copy(where);
 	//sound.updateMatrix();
-	sound.updateMatrixWorld(true);
+	//sound.updateMatrixWorld(true);
+
+	//Distance between two points
+	var dist = where.distanceTo(Platformer.Player.position) + 0.1;
+	sound.setRefDistance(dist);
+
 	if (sound.source.buffer instanceof AudioBuffer) {
 
-
+/*
 		var position = new THREE.Vector3();
 		var quaternion = new THREE.Quaternion();
 		var scale = new THREE.Vector3();
@@ -31,10 +50,10 @@ Platformer.PlaySound = function(sound, where) {
 
 
 		console.log("audioListener: " + position);
-
+*/
 		sound.play();
 	}
-}
+};
 
 Platformer.AddSysLog = function() {
 
@@ -48,7 +67,7 @@ Platformer.AddSysLog = function() {
 	var sprite = new THREE.Sprite( Platformer.GabenMaterial  );
 
 
-	sprite.position.copy(v3(0, 1, 0));
+	sprite.position.copy(v3(-5, 1, -5));
 	var scale = 5;
 	sprite.scale.copy(v3(scale, scale, scale));
 	sprite.updateMatrix();
