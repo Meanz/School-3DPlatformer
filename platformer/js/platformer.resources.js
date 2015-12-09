@@ -95,6 +95,9 @@ function LoadResources(fn)
     //CyberWind
     Platformer.Audio.CyberWind = LoadStaticAudio("sounds/92029__urupin__digital-wind.mp3");
 
+    //Menu loopp
+    Platformer.Audio.MenuLoop = LoadStaticAudio("sounds/329130__dodgyloops__digitaltribal-dodgyloops-dodgy-c.wav");
+
     //Unlock
     ResourceLock = false;
     if(ResourceWaitCount == 0) {
