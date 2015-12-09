@@ -92,7 +92,7 @@ Platformer.LoadLevel = function(levelName) {
 		//Gaben, syslog
 		//Platformer.AddSysLog();
 
-		Platformer.AddSymbolParticleCloud();
+		//Platformer.AddSymbolParticleCloud();
 
 	});
 };
@@ -109,7 +109,7 @@ OnInit = function() {
 		SceneManager.Add(new Platformer.MainMenu(false));
 
 		var friction = 1.2;
-		var restitution = .5;
+		var restitution = .25;
 		var mass = 50;
 		var mag = 5;
 		var f = 20;
@@ -147,6 +147,12 @@ OnInit = function() {
 			if(Input.IsKeyReleased(KEY_2)) {
 				console.log("Ending world");
 				Platformer.IsWorldEnding = true;
+			}
+
+			if(Input.IsKeyReleased(KEY_3)) {
+				for(var i=0; i < SceneManager.SceneObjects.length; i++) {
+					console.log("Obj: " + SceneManager.SceneObjects[i].name);
+				}
 			}
 
 			if (Platformer.IsPlaying) {

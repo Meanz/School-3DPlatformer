@@ -34,6 +34,7 @@ Platformer.AddSysLog = function() {
 		}
 
 	}
+	sprite.name = "syslog";
 	SceneManager.Add( sprite );
 
 };
@@ -51,6 +52,7 @@ Platformer.AddPlane = function(size, color, position) {
 		this.Mesh.position.copy(v);
 	};
 	this.Mesh.position.copy(position);
+	this.name = "plane";
 	Platformer.Add(this.Mesh);
 	return this;
 };
@@ -82,6 +84,7 @@ Platformer.AddFloor = function(position, dimension, material) {
 
 		}
 	};
+	floor.name = "floor";
 	SceneManager.AddTile(floor);
 	return floor;
 };
@@ -91,6 +94,7 @@ Platformer.AddPlayer = function(position, dimension, material, mass) {
 		material = Platformer.DefaultMaterial;
 	}
 	var sphere = Geometry.StaticSphereMass(position, dimension, material, mass);
+	sphere.name = "player";
 	SceneManager.AddBase(sphere);
 	return sphere;
 };
@@ -124,7 +128,7 @@ Platformer.AddTestBox = function(position, dimension) {
 		}
 
 	};
-
+	box.name = "testbox";
 	SceneManager.Add(box);
 };
 
@@ -160,6 +164,7 @@ Platformer.AddTracer = function(position) {
 	};
 
 	console.log("Tracer created");
+	tracer.name = "tracer";
 	SceneManager.Add(tracer);
 	return tracer;
 
@@ -176,6 +181,7 @@ Platformer.AddScanner = function(positions) {
 	scannerSpot.position.set(scanner.position.x, scanner.position.y + 1.01, scanner.position.z);
 	scannerSpot.target = scanner;
 	scanner.spot = scannerSpot;
+	scannerSpot.name = "scannerSpot";
 	SceneManager.Add(scannerSpot);
 	scanner.sound = Platformer.Audio.Scanner;
 	scanner.add(scanner.sound);
@@ -250,6 +256,7 @@ Platformer.AddScanner = function(positions) {
 	scanner.OnEnd = function(){
 		console.log("Scanner(" + scanner.id + ") was ended");
 	};
+	scanner.name = "scanner";
 	SceneManager.Add(scanner);
 	return scanner;
 
@@ -296,6 +303,7 @@ Platformer.AddTeleporter = function(position) {
 	};
 
 	console.log("Teleporter created");
+	teleporter.name = "teleporter";
 	SceneManager.Add(teleporter);
 	return teleporter;
 };
@@ -322,6 +330,7 @@ Platformer.AddJumppad = function(position){
 	};
 
 	console.log("Jumppad created");
+	jumppad.name = "jumppad";
 	SceneManager.Add(jumppad);
 	return jumppad;
 };
@@ -351,19 +360,30 @@ Platformer.AddFloppyDisk = function(position, extraTime){
 	};
 
 	console.log("Floppydisk created");
+	floppyDisk.name = "floppyDisk";
 	SceneManager.Add(floppyDisk);
 	return floppyDisk;
 };
 
 Platformer.AddPodium = function(position){
 	var podium = new THREE.Object3D();
+	podium.name = "podium";
+	podium.Tag = TAG_LEVEL;
 	var podiumBottom = new THREE.Mesh(Platformer.Podium.geometryBottom, Platformer.Podium.materialBase);
+	podiumBottom.name = "podiumBottom";
+	podiumBottom.Tag = TAG_LEVEL;
 	SceneManager.Add(podium, podiumBottom);
 	var podiumLeg = new THREE.Mesh(Platformer.Podium.geometryLeg, Platformer.Podium.materialBase);
+	podiumLeg.name = "podiumLeg";
+	podiumLeg.Tag = TAG_LEVEL;
 	SceneManager.Add(podium, podiumLeg);
 	var podiumTopp = new THREE.Mesh(Platformer.Podium.geometryTopp, Platformer.Podium.materialBase);
+	podiumTopp.name = "podiumTop";
+	podiumTopp.Tag = TAG_LEVEL;
 	SceneManager.Add(podium, podiumTopp);
 	var podiumIcosahedron = new THREE.Mesh(Platformer.Podium.geometryIcosahedron, Platformer.Podium.materialIcosahedron);
+	podiumIcosahedron.name = "podiumIcosahedron";
+	podiumIcosahedron.Tag = TAG_LEVEL;
 	SceneManager.Add(podium, podiumIcosahedron);
 	podium.position.copy(position);
 	podium.scale.set(0.06, 0.06, 0.06);
@@ -377,6 +397,7 @@ Platformer.AddPodium = function(position){
 	};
 
 	console.log("Podium created");
+	podium.name = "podium";
 	SceneManager.Add(podium);
 	return podium;
 

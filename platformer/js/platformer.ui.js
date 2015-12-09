@@ -5,19 +5,21 @@
 function AddTitle(p) {
     var text = SceneManager.Add(p, new Platformer.UIText("Inside the Mainframe", "48px Arial", "#ff0000",
         v3z()));
+    text.name = "text";
     text.SetPosition(0, Platformer.Camera.top - (text.GetHeight() / 2));
 }
 
 function OrthoCamera() {
     // Switch camera
+    Platformer.Camera.position.copy(v3z());
+    Platformer.Camera.toFrontView();
     Platformer.Camera.toOrthographic2(-Platformer.Width / 2, Platformer.Width / 2, Platformer.Height / 2,
         -Platformer.Height / 2);
-    Platformer.Camera.toFrontView();
 }
 
 Platformer.LostMenu = function(deathMessage) {
     THREE.Object3D.call(this);
-
+    this.name = "LostMenu";
     this.OnStart = function() {
         OrthoCamera();
         AddTitle(this);
@@ -37,6 +39,7 @@ Platformer.LostMenu.constructor = Platformer.LostMenu;
 Platformer.MainMenu = function(inPauseMode) {
     THREE.Object3D.call(this);
     // Base is THREE.Object3D
+    this.name = "MainMenu";
     this.Menu = "main";
     this.InPauseMode = inPauseMode;
     this.Clear = function() {
@@ -171,6 +174,8 @@ Platformer.MainMenu = function(inPauseMode) {
 
     this.OnStart = function() {
         // Switch camera
+        console.log("MainMenu on start");
+
         OrthoCamera();
 
         this.DisplayMainMenu();
@@ -188,6 +193,7 @@ Platformer.UIText = function(text, font, color, inPosition) {
     this.Text = text;
     this.Font = font;
     this.Color = color;
+    this.name = "text";
     this.TextTexture = new THREE.Texture(null);
     // Create text thing
     Util.DrawTextToTexture(text, font, color, this.TextTexture);
@@ -218,7 +224,7 @@ Platformer.UIText = function(text, font, color, inPosition) {
     this.SetPosition = function(x, y) {
         var v = v3(x, y, 0);
         this.position.copy(v);
-    }
+    };
 };
 Platformer.UIText.prototype = Object.create(THREE.Mesh.prototype);
 Platformer.UIText.constructor = Platformer.UIText;
@@ -230,6 +236,7 @@ Platformer.UIButton = function(text, position, onClick) {
     this.SetPosition(position.x, position.y);
     this.IsHovering = false;
     this.onClick = onClick;
+    this.name = "button";
     this.onUpdate = function(delta) {
         // console.log("" + Platformer.MouseX + " / " + Platformer.MouseY + " --
         // " + this.width + " / " + this.height);

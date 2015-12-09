@@ -231,6 +231,7 @@ Platformer.Init = function() {
 	Platformer.jsonLoader = new THREE.JSONLoader();
 	Platformer.textureLoader = new THREE.TextureLoader();
 	Platformer.audioListener = new THREE.AudioListener();
+	Platformer.audioListener.name = "audioListener";
 
 	if(SceneManager !== undefined && SceneManager.Init !== undefined) {
 		SceneManager.Init();

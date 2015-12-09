@@ -33,7 +33,7 @@ Platformer.GetSymbolCloud = function(symbol, range, amount){
         }
 
     };
-
+    cloud.name = "cloud";
     return cloud;
 };
 
