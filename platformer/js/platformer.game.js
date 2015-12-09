@@ -202,6 +202,7 @@ OnInit = function() {
 
 				if (Input.IsKeyReleased(KEY_G - KEY_LCASE)) {
 					player.GodMode = !player.GodMode;
+					player.visible = player.GodMode;
 				}
 
 				if(Input.IsKeyReleased(KEY_M - KEY_LCASE)) {
@@ -296,7 +297,13 @@ OnInit = function() {
 					impulse.z += -spd * Math.sin(Platformer.Controls.Yaw + Math.PI / 2);
 				}
 
-				player.applyCentralImpulse(impulse);
+				if(player.GodMode) {
+					Platformer.Controls.camera.position.x += impulse.x * 0.01;
+					Platformer.Controls.camera.position.y += impulse.y * 0.01;
+					Platformer.Controls.camera.position.z += impulse.z * 0.01;
+				} else {
+					player.applyCentralImpulse(impulse);
+				}
 
 				if (player.position.y < -15 && !Platformer.IsWorldEnding) {
 					Platformer.PlayerDied("Fell off the world.");
@@ -336,6 +343,8 @@ Platformer.StartLevel = function(levelName) {
 	Platformer.Player.position.x = StartPositionX;
 	Platformer.Player.position.y = StartPositionY;
 	Platformer.Player.position.z = StartPositionZ;
+	Platformer.Controls.Yaw = -Math.PI;
+	Platformer.Controls.Pitch = -2.24;
 	Platformer.Player.__dirtyPosition = true;
 	Platformer.Player.__dirtyRotation = true;
 	Platformer.Player.setLinearVelocity(v3z());

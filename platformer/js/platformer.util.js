@@ -232,7 +232,7 @@ Util.DrawMatrixTexture = function(clrx, clry, clrz, delta) {
 	ctx.lineTo(0, h);
 	ctx.lineTo(w, h);
 
-	ctx.stroke();
+//	ctx.stroke();
 	ctx.closePath();
 
 	Platformer.Texture.needsUpdate = true;
