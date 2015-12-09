@@ -347,7 +347,6 @@ Platformer.EndLevel = function() {
 };
 
 Platformer.PlayerReachedEnd = function() {
-	Platformer.Player.Level++;
 	// End level
 	Platformer.EndLevel();
 	// Spawn the continue menu

@@ -49,6 +49,8 @@ Platformer.ContinueMenu = function() {
         SceneManager.Add(menu, new Platformer.UIText("You completed the level", "24px Arial", "#ff0000", v3z(
             0.0, -10.0)));
         menu.toMainMenu = SceneManager.Add(menu, new Platformer.UIButton("Continue", v2(0, -50), function() {
+            //
+            Platformer.Player.Level++;
             //Clear
             SceneManager.ClearLevel();
             SceneManager.Remove(menu);
@@ -72,7 +74,14 @@ Platformer.LostMenu = function(deathMessage) {
         var lostMenu = this;
         SceneManager.Add(lostMenu, new Platformer.UIText(deathMessage, "24px Arial", "#ff0000", v3z(
             0.0, -10.0)));
-        lostMenu.toMainMenu = SceneManager.Add(lostMenu, new Platformer.UIButton("OK :(", v2(0, -50), function() {
+        SceneManager.Add(lostMenu, new Platformer.UIButton("Retry", v2(0, -50), function() {
+            SceneManager.ClearLevel();
+            // Fix camera
+            Platformer.Camera.toPerspective();
+            Platformer.StartLevel("level" + Platformer.Player.Level + ".json");
+            Platformer.LockCursor();
+        }));
+        lostMenu.toMainMenu = SceneManager.Add(lostMenu, new Platformer.UIButton("Back to main menu", v2(0, -100), function() {
             SceneManager.ClearLevel();
             SceneManager.Add(new Platformer.MainMenu(false));
         }));
@@ -168,10 +177,12 @@ Platformer.MainMenu = function(inPauseMode) {
                 // Fix camera
                 Platformer.Camera.toPerspective();
 
+                Platformer.Player.Level = this.levelNo;
                 Platformer.StartLevel(this.level);
                 Platformer.LockCursor();
             }));
             that.level = levels[i];
+            that.levelNo = i + 1;
         }
 
         SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, 100 - (levels.length * 50) - 20), function() {
