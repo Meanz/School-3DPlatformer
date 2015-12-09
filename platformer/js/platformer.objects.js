@@ -223,7 +223,7 @@ Platformer.AddRotatingCube = function(position, dimension, material) {
 
 	//It's a tile
 	geom.name = "rotatingcube";
-	SceneManager.Add(geom);
+	SceneManager.AddTile(geom);
 };
 
 Platformer.AddPlayer = function(position, dimension, material, mass) {

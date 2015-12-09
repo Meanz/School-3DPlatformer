@@ -256,6 +256,7 @@ OnInit = function() {
 						: f);
 
 				if (player.inAir) {
+					console.log("in air")
 					spd /= 4;
 				}
 
