@@ -324,8 +324,8 @@ Platformer.AddScanner = function(positions) {
 	scanner.rotation.z = -Math.PI / 2;
 	scanner.speed = 3;
 
-	var scannerSpot = new THREE.SpotLight(0xff3333, 1.0, 20, Math.PI / 4, 0.5, 0.5);
-	scannerSpot.position.set(scanner.position.x, scanner.position.y + 1.01, scanner.position.z);
+	var scannerSpot = new THREE.SpotLight(0xffffff, 1.0, 20, Math.PI / 6, 0.5, 0.5);
+	scannerSpot.position.set(scanner.position.x, scanner.position.y + 0.01, scanner.position.z);
 	scannerSpot.target = scanner;
 	scanner.spot = scannerSpot;
 	scannerSpot.name = "scannerSpot";
@@ -575,7 +575,7 @@ Platformer.ParseJsonObjects = function() {
 	Platformer.Scanner = {};
 	Platformer.Scanner.geometry = scannerParsed.geometry;
 	Platformer.Scanner.material = new THREE.MeshPhongMaterial({
-		color : 0x140404,
+		color : 0x880404,
 		specular : 0xD6D6D6,
 		shininess : 10
 	});

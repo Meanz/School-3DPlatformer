@@ -66,7 +66,7 @@ Platformer.LoadLevel = function(levelName) {
 				if(obj.Targets.length > 0) {
 					var targets = [];
 					for(var j=0; j < obj.Targets.length; j++) {
-						targets.push(v3(obj.Targets[j].x * scale.x, obj.Targets[j].y * scale.y + 10, obj.Targets[j].z * scale.z));
+						targets.push(v3(obj.Targets[j].x * scale.x, obj.Targets[j].y * scale.y + 5, obj.Targets[j].z * scale.z));
 					}
 					Platformer.AddScanner(targets);
 				} else {
@@ -275,7 +275,6 @@ OnInit = function() {
 						: f);
 
 				if (player.inAir) {
-					console.log("in air")
 					spd /= 4;
 				}
 
