@@ -314,10 +314,10 @@ Platformer.ShowEinstein = function(visible) {
 	var einstein = $("#hud-einstein");
 	if(visible) {
 		Platformer.IsShowingEinstein = true;
-		einstein.show();
+		einstein.fadeIn();
 	} else {
 		Platformer.IsShowingEinstein = false;
-		einstein.hide();
+		einstein.fadeOut();
 	}
 };
 Platformer.StartLevel = function(levelName) {
