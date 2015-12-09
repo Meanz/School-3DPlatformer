@@ -87,7 +87,7 @@ Platformer.LoadLevel = function(levelName) {
 			}else if (type == "jumppad") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
-				Platformer.AddJumppad(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
+				Platformer.AddJumppad(v3(scale.x * tileX, scale.y * tileHeight + 1, scale.z * tileY));
 			} else {
 				console.log("type: " + type);
 			}
