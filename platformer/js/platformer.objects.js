@@ -1,5 +1,5 @@
 
-THREE.Audio.prototype.dupl = function ( other ) {
+THREE.Audio.prototype.dupl = function () {
 	var audio = new THREE.Audio(Platformer.audioListener);
 	audio.load(fn);
 	var scope = audio;
@@ -8,6 +8,30 @@ THREE.Audio.prototype.dupl = function ( other ) {
 		if ( scope.autoplay ) scope.play();
 	} );
 	return audio;
+};
+
+//
+Platformer.PlaySoundOnObject = function(attachTo, sound) {
+
+	//Create audio object
+	var audioObject = sound.dupl();
+	audioObject.Tag = TAG_LEVEL;
+	audioObject.GC = false;
+	audioObject.OnStart = function() {};
+	//We need to hook the start thing
+	audioObject.onUpdate = function() {
+		//Assume that it will always be playing
+		if(!this.isPlaying && !this.GC) {
+			SceneManager.Remove(this);
+			this.GC = true;
+		}
+	};
+
+	//
+	//Platformer.PlaySound(audioObject);
+	//
+
+	SceneManager.Add(attachTo, audioObject);
 };
 
 //Helper function for audio
