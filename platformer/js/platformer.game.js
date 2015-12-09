@@ -107,7 +107,9 @@ Platformer.LoadLevel = function(levelName) {
 		//Gaben, syslog
 		Platformer.AddSysLog();
 
-		//Platformer.AddSymbolParticleCloud();
+		Platformer.AddSymbolParticleCloud();
+
+		Platformer.AddWirePlane(v3(0, -40, 0), 1000, 1000);
 
 	});
 };

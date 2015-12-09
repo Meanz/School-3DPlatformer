@@ -239,6 +239,13 @@ Platformer.AddPlayer = function(position, dimension, material, mass) {
 	return sphere;
 };
 
+Platformer.AddWirePlane = function(position, width, height){
+	var plane = Geometry.Plane(position, width, height);
+	plane.rotation.x = Math.PI/2;
+	SceneManager.Add(plane);
+	return plane;
+};
+
 Platformer.AddTestBox = function(position, dimension) {
 	var testMaterial = Physijs.createMaterial(new THREE.MeshLambertMaterial({
 		map : Platformer.Textures.Plywood

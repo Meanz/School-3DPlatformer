@@ -25,6 +25,12 @@ Geometry.StaticSphereMass = function(pos, dim, material, mass) {
 	return tb;
 };
 
+Geometry.Plane = function(pos, width, height){
+	var tb = new THREE.Mesh(new THREE.PlaneGeometry(width, height, width/20, height/20), new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe:true, fog:false}));
+	tb.position.copy(pos);
+	return tb;
+};
+
 Geometry.DebugBox = function(pos, dim, clr) {
 	var _clr;
 	if (clr === undefined) {
