@@ -5,7 +5,7 @@
 function AddTitle(p) {
     var text = SceneManager.Add(p, new Platformer.UIText("Inside the Mainframe", "48px Arial", "#ff0000",
         v3z()));
-    text.name = "text";
+    text.name = "title";
     text.SetPosition(0, Platformer.Camera.top - (text.GetHeight() / 2));
 }
 
@@ -19,7 +19,7 @@ function OrthoCamera() {
 
 Platformer.VictoryMenu = function() {
     THREE.Object3D.call(this);
-    this.name = "LostMenu";
+    this.name = "VictoryMenu";
     this.OnStart = function() {
         OrthoCamera();
         AddTitle(this);
@@ -41,7 +41,7 @@ Platformer.VictoryMenu.constructor = Platformer.ContinueMenu;
 
 Platformer.ContinueMenu = function() {
     THREE.Object3D.call(this);
-    this.name = "LostMenu";
+    this.name = "ContinueMenu";
     this.OnStart = function() {
         OrthoCamera();
         AddTitle(this);
@@ -155,6 +155,41 @@ Platformer.MainMenu = function(inPauseMode) {
             mainMenu.DisplaySettings();
         }));
 
+        //sensitivity
+        SceneManager.Add(mainMenu, new Platformer.UIText("Sensitivity (" + Platformer.Controls.Sensitivity + ")", "24px Arial", "#ff0000", v2(
+            0.0, 20
+        )));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Controls.Sensitivity == PARTICLE_AMOUNT_LOW ? "<Low>" : "Low", v2(-260, -20), function() {
+            mainMenu.Clear();
+            Platformer.Controls.Sensitivity = SENSITIVITY_LOW;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Controls.Sensitivity == SENSITIVITY_MEDIUM ? "<Medium>" : "Medium", v2(-130, -20), function() {
+            mainMenu.Clear();
+            Platformer.Controls.Sensitivity = SENSITIVITY_MEDIUM;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Controls.Sensitivity == SENSITIVITY_HIGH ? "<High>" : "High", v2(10, -20), function() {
+            mainMenu.Clear();
+            Platformer.Controls.Sensitivity = SENSITIVITY_HIGH;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Controls.Sensitivity == SENSITIVITY_ULTRA ? "<Ultra>" : "Ultra", v2(120, -20), function() {
+            mainMenu.Clear();
+            Platformer.Controls.Sensitivity = SENSITIVITY_ULTRA;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Controls.Sensitivity == SENSITIVITY_INSANE ? "<Insane>" : "Insane", v2(240, -20), function() {
+            mainMenu.Clear();
+            Platformer.Controls.Sensitivity = SENSITIVITY_INSANE;
+            mainMenu.DisplaySettings();
+        }));
+
         SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -100), function() {
             mainMenu.Clear();
             mainMenu.DisplayMainMenu();
@@ -167,7 +202,7 @@ Platformer.MainMenu = function(inPauseMode) {
 
         AddTitle(mainMenu);
 
-        var levels = [ "level1.json", "level2.json", "level3.json", "leveltest.json", "test.json", "test1.json" ];
+        var levels = [ "level1.json", "level2.json", "level3.json", "level4.json" ];
 
         for (var i = 0; i < levels.length; i++) {
             var that = SceneManager.Add(mainMenu, new Platformer.UIButton(levels[i], v2(0, 100 - (i * 50)), function() {
@@ -241,7 +276,6 @@ Platformer.UIText = function(text, font, color, inPosition) {
     this.Text = text;
     this.Font = font;
     this.Color = color;
-    this.name = "text";
     this.TextTexture = new THREE.Texture(null);
     // Create text thing
     Util.DrawTextToTexture(text, font, color, this.TextTexture);
@@ -252,6 +286,7 @@ Platformer.UIText = function(text, font, color, inPosition) {
         transparent : true
     });
     THREE.Mesh.call(this, this.Geometry, this.Material);
+    this.name = "text";
     if(inPosition instanceof THREE.Vector2) {
         this.position.copy(v3(inPosition.x, inPosition.y, 0.0));
     } else if(inPosition instanceof THREE.Vector3) {

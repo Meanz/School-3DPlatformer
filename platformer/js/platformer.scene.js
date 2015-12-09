@@ -143,7 +143,11 @@ SceneManager.Internal_Add = function(obj) {
  */
 SceneManager.Remove = function(obj) {
 	if (obj !== undefined && obj !== null) {
-		SceneManager.RemoveQueue.push(obj);
+		if(SceneManager.RemoveQueue.indexOf(obj) == -1) {
+			SceneManager.RemoveQueue.push(obj);
+		} else {
+			console.log("Tried to remove the same element twice, what a noob you are.");
+		}
 	} else {
 		Platformer.NullArgument("SceneManager.Remove", "obj");
 	}

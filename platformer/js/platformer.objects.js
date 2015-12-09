@@ -29,7 +29,6 @@ Platformer.PlaySound = function(sound, where) {
 	//Platformer.audioListener.updateMatrixWorld(true);
 	//Update sound position
 	//sound.position.copy(where);
-	//sound.updateMatrix();
 	//sound.updateMatrixWorld(true);
 
 	//Distance between two points
@@ -213,6 +212,7 @@ Platformer.AddRotatingCube = function(position, dimension, material) {
 	};
 
 	//It's a tile
+	geom.name = "rotatingcube";
 	SceneManager.Add(geom);
 };
 
@@ -390,14 +390,24 @@ Platformer.AddScanner = function(positions) {
 Platformer.AddTeleporter = function(position) {
 	var teleporter = new THREE.Object3D();
 	var telePlatform = new THREE.Mesh(Platformer.Teleporter.geometryPlatform, Platformer.Teleporter.materialPlatform);
+	telePlatform.name = "telePlatform";
+	telePlatform.Tag = TAG_LEVEL;
 	SceneManager.Add(teleporter, telePlatform);
 	var teleGimbalX = new THREE.Mesh(Platformer.Teleporter.geometryGimbalX, Platformer.Teleporter.materialGimbalX);
+	teleGimbalX.name = "teleGimbalX";
+	teleGimbalX.Tag = TAG_LEVEL;
 	SceneManager.Add(teleporter, teleGimbalX);
 	var teleGimbalY = new THREE.Mesh(Platformer.Teleporter.geometryGimbalY, Platformer.Teleporter.materialGimbalY);
+	teleGimbalY.name = "teleGimbalY";
+	teleGimbalY.Tag = TAG_LEVEL;
 	SceneManager.Add(teleGimbalX, teleGimbalY);
 	var teleGimbalZ = new THREE.Mesh(Platformer.Teleporter.geometryGimbalZ, Platformer.Teleporter.materialGimbalZ);
+	teleGimbalZ.name = "teleGimbalZ";
+	teleGimbalZ.Tag = TAG_LEVEL;
 	SceneManager.Add(teleGimbalY, teleGimbalZ);
 	var teleIcosahedron = new THREE.Mesh(Platformer.Teleporter.geometryIcosahedron, Platformer.Teleporter.materialIcosahedron);
+	teleIcosahedron.name = "teleIcosahedron";
+	teleIcosahedron.Tag = TAG_LEVEL;
 	SceneManager.Add(teleporter, teleIcosahedron);
 	teleporter.position.copy(position);
 	teleporter.scale.set(0.09, 0.09, 0.09);

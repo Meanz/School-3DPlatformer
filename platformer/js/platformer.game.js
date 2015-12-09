@@ -92,9 +92,9 @@ Platformer.LoadLevel = function(levelName) {
 		Platformer.AddRotatingCube(v3(-3, 0, -3), v3(5, 1, 1), floorMaterial);
 
 		//Gaben, syslog
-		Platformer.AddSysLog();
+		//Platformer.AddSysLog();
 
-		Platformer.AddSymbolParticleCloud();
+		//Platformer.AddSymbolParticleCloud();
 
 	});
 };
@@ -154,7 +154,6 @@ OnInit = function() {
 				console.log("SceneObjects: " + SceneManager.SceneObjects.length);
 				console.log("LevelObjects: " + SceneManager.LevelObjects.length);
 				console.log("TileObjects: " + SceneManager.TileObjects.length);
-
 			}
 
 			if(Input.IsKeyReleased(KEY_2)) {
@@ -321,12 +320,10 @@ Platformer.PlayerDied = function(killedBy) {
 	console.log("Playing death sound?");
 	Platformer.PlaySound(Platformer.Audio.Death);
 	console.log("Player killed by " + killedBy);
-	Platformer.IsPlaying = false;
-	SceneManager.ClearLevel();
+	// End level
+	Platformer.EndLevel();
 	// Spawn the main menu!
 	SceneManager.Add(new Platformer.LostMenu("Player killed by " + killedBy));
-	Platformer.FreeCursor();
-	$("#hud-ingame").hide();
 };
 
 Platformer.EndLevel = function() {

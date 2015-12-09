@@ -24,6 +24,7 @@ Platformer.FirstPersonControls = function(camera) {
 	this.StrafeRight = false;
 	this.Jump = false;
 	this.Speed = 0.5;
+	this.Sensitivity = 0.001;
 
 	this.onMouseMove = function(event) {
 
@@ -95,8 +96,8 @@ Platformer.FirstPersonControls = function(camera) {
 	this.Update = function(delta) {
 
 		//
-		this.Yaw += this.DeltaX * 0.001;
-		this.Pitch -= this.DeltaY * 0.001;
+		this.Yaw += this.DeltaX * this.Sensitivity;
+		this.Pitch -= this.DeltaY * this.Sensitivity;
 		// Makes sure the Pitch dosen't flip the camera
 		if(this.Pitch < -Math.PI+0.0001){
 			this.Pitch = -Math.PI+0.0001;
