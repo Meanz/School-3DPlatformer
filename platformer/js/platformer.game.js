@@ -48,11 +48,11 @@ Platformer.LoadLevel = function(levelName) {
 			} else if (type == "end") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
-				Platformer.AddTeleporter(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
+				Platformer.AddTeleporter(v3(scale.x * tileX, scale.y * tileHeight - 0.5, scale.z * tileY));
 			}else if (type == "end_final") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
-				Platformer.AddPodium(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
+				Platformer.AddPodium(v3(scale.x * tileX, scale.y * tileHeight - 0.5, scale.z * tileY));
 			} else if (type == "tracer") {
 				if(obj.WithFloor == "true"){
 					var position = v3(scale.x * tileX, scale.y, scale.z * tileY);
