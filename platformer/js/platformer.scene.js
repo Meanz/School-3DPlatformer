@@ -319,9 +319,9 @@ SceneManager.OnSimulation = function(delta) {
 	for (var i = 0; i < SceneManager.SceneObjects.length; i++) {
 		var so = SceneManager.SceneObjects[i];
 		if (so !== undefined) {
-			if (so.onUpdate !== undefined) {
+			if (so.OnUpdate !== undefined) {
 				if (Platformer.IsPlaying || !(so.Tag !== undefined && so.Tag & TAG_LEVEL)) {
-					so.onUpdate(delta);
+					so.OnUpdate(delta);
 				}
 			}
 		}

@@ -17984,7 +17984,7 @@ THREE.Texture = function ( image, mapping, wrapS, wrapT, magFilter, minFilter, f
 	this.unpackAlignment = 4; // valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
 
 	this.version = 0;
-	this.onUpdate = null;
+	this.OnUpdate = null;
 
 };
 
@@ -24070,7 +24070,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 		textureProperties.__version = texture.version;
 
-		if ( texture.onUpdate ) texture.onUpdate( texture );
+		if ( texture.OnUpdate ) texture.OnUpdate( texture );
 
 	}
 
@@ -24272,7 +24272,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 				textureProperties.__version = texture.version;
 
-				if ( texture.onUpdate ) texture.onUpdate( texture );
+				if ( texture.OnUpdate ) texture.OnUpdate( texture );
 
 			} else {
 

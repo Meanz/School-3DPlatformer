@@ -33,7 +33,7 @@ Platformer.LoadLevel = function(levelName) {
 
 				if (type == "start") {
 					StartPositionX = tileX * dimension.x;
-					StartPositionY = tileHeight * dimension.y + 1;
+					StartPositionY = tileHeight * dimension.y + 2;
 					StartPositionZ = tileY * dimension.z;
 				}
 
@@ -64,18 +64,23 @@ Platformer.LoadLevel = function(levelName) {
 					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 					Platformer.AddFloor(position, scale, floorMaterial);
 				}
-				Platformer.AddScanner(v3(scale.x * tileX, scale.y * 0.5 + 4, scale.z * tileY))
+				Platformer.AddScanner(v3(scale.x * tileX, scale.y * 0.5 + 4, scale.z * tileY));
 			} else if (type == "floppydisk") {
 				if(obj.WithFloor == true){
 					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 					Platformer.AddFloor(position, scale, floorMaterial);
 				}
-			//	Platformer.AddFloppyDisk(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY))
-				Platformer.AddPendulum(v3(scale.x * tileX, scale.y * 0.5 + 2.5, scale.z * tileY), v3(1, 5, 1), floorMaterial);
+				Platformer.AddFloppyDisk(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
+			} else if (type == "pendulum") {
+				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
+				Platformer.AddFloor(position, scale, floorMaterial);
+				Platformer.AddPendulum(v3(scale.x * tileX, scale.y * 0.5 + 1, scale.z * tileY), v3(1, 5, 1), floorMaterial);
+			}else if (type == "rotcube") {
+				Platformer.AddRotatingCube(v3(scale.x * tileX, scale.y * 0.5 - 0.5, scale.z * tileY), v3(5, 1, 1), floorMaterial);
 			}else if (type == "jumppad") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
-				Platformer.AddJumppad(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY))
+				Platformer.AddJumppad(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
 			} else {
 				console.log("type: " + type);
 			}
@@ -90,7 +95,7 @@ Platformer.LoadLevel = function(levelName) {
 	//	Platformer.AddPodium(v3(15, 1, 0));
 	//	Platformer.AddFloppyDisk(v3(10, 1, -5));
 
-		Platformer.AddRotatingCube(v3(-3, 0, -3), v3(5, 1, 1), floorMaterial);
+	//	Platformer.AddRotatingCube(v3(-3, 0, -3), v3(5, 1, 1), floorMaterial);
 
 		//Gaben, syslog
 		//Platformer.AddSysLog();
@@ -99,9 +104,6 @@ Platformer.LoadLevel = function(levelName) {
 
 	});
 };
-
-//TODO(Meanzie): Some objects are not being removed properly.
-
 var raycaster = new THREE.Raycaster();
 OnInit = function() {
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
@@ -146,7 +148,7 @@ OnInit = function() {
 			console.log("Player was removed");
 		};
 
-		player.onUpdate = function() {
+		player.OnUpdate = function() {
 
 			//Sound
 			var isPlayingAnything = Platformer.Audio.Intro.isPlaying || Platformer.Audio.End.isPlaying;

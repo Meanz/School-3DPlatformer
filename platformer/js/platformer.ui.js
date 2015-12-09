@@ -39,7 +39,7 @@ Platformer.VictoryMenu = function() {
             0.0, -10.0)));
         menu.toMainMenu = SceneManager.Add(menu, new Platformer.UIButton("OK!!!", v2(0, -50), function() {
             //Clear
-            this.Clear();
+            menu.Clear();
             SceneManager.ClearLevel();
             SceneManager.Remove(menu);
             // Soooo... Do stuff here?
@@ -88,6 +88,7 @@ Platformer.LostMenu = function(deathMessage) {
         SceneManager.Add(lostMenu, new Platformer.UIText(deathMessage, "24px Arial", "#ff0000", v3z(
             0.0, -10.0)));
         SceneManager.Add(lostMenu, new Platformer.UIButton("Retry", v2(0, -50), function() {
+            lostMenu.Clear();
             SceneManager.ClearLevel();
             // Fix camera
             Platformer.Camera.toPerspective();
@@ -168,7 +169,7 @@ Platformer.MainMenu = function(inPauseMode) {
             0.0, 20
         )));
 
-        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Controls.Sensitivity == PARTICLE_AMOUNT_LOW ? "<Low>" : "Low", v2(-260, -20), function() {
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Controls.Sensitivity == SENSITIVITY_LOW ? "<Low>" : "Low", v2(-260, -20), function() {
             mainMenu.Clear();
             Platformer.Controls.Sensitivity = SENSITIVITY_LOW;
             mainMenu.DisplaySettings();
@@ -216,7 +217,7 @@ Platformer.MainMenu = function(inPauseMode) {
             var that = SceneManager.Add(mainMenu, new Platformer.UIButton(levels[i], v2(0, 100 - (i * 50)), function() {
 
                 mainMenu.Clear();
-                SceneManager.Remove(mainMenu);
+                SceneManager.ClearLevel();
                 // Fix camera
                 Platformer.Camera.toPerspective();
 
@@ -328,7 +329,7 @@ Platformer.UIButton = function(text, position, onClick) {
     this.IsHovering = false;
     this.onClick = onClick;
     this.name = "button";
-    this.onUpdate = function(delta) {
+    this.OnUpdate = function(delta) {
         // console.log("" + Platformer.MouseX + " / " + Platformer.MouseY + " --
         // " + this.width + " / " + this.height);
         // Get mouse coordinates

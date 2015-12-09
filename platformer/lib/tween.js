@@ -245,7 +245,7 @@ TWEEN.Tween = function (object) {
 
 	};
 
-	this.onUpdate = function (callback) {
+	this.OnUpdate = function (callback) {
 
 		_onUpdateCallback = callback;
 		return this;

@@ -10,6 +10,8 @@ var TOOL_START = "start";
 var TOOL_END = "end";
 var TOOL_END_FINAL = "end_final";
 var TOOL_DISK = "floppydisk";
+var TOOL_PENDULUM = "pendulum";
+var TOOL_ROTATINGCUBE = "rotcube";
 
 Designer.Tool = TOOL_FLOOR;
 Designer.SaveX = 0;
@@ -119,6 +121,16 @@ Designer.LoadLevel = function() {
 				Designer.Tiles.push(tileFloor);
 				// console.log("Added floor at " + tileX + " / " + tileY);
 
+			} else if (type == TOOL_PENDULUM) {
+				var tileFloor = new Tile_Pendulum(tileX, tileY);
+				var tileHeight = obj.TileHeight;
+				tileFloor.TileHeight = tileHeight;
+				Designer.Tiles.push(tileFloor);
+			} else if (type == TOOL_ROTATINGCUBE) {
+				var tileFloor = new Tile_RotatingCube(tileX, tileY);
+				var tileHeight = obj.TileHeight;
+				tileFloor.TileHeight = tileHeight;
+				Designer.Tiles.push(tileFloor);
 			} else if (type == "start") {
 				Designer.AddStartTile(tileX, tileY);
 			} else if (type == "end") {
@@ -183,6 +195,8 @@ Designer.AddTools = function() {
 	Designer.AddTool(TOOL_END);
 	Designer.AddTool(TOOL_END_FINAL);
 	Designer.AddTool(TOOL_DISK);
+	Designer.AddTool(TOOL_ROTATINGCUBE);
+	Designer.AddTool(TOOL_PENDULUM);
 	Designer.SelectTool(TOOL_FLOOR);
 };
 
@@ -364,6 +378,10 @@ Designer.Update = function() {
 					Designer.Tiles.push(new Tile_EndFinal(tileX, tileY));
 				}else if (Designer.Tool == TOOL_START) {
 					Designer.AddStartTile(tileX, tileY);
+				}else if (Designer.Tool == TOOL_ROTATINGCUBE) {
+					Designer.Tiles.push(new Tile_RotatingCube(tileX, tileY));
+				}else if (Designer.Tool == TOOL_PENDULUM) {
+					Designer.Tiles.push(new Tile_Pendulum(tileX, tileY));
 				} else if (Designer.Tool == TOOL_END) {
 					Designer.AddEndTile(tileX, tileY);
 				}
@@ -530,6 +548,25 @@ Tile_Floor.prototype.GetHtml = function() {
 Tile_Floor.prototype.UpdateValues = function() {
 	Tile.prototype.UpdateValues.call(this);
 };
+
+var Tile_Pendulum = function(tileX, tileY) {
+	Tile_Floor.call(this, tileX, tileY);
+	this.TileHeight = 0;
+	this.TileType = "pendulum";
+	this.Color = "#ff00ff";
+	this.Text = "Pendulum";
+};
+Tile_Pendulum.prototype = Object.create(Tile_Floor.prototype);
+
+var Tile_RotatingCube = function(tileX, tileY) {
+	Tile_Floor.call(this, tileX, tileY);
+	this.TileHeight = 0;
+	this.TileType = "rotcube";
+	this.Color = "#ff00ff";
+	this.Text = "Rotating Cube";
+};
+Tile_RotatingCube.prototype = Object.create(Tile_Floor.prototype);
+
 
 var Tile_Wall = function(tileX, tileY) {
 	Tile.call(this, tileX, tileY);

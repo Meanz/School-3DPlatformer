@@ -1,5 +1,5 @@
 
-THREE.Audio.prototype.dupl = function () {
+THREE.Audio.prototype.Duplicate = function () {
 	var audio = new THREE.Audio(Platformer.audioListener);
 	audio.source.buffer = this.source.buffer;
 	return audio;
@@ -12,17 +12,17 @@ THREE.Audio.prototype.IsLoaded = function () {
 //
 Platformer.PlaySoundOnObject = function(attachTo, sound) {
 	//Create audio object
-	var audioObject = sound.dupl();
+	var audioObject = sound.Duplicate();
 	audioObject.position.copy(sound.position);
 	audioObject.Tag = TAG_LEVEL;
 	audioObject.GC = false;
 	audioObject.OnStart = function() {
 		//Playes the audio of loaded
 		if (this.IsLoaded()) {
-			audioObject.play();
+			this.play();
 		}
 	};
-	audioObject.onUpdate = function() {
+	audioObject.OnUpdate = function () {
 		//Assume that it will always be playing
 		if(!this.isPlaying && !this.GC) {
 			SceneManager.Remove(this);
@@ -93,7 +93,7 @@ Platformer.AddSysLog = function() {
 	sprite.updateMatrix();
 	sprite.AccumDelta = 0;
 	sprite.thing = 0;
-	sprite.onUpdate = function(delta) {
+	sprite.OnUpdate = function(delta) {
 		this.AccumDelta += delta;
 		if(this.AccumDelta > 500) {
 
@@ -143,7 +143,7 @@ Platformer.AddFloor = function(position, dimension, material) {
 		this.setAngularFactor(v3z());
 	};
 	floor.IsEnding = false;
-	floor.onUpdate = function() {
+	floor.OnUpdate = function() {
 		if(Platformer.IsWorldEnding) {
 			if(!this.IsEnding) {
 				var ran = Math.round(Math.random() * 600);
@@ -219,7 +219,7 @@ Platformer.AddPendulum = function(position, dimension, material) {
 
 	};
 
-	geom.onUpdate = function(delta) {
+	geom.OnUpdate = function(delta) {
 		this.rotation.x += (delta * SECOND) * (this.rotationSpeed) * (2 * Math.PI);
 		//Forces update
 		//Please note that this is not the correct way to do things in physijs
@@ -291,7 +291,7 @@ Platformer.AddRotatingCube = function(position, dimension, material) {
 
 	};
 
-	geom.onUpdate = function(delta) {
+	geom.OnUpdate = function(delta) {
 		this.rotation.y += (delta * SECOND) * (this.rotationSpeed) * (2 * Math.PI);
 		//Forces update
 		//Please note that this is not the correct way to do things in physijs
@@ -327,7 +327,7 @@ Platformer.AddTestBox = function(position, dimension) {
 
 	box.value = 0;
 	box.reverse = false;
-	box.onUpdate = function() {
+	box.OnUpdate = function() {
 		if (box.reverse) {
 			box.value--;
 		} else {
@@ -519,7 +519,7 @@ Platformer.AddTeleporter = function(position) {
 			.start();
 
 
-	teleporter.onUpdate = function() {
+	teleporter.OnUpdate = function() {
 		var difVec = v3z().subVectors(Platformer.Player.position, teleporter.position);
 		if (difVec.length() < 1
 				&& (Platformer.Player.position.y >= teleporter.position.y && Platformer.Player.position.y < teleporter.position.y + 3)) {
@@ -541,7 +541,7 @@ Platformer.AddJumppad = function(position){
 	jumppad.cooldownTime = 5000;
 	jumppad.cooldown = 0;
 
-	jumppad.onUpdate = function(delta) {
+	jumppad.OnUpdate = function(delta) {
 		if (jumppad.cooldown <= 0) {
 			if (v3z().subVectors(Platformer.Player.position, jumppad.position).length() < 2) {
 				Platformer.Player.setLinearVelocity(v3z());
@@ -577,7 +577,7 @@ Platformer.AddFloppyDisk = function(position, extraTime){
 			.repeat(Infinity)
 			.start();
 
-	floppyDisk.onUpdate = function(){
+	floppyDisk.OnUpdate = function(){
 		if(floppyDisk.position.distanceTo(Platformer.Player.position) < 2){
 			Platformer.Player.TimeRemaining += floppyDisk.extraTime;
 			SceneManager.Remove(floppyDisk);
@@ -615,7 +615,7 @@ Platformer.AddPodium = function(position){
 	podium.scale.set(0.06, 0.06, 0.06);
 
 
-	podium.onUpdate = function() {
+	podium.OnUpdate = function() {
 		var difVec = v3z().subVectors(Platformer.Player.position, podium.position);
 		if (difVec.length() < 2) {
 			Platformer.PlayerReachedPodium();
