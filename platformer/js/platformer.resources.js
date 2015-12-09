@@ -26,6 +26,12 @@ function WaitForResource() {
     ResourceWaitCount++;
 }
 
+function LoadAudio(fn) {
+    var audio = new THREE.Audio(Platformer.audioListener);
+    audio.load(fn);
+    return audio;
+}
+
 function LoadResources(fn)
 {
     ResourceCompleteFn = fn;
@@ -63,8 +69,22 @@ function LoadResources(fn)
     });
 
     //Scanner Audio
-    Platformer.Audio.Scanner = new THREE.Audio(Platformer.audioListener);
-    Platformer.Audio.Scanner.load("sounds/160421__bigkahuna360__electrical-shock-zap.wav");
+    Platformer.Audio.Scanner = LoadAudio("sounds/160421__bigkahuna360__electrical-shock-zap.wav");
+
+    //Intro Audio
+    Platformer.Audio.Intro = LoadAudio("sounds/cyborgEinstain.mp3");
+
+    //End Audio
+    Platformer.Audio.End = LoadAudio("sounds/cyborgEinstainEnd.mp3");
+
+    //Death Audio
+    Platformer.Audio.Death = LoadAudio("sounds/death.mp3");
+
+    //Jump Audio
+    Platformer.Audio.Jump = LoadAudio("sounds/jump.mp3");
+
+    //JumpPad Audio
+    Platformer.Audio.JumpPad = LoadAudio("sounds/jumppad.mp3");
 
     //Unlock
     ResourceLock = false;

@@ -1,5 +1,40 @@
 
 
+//Helper function for audio
+Platformer.PlaySound = function(sound, where) {
+	if(where == undefined) {
+		where = v3z().copy(Platformer.Player.position);
+		//Why do we have to multiply it? this is insane :(
+		where.x *= 2;
+		where.y *= 2;
+		where.z *= 2;
+	}
+
+	//Also update listener position
+	Platformer.audioListener.position.copy(Platformer.Player.position);
+	Platformer.audioListener.updateMatrixWorld(true);
+	//Update sound position
+	sound.position.copy(where);
+	//sound.updateMatrix();
+	sound.updateMatrixWorld(true);
+	if (sound.source.buffer instanceof AudioBuffer) {
+
+
+		var position = new THREE.Vector3();
+		var quaternion = new THREE.Quaternion();
+		var scale = new THREE.Vector3();
+		sound.matrixWorld.decompose( position, quaternion, scale );
+
+		console.log("position: " + position);
+
+		Platformer.audioListener.matrixWorld.decompose( position, quaternion, scale );
+
+
+		console.log("audioListener: " + position);
+
+		sound.play();
+	}
+}
 
 Platformer.AddSysLog = function() {
 
@@ -308,9 +343,7 @@ Platformer.AddScanner = function(positions) {
 			if (angleToY < scanner.spot.angle && vScanToPlay.length() < scanner.spot.distance) {
 				Platformer.Player.TimeRemaining -= scanner.timePenelty;
 				scanner.spot.visible = false;
-				if (scanner.sound.source.buffer instanceof AudioBuffer) {
-					scanner.sound.play();
-				}
+				Platformer.PlaySound(scanner.sound);
 				scanner.cooldown = scanner.cooldownTime;
 				console.log("Scanner(id" + scanner.id + ") detected player");
 			}
@@ -395,6 +428,7 @@ Platformer.AddJumppad = function(position){
 				Platformer.Player.setLinearVelocity(v3z());
 				Platformer.Player.applyCentralImpulse(v3(0, 2 * 500, 0));
 				jumppad.cooldown = jumppad.cooldownTime;
+				Platformer.PlaySound(Platformer.Audio.JumpPad);
 			}
 		} else {
 			jumppad.cooldown -= delta;

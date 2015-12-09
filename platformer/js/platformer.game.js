@@ -158,7 +158,6 @@ OnInit = function() {
 			}
 
 			if (Platformer.IsPlaying) {
-
 				if (Input.IsKeyReleased(KEY_Q - KEY_LCASE)) {
 					Platformer.EndLevel();
 					// Spawn the main menu!
@@ -204,7 +203,10 @@ OnInit = function() {
 					var intersection = intersections[i];
 					if (intersection.object != player) {
 						//console.log(intersection.distance);
-						if (intersection.distance <= 2) {
+						if (intersection.distance <= 1) {
+							if(player.CanJump == false) {
+								console.log("CanJump :: " + intersection.distance);
+							}
 							player.CanJump = true;
 							player.inAir = false;
 						} else {
@@ -220,7 +222,8 @@ OnInit = function() {
 					impulse.y += f * 20;
 					console.log("jumping motherfuckers.");
 					player.CanJump = false;
-					player.InternalJumpCd = 16; //:D
+					Platformer.PlaySound(Platformer.Audio.Jump);
+					player.InternalJumpCd = 32; //:D
 				}
 
 				var spd = ((Platformer.Controls.StrafeLeft || Platformer.Controls.StrafeRight)
@@ -280,6 +283,8 @@ Platformer.StartLevel = function(levelName) {
 };
 
 Platformer.PlayerDied = function(killedBy) {
+	console.log("Playing death sound?");
+	Platformer.PlaySound(Platformer.Audio.Death);
 	console.log("Player killed by " + killedBy);
 	Platformer.IsPlaying = false;
 	SceneManager.ClearLevel();
