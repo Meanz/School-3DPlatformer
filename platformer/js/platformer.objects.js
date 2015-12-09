@@ -12,8 +12,13 @@ Platformer.PlaySoundOnObject = function(attachTo, sound) {
 	var audioObject = sound.dupl();
 	audioObject.Tag = TAG_LEVEL;
 	audioObject.GC = false;
-	audioObject.OnStart = function() {};
-	//We need to hook the start thing
+	audioObject.OnStart = function() {
+		//Playes the audio of loaded
+		if (audioObject.source.buffer instanceof AudioBuffer) {
+			audioObject.play();
+		}
+	};
+
 	audioObject.onUpdate = function() {
 		//Assume that it will always be playing
 		if(!this.isPlaying && !this.GC) {
@@ -22,9 +27,12 @@ Platformer.PlaySoundOnObject = function(attachTo, sound) {
 		}
 	};
 
-	//
-	//Platformer.PlaySound(audioObject);
-	//
+	audioObject.onEnd = function(){
+		if (audioObject.source.buffer instanceof AudioBuffer) {
+			this.stop();
+		}
+	};
+
 
 	SceneManager.Add(attachTo, audioObject);
 };
@@ -40,11 +48,8 @@ Platformer.PlayStaticSound = function(sound) {
 	sound.position.copy(zero);
 	sound.updateMatrixWorld(true);
 */
-	sound.setRefDistance(0.1);
 
-	if (sound.source.buffer instanceof AudioBuffer) {
-		sound.play();
-	}
+
 };
 
 

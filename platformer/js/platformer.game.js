@@ -111,6 +111,8 @@ OnInit = function() {
 
 		SceneManager.Add(new Platformer.MainMenu(false));
 
+		SceneManager.Add(Platformer.audioListenerStatic);
+
 		var friction = 1.2;
 		var restitution = .0;
 		var mass = 50;
@@ -122,8 +124,11 @@ OnInit = function() {
 
 		var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), playerMaterial, mass);
 		Platformer.Player = player;
-		//player.add(Platformer.audioListener);
-		Platformer.Scene.add(Platformer.audioListener);
+		SceneManager.Add(Platformer.Player, Platformer.audioListener);
+
+
+
+
 
 		player.OnStart = function () {
 			player.name = "player";
@@ -294,11 +299,11 @@ Platformer.ShowEinstein = function(visible) {
 		Platformer.IsShowingEinstein = false;
 		einstein.hide();
 	}
-}
+};
 Platformer.StartLevel = function(levelName) {
 	if(Platformer.Player.Level == 1) {
 		console.log("Playing supposed audio");
-		Platformer.PlayStaticSound(Platformer.Audio.Intro);
+		Platformer.PlaySoundOnObject(Platformer.Scene ,Platformer.Audio.Intro);
 		Platformer.ShowEinstein(true);
 	}
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
