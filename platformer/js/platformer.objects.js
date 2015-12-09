@@ -1,15 +1,26 @@
-
+/**
+ *
+ * @returns {THREE.Audio}
+ */
 THREE.Audio.prototype.Duplicate = function () {
 	var audio = new THREE.Audio(Platformer.audioListener);
 	audio.source.buffer = this.source.buffer;
 	return audio;
 };
-
+/**
+ *
+ * @returns {boolean}
+ */
 THREE.Audio.prototype.IsLoaded = function () {
 	return this.source.buffer instanceof AudioBuffer;
 };
 
-//
+/**
+ *
+ * @param attachTo
+ * @param sound
+ * @returns {*}
+ */
 Platformer.PlaySoundOnObject = function(attachTo, sound) {
 	var audioObject = null;
 	if(Platformer.Settings.IsSoundEnabled) {
@@ -78,7 +89,9 @@ Platformer.PlaySound = function(sound, where) {
 		sound.play();
 	}
 };
-
+/**
+ *
+ */
 Platformer.AddSysLog = function() {
 
 	Platformer.SysLogLines = [];

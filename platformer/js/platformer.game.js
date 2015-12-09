@@ -95,18 +95,8 @@ Platformer.LoadLevel = function(levelName) {
 			}
 
 		}
-	//	Platformer.AddTracer(v3(0, 2, -20));
 
-		//Hardcode scanners =D?
-	//	Platformer.AddScanner([ v3(5, 5, 0), v3(10, 5, 0), v3(-5, 5, -20) ]);
-	//	Platformer.AddTeleporter(v3(10, 1, 0));
-	//	Platformer.AddJumppad(v3(-10, 1, -5));
-	//	Platformer.AddPodium(v3(15, 1, 0));
-	//	Platformer.AddFloppyDisk(v3(10, 1, -5));
-
-	//	Platformer.AddRotatingCube(v3(-3, 0, -3), v3(5, 1, 1), floorMaterial);
-
-		//Gaben, syslog
+		// syslog
 		Platformer.AddSysLog();
 
 		Platformer.AddSymbolParticleCloud();
