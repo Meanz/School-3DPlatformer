@@ -199,7 +199,25 @@ Platformer.MainMenu = function(inPauseMode) {
             mainMenu.DisplaySettings();
         }));
 
-        SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -100), function() {
+        //sensitivity
+        SceneManager.Add(mainMenu, new Platformer.UIText("Sound", "24px Arial", "#ff0000", v2(
+            0.0, -60
+        )));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton(!Platformer.Settings.IsSoundEnabled ? "<Disabled>" : "Disabled", v2(-90, -100), function() {
+            mainMenu.Clear();
+            Platformer.Settings.IsSoundEnabled = false;
+            mainMenu.DisplaySettings();
+        }));
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton(Platformer.Settings.IsSoundEnabled ? "<Enabled>" : "Enabled", v2(90, -100), function() {
+            mainMenu.Clear();
+            Platformer.Settings.IsSoundEnabled = true;
+            mainMenu.DisplaySettings();
+        }));
+
+
+        SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -180), function() {
             mainMenu.Clear();
             mainMenu.DisplayMainMenu();
         }));

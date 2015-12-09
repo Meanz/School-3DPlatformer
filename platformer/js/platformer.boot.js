@@ -32,6 +32,7 @@ var SENSITIVITY_INSANE = 0.5;
 
 Platformer.Settings = {};
 Platformer.Settings.ParticleAmount = PARTICLE_AMOUNT_HIGH;
+Platformer.Settings.IsSoundEnabled = true;
 
 //
 Platformer.Textures = {};

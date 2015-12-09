@@ -11,30 +11,33 @@ THREE.Audio.prototype.IsLoaded = function () {
 
 //
 Platformer.PlaySoundOnObject = function(attachTo, sound) {
-	//Create audio object
-	var audioObject = sound.Duplicate();
-	audioObject.position.copy(sound.position);
-	audioObject.Tag = TAG_LEVEL;
-	audioObject.GC = false;
-	audioObject.OnStart = function() {
-		//Playes the audio of loaded
-		if (this.IsLoaded()) {
-			this.play();
+
+	if(Platformer.Settings.IsSoundEnabled) {
+			//Create audio object
+		var audioObject = sound.Duplicate();
+		audioObject.position.copy(sound.position);
+		audioObject.Tag = TAG_LEVEL;
+		audioObject.GC = false;
+		audioObject.OnStart = function() {
+			//Playes the audio of loaded
+			if (this.IsLoaded()) {
+				this.play();
+			}
+		};
+		audioObject.OnUpdate = function () {
+			//Assume that it will always be playing
+			if(!this.isPlaying && !this.GC) {
+				SceneManager.Remove(this);
+				this.GC = true;
+			}
+		};
+		audioObject.OnEnd = function(){
+			if (this.isPlaying && this.IsLoaded()) {
+				this.stop();
+			}
+		};
+		SceneManager.Add(attachTo, audioObject);
 		}
-	};
-	audioObject.OnUpdate = function () {
-		//Assume that it will always be playing
-		if(!this.isPlaying && !this.GC) {
-			SceneManager.Remove(this);
-			this.GC = true;
-		}
-	};
-	audioObject.OnEnd = function(){
-		if (this.isPlaying && this.IsLoaded()) {
-			this.stop();
-		}
-	};
-	SceneManager.Add(attachTo, audioObject);
 };
 
 /**
