@@ -333,7 +333,13 @@ Platformer.StartLevel = function(levelName) {
 	Platformer.ParseJsonObjects();
 	Platformer.LoadLevel(levelName);
 	Platformer.IsPlaying = true;
-	Platformer.Player.TimeRemaining = 100;
+	if(Platformer.Player.Level == 1){
+		Platformer.Player.TimeRemaining = 30;
+	}else if(Platformer.Player.Level == 2){
+		Platformer.Player.TimeRemaining = 30;
+	}else if(Platformer.Player.Level == 3){
+		Platformer.Player.TimeRemaining = 55;
+	}
 	Platformer.Player.LastTimeUpdate = Date.now();
 
 	Platformer.Player.position.x = StartPositionX;

@@ -116,8 +116,10 @@ Platformer.MainMenu = function(inPauseMode) {
 
         AddTitle(mainMenu);
 
-        SceneManager.Add(mainMenu, new Platformer.UIText("In this game you have to get past ", "24px Arial", "#ff0000", v2(0.0, 80.0)));
-        SceneManager.Add(mainMenu, new Platformer.UIText("different kinds of obstacles to complete the game.", "24px Arial", "#ff0000", v2(0.0, 50.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("In this game you have to get past ", "24px Arial", "#ff0000", v2(0.0, 140.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("different kinds of obstacles to complete the game.", "24px Arial", "#ff0000", v2(0.0, 110.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("Use WASD and Space to control script kid.", "24px Arial", "#ff0000", v2(0.0, 80.0)));
+        SceneManager.Add(mainMenu, new Platformer.UIText("Press Q to get to the menu.", "24px Arial", "#ff0000", v2(0.0, 50.0)));
 
         SceneManager.Add(mainMenu, new Platformer.UIButton("Back", v2(0, -50), function() {
             mainMenu.Clear();
