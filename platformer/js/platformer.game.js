@@ -74,9 +74,9 @@ Platformer.LoadLevel = function(levelName) {
 			} else if (type == "pendulum") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
-				Platformer.AddPendulum(v3(scale.x * tileX, scale.y * 0.5 + 1, scale.z * tileY), v3(1, 5, 1), floorMaterial);
+				Platformer.AddPendulum(v3(scale.x * tileX, scale.y * 0.5 + 3, scale.z * tileY), v3(1, 5, 1), floorMaterial);
 			}else if (type == "rotcube") {
-				Platformer.AddRotatingCube(v3(scale.x * tileX, scale.y * 0.5 - 0.5, scale.z * tileY), v3(5, 1, 1), floorMaterial);
+				Platformer.AddRotatingCube(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY), v3(8, 1, 2), floorMaterial);
 			}else if (type == "jumppad") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
