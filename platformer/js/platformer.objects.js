@@ -13,6 +13,7 @@ THREE.Audio.prototype.IsLoaded = function () {
 Platformer.PlaySoundOnObject = function(attachTo, sound) {
 	//Create audio object
 	var audioObject = sound.dupl();
+	audioObject.position.copy(sound.position);
 	audioObject.Tag = TAG_LEVEL;
 	audioObject.GC = false;
 	audioObject.OnStart = function() {
@@ -36,22 +37,9 @@ Platformer.PlaySoundOnObject = function(attachTo, sound) {
 	SceneManager.Add(attachTo, audioObject);
 };
 
-//Helper function for audio
-Platformer.PlayStaticSound = function(sound) {
-	var zero = v3z();
-/*
-	//Also update listener position
-	Platformer.audioListener.position.copy(zero);
-	Platformer.audioListener.updateMatrixWorld(true);
-	//Update sound position
-	sound.position.copy(zero);
-	sound.updateMatrixWorld(true);
-*/
-
-
-};
-
-
+/**
+ * @deprecated Do not use
+ */
 Platformer.PlaySound = function(sound, where) {
 	if(where == undefined) {
 		where = v3z().copy(Platformer.Player.position);
@@ -119,7 +107,7 @@ Platformer.AddSysLog = function() {
 			this.thing++;
 		}
 
-	}
+	};
 	sprite.name = "syslog";
 	SceneManager.Add( sprite );
 
@@ -464,7 +452,7 @@ Platformer.AddScanner = function(positions) {
 			if (angleToY < scanner.spot.angle && vScanToPlay.length() < scanner.spot.distance) {
 				Platformer.Player.TimeRemaining -= scanner.timePenelty;
 				scanner.spot.visible = false;
-				Platformer.PlaySound(scanner.sound);
+				Platformer.PlaySoundOnObject(scanner, scanner.sound);
 				scanner.cooldown = scanner.cooldownTime;
 				console.log("Scanner(id" + scanner.id + ") detected player");
 			}
@@ -559,7 +547,7 @@ Platformer.AddJumppad = function(position){
 				Platformer.Player.setLinearVelocity(v3z());
 				Platformer.Player.applyCentralImpulse(v3(0, 2 * 500, 0));
 				jumppad.cooldown = jumppad.cooldownTime;
-				Platformer.PlaySound(Platformer.Audio.JumpPad);
+				Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.JumpPad);
 			}
 		} else {
 			jumppad.cooldown -= delta;

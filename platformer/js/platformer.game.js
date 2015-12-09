@@ -111,8 +111,6 @@ OnInit = function() {
 
 		SceneManager.Add(new Platformer.MainMenu(false));
 
-		SceneManager.Add(Platformer.audioListenerStatic);
-
 		var friction = 1.2;
 		var restitution = .0;
 		var mass = 50;
@@ -124,7 +122,7 @@ OnInit = function() {
 
 		var player = Platformer.AddPlayer(v3(0, 5, 0), v3(1 ,1 ,1), playerMaterial, mass);
 		Platformer.Player = player;
-		SceneManager.Add(Platformer.Player, Platformer.audioListener);
+		SceneManager.Add(Platformer.Camera, Platformer.audioListener);
 
 
 
@@ -246,7 +244,7 @@ OnInit = function() {
 					player.setLinearVelocity(v3(lv.x, 0.1, lv.z));
 					impulse.y += f * jumpStrength;
 					player.CanJump = false;
-					Platformer.PlaySound(Platformer.Audio.Jump);
+					Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.Jump);
 					player.InternalJumpCd = 32; //:D
 				}
 
@@ -303,7 +301,7 @@ Platformer.ShowEinstein = function(visible) {
 Platformer.StartLevel = function(levelName) {
 	if(Platformer.Player.Level == 1) {
 		console.log("Playing supposed audio");
-		Platformer.PlaySoundOnObject(Platformer.Scene ,Platformer.Audio.Intro);
+		Platformer.PlaySoundOnObject(Platformer.Camera ,Platformer.Audio.Intro);
 		Platformer.ShowEinstein(true);
 	}
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
@@ -326,7 +324,7 @@ Platformer.StartLevel = function(levelName) {
 
 Platformer.PlayerDied = function(killedBy) {
 	console.log("Playing death sound?");
-	Platformer.PlaySound(Platformer.Audio.Death);
+	Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.Death);
 	console.log("Player killed by " + killedBy);
 	// End level
 	Platformer.EndLevel();
@@ -360,7 +358,7 @@ Platformer.PlayerReachedEnd = function() {
 
 Platformer.PlayerReachedPodium = function() {
 	console.log("Playing End Sound");
-	Platformer.PlayStaticSound(Platformer.Audio.End);
+	Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.End);
 	// End level
 	Platformer.EndLevel();
 	// Spawn the victory menu

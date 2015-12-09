@@ -33,9 +33,8 @@ function LoadAudio(fn) {
 }
 
 function LoadStaticAudio(fn) {
-    var audio = new THREE.Audio(Platformer.audioListenerStatic);
+    var audio = LoadAudio(fn);
     audio.position.z = -1;
-    audio.load(fn);
     return audio;
 }
 
