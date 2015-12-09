@@ -141,9 +141,10 @@ function TextureCreate(clrx, clry, clrz, delta) {
 Platformer.Init = function() {
 
 	Platformer.Renderer = new THREE.WebGLRenderer({
-		antialias : true
-	});
+		antialias : true,
 
+	});
+	Platformer.Renderer.setClearColor( 0xaaaaaa );
 	Platformer.Width = window.innerWidth - 4;
 	Platformer.Height = window.innerHeight - 4;
 
