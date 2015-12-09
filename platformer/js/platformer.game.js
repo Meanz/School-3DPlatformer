@@ -139,9 +139,6 @@ OnInit = function() {
 		SceneManager.Add(Platformer.Camera, Platformer.audioListener);
 
 
-
-
-
 		player.OnStart = function () {
 			player.name = "player";
 			player.visible = false;
@@ -183,12 +180,6 @@ OnInit = function() {
 			if(Input.IsKeyReleased(KEY_3)) {
 				for(var i=0; i < SceneManager.SceneObjects.length; i++) {
 					console.log("Obj: " + SceneManager.SceneObjects[i].name);
-				}
-			}
-
-			if(Input.IsKeyReleased(KEY_4)) {
-				if(Platformer.Audio.Intro.isPlaying) {
-					Platformer.Audio.Intro.stop();
 				}
 			}
 
@@ -331,6 +322,12 @@ Platformer.StartLevel = function(levelName) {
 		Platformer.PlaySoundOnObject(Platformer.Camera ,Platformer.Audio.Intro);
 		Platformer.ShowEinstein(true);
 	}
+
+
+	Platformer.Audio.CyberWind.position.z = -10;
+	Platformer.Audio.CyberWind.setLoop(true);
+	Platformer.PlaySoundOnObject(Platformer.Camera ,Platformer.Audio.CyberWind);
+
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 	Platformer.IsWorldEnding = false;
 	Platformer.ParseJsonObjects();
@@ -349,6 +346,10 @@ Platformer.StartLevel = function(levelName) {
 	Platformer.Player.setLinearVelocity(v3z());
 	Platformer.Player.setAngularVelocity(v3z());
 	$("#hud-ingame").show();
+
+
+
+
 };
 
 Platformer.PlayerDied = function(killedBy) {

@@ -92,6 +92,9 @@ function LoadResources(fn)
     //JumpPad Audio
     Platformer.Audio.JumpPad = LoadStaticAudio("sounds/jumppad.mp3");
 
+    //CyberWind
+    Platformer.Audio.CyberWind = LoadStaticAudio("sounds/92029__urupin__digital-wind.mp3");
+
     //Unlock
     ResourceLock = false;
     if(ResourceWaitCount == 0) {
