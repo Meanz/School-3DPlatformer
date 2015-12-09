@@ -78,13 +78,6 @@ function LoadResources(fn)
         OnResourceLoaded("SysLog.txt");
     });
 
-    //Plywood
-    WaitForResource();
-    Platformer.textureLoader.load("images/plywood.jpg", function(texture) {
-        Platformer.Textures.Plywood = texture;
-        OnResourceLoaded("images/plywood.jpg");
-    });
-
     //FloppyDisk
     WaitForResource();
     Platformer.textureLoader.load("images/floppydiskTex.png", function(texture) {

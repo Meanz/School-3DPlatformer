@@ -161,7 +161,6 @@ Platformer.Init = function() {
 	// Defaults
 	Platformer.DefaultMaterial = Physijs.createMaterial(new THREE.MeshLambertMaterial({
 		map : Platformer.Texture
-	// loader.load('images/bg.png')
 	}), 5, // high friction
 	.1 // low restitution
 	);
