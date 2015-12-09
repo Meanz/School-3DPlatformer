@@ -61,7 +61,9 @@ Platformer.LoadLevel = function(levelName) {
 				Platformer.AddTracer(v3(scale.x * tileX, (scale.y * tileHeight) + 2.5, scale.z * tileY));
 			} else if (type == "scanner") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
-				Platformer.AddFloor(position, scale, floorMaterial);
+				if(obj.WithFloor == "true") {
+					Platformer.AddFloor(position, scale, floorMaterial);
+				}
 				//Convert all targets into v3's
 				if(obj.Targets.length > 0) {
 					var targets = [];
