@@ -8,7 +8,7 @@ Platformer.AddSymbolParticleCloud = function(){
 
 Platformer.GetSymbolCloud = function(symbol, range, amount){
     var geom = new THREE.Geometry();
-    var material = new THREE.PointCloudMaterial({
+    var material = new THREE.PointsMaterial({
         size : 0.3,
         transparent : true,
         opacity : 0.5,
@@ -25,7 +25,7 @@ Platformer.GetSymbolCloud = function(symbol, range, amount){
         geom.vertices.push(particle);
     }
 
-    var cloud = new THREE.PointCloud(geom, material);
+    var cloud = new THREE.Points(geom, material);
     cloud.sortParticles = true;
     cloud.onRender = function(){
         if(cloud.position.distanceTo(Platformer.Player.position) > range/2-20){
