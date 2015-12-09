@@ -120,8 +120,12 @@ function LoadResources(fn)
     //CyberWind
     Platformer.Audio.CyberWind = LoadStaticAudio("sounds/92029__urupin__digital-wind.mp3");
 
-    //Menu loopp
+    //Menu loop
     Platformer.Audio.MenuLoop = LoadStaticAudio("sounds/329130__dodgyloops__digitaltribal-dodgyloops-dodgy-c.wav");
+
+    //Floppy
+    Platformer.Audio.Floppy = LoadStaticAudio("sounds/4761__jovica__ppg-006-digital-mallet-g-2.wav");
+
     //Unlock
     requestAnimationFrame(WaitForResources);
 };

@@ -510,6 +510,7 @@ Platformer.AddFloppyDisk = function(position, extraTime){
 
 	floppyDisk.OnUpdate = function(){
 		if(floppyDisk.position.distanceTo(Platformer.Player.position) < 2){
+			Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.Floppy);
 			Platformer.Player.TimeRemaining += floppyDisk.extraTime;
 			SceneManager.Remove(floppyDisk);
 			console.log("Floppydisk picked up by player");
