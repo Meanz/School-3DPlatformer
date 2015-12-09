@@ -331,8 +331,10 @@ Platformer.StartLevel = function(levelName) {
 	}
 
 	var snd = Platformer.PlaySoundOnObject(Platformer.Camera ,Platformer.Audio.CyberWind);
-	snd.setLoop(true);
-	snd.position.z = -10;
+	if(snd != null) {
+		snd.setLoop(true);
+		snd.position.z = -10;
+	}
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 	Platformer.IsWorldEnding = false;
 	Platformer.ParseJsonObjects();
@@ -385,7 +387,10 @@ Platformer.PlayerReachedEnd = function() {
 	Platformer.EndLevel();
 	// Spawn the continue menu
 	SceneManager.Add(new Platformer.ContinueMenu());
-	Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.MenuLoop).setLoop(true);
+	var snd = Platformer.PlaySoundOnObject(Platformer.Camera, Platformer.Audio.MenuLoop);
+	if(snd != null) {
+		snd.setLoop(true);
+	}
 };
 
 Platformer.PlayerReachedPodium = function() {
