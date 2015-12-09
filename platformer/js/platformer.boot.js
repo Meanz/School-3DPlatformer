@@ -12,6 +12,12 @@ Platformer.Camera = null;
 Platformer.IsPointerLocked = false;
 Platformer.IsPlaying = false;
 
+//Time constants
+var SECOND = 1.0 / 1000.0;
+var MINUTE = SECOND * 60.0;
+var HOUR = MINUTE * 60.0;
+
+//Settings constants
 var PARTICLE_AMOUNT_LOW = 10000;
 var PARTICLE_AMOUNT_MEDIUM = 25000;
 var PARTICLE_AMOUNT_HIGH = 50000;

@@ -70,7 +70,8 @@ Platformer.LoadLevel = function(levelName) {
 					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 					Platformer.AddFloor(position, scale, floorMaterial);
 				}
-				Platformer.AddFloppyDisk(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY))
+			//	Platformer.AddFloppyDisk(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY))
+				Platformer.AddPendulum(v3(scale.x * tileX, scale.y * 0.5 + 2.5, scale.z * tileY), v3(1, 5, 1), floorMaterial);
 			}else if (type == "jumppad") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);

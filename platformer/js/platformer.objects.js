@@ -1,12 +1,7 @@
 
 THREE.Audio.prototype.dupl = function () {
 	var audio = new THREE.Audio(Platformer.audioListener);
-	audio.load(fn);
-	var scope = audio;
-	scope.context.decodeAudioData( other.source.buffer, function ( buffer ) {
-		scope.source.buffer = buffer;
-		if ( scope.autoplay ) scope.play();
-	} );
+	audio.source.buffer = this.source.buffer;
 	return audio;
 };
 
@@ -176,7 +171,76 @@ Platformer.AddFloor = function(position, dimension, material) {
 	return floor;
 };
 
-var SECOND = 1.0 / 1000.0;
+Platformer.AddPendulum = function(position, dimension, material) {
+	//Geometry
+	//pos, dim, material, mass
+	var geom = Geometry.StaticBox(position, dimension, material, 5);
+	geom.rotationSpeed = 0.2; //x full rotations / s
+	geom.constraint = null;
+	//Don't do initializatiojn
+	geom.IsInitialized = true;
+	//Add a constraint
+	/*geom.constraint = new Physijs.HingeConstraint(
+	 geom,
+	 geom,
+	 v3(dimension.x / 2, dimension.y / 2, dimension.z / 2), //Middle
+	 v3(1.0, 0.0, 0.0) //Axis along which the hinge lies
+	 );*/
+	geom.OnStart = function() {
+		//this.setAngularFactor(v3z());
+		this.setLinearFactor(v3z());
+		console.log("OnStart - RotatingCube");
+	};
+
+	geom.OnEnd = function() {
+		if(this.constraint != null) {
+			Platformer.removeConstraint(this.constraint);
+		}
+	};
+
+	geom.onRender = function() {
+
+		if(!this.IsInitialized) {
+			Platformer.Scene.addConstraint(this.constraint);
+			this.constraint.setLimits(
+				0,				//Min angle
+				Math.PI * 2,	//Max angle
+				0.1, 			//Bias
+				0.0			//Relaxation factor ( bouncyness )
+			);
+
+			//Angular motor?
+			/*this.constraint.configureAngularMotor(
+			 1, //which 0,1,2 ( x, y, z )
+			 0, //lower limit
+			 1, //upper limit
+			 5, //Target velocity
+			 500 //Max force
+			 );*/
+			//targetVelocity, accelerationForce
+			var targetVelocity = 10;
+			var accelerationForce = 10;
+			this.constraint.enableAngularMotor(targetVelocity, accelerationForce);
+			this.IsInitialized = true;
+			console.log("Initialized constraint");
+		}
+
+	};
+
+	geom.onUpdate = function(delta) {
+		this.rotation.x += (delta * SECOND) * (this.rotationSpeed) * (2 * Math.PI);
+		//Forces update
+		//Please note that this is not the correct way to do things in physijs
+		//This will result in inaccurate collision boxes
+		//But it's the easiest way to do things without spending too much time on the problem
+		this.__dirtyPosition = true;
+		this.__dirtyRotation = true;
+	};
+
+	//It's a tile
+	geom.name = "rotatingcube";
+	SceneManager.Add(geom);
+}
 
 Platformer.AddRotatingCube = function(position, dimension, material) {
 
