@@ -134,11 +134,20 @@ OnInit = function() {
 			player.TimeRemaining = 0;
 			player.InternalJumpCd = 0;
 			player.Level = 1;
+			player.IsShowingEinstein = false;
 		};
+
 		player.OnEnd = function() {
 			console.log("Player was removed");
 		};
+
 		player.onUpdate = function() {
+
+			//Sound
+			var isPlayingAnything = Platformer.Audio.Intro.isPlaying || Platformer.Audio.End.isPlaying;
+			if(!isPlayingAnything && Platformer.IsShowingEinstein)  {
+				Platformer.ShowEinstein(false);
+			}
 
 			if (Input.IsKeyReleased(KEY_1)) {
 				console.log("SceneObjects: " + SceneManager.SceneObjects.length);
@@ -206,7 +215,7 @@ OnInit = function() {
 						//console.log(intersection.distance);
 						if (intersection.distance <= 1) {
 							if(player.CanJump == false) {
-								console.log("CanJump :: " + intersection.distance);
+								//console.log("CanJump :: " + intersection.distance);
 							}
 							player.CanJump = true;
 							player.inAir = false;
@@ -256,9 +265,9 @@ OnInit = function() {
 
 				player.applyCentralImpulse(impulse);
 
-				if (player.position.y < -10) {
-					player.position.y = StartPositionY;
+				if (player.position.y < -15 && !Platformer.IsWorldEnding) {
 					player.position.x = StartPositionX;
+					player.position.y = StartPositionY;
 					player.position.z = StartPositionZ;
 					player.__dirtyPosition = true;
 					player.__dirtyRotation = true;
@@ -272,10 +281,22 @@ OnInit = function() {
 	LoadResources(OnInitComplete)
 };
 
+Platformer.IsShowingEinstein = false;
+Platformer.ShowEinstein = function(visible) {
+	var einstein = $("#hud-einstein");
+	if(visible) {
+		Platformer.IsShowingEinstein = true;
+		einstein.show();
+	} else {
+		Platformer.IsShowingEinstein = false;
+		einstein.hide();
+	}
+}
 Platformer.StartLevel = function(levelName) {
 	if(Platformer.Player.Level == 1) {
 		console.log("Playing supposed audio");
 		Platformer.PlayStaticSound(Platformer.Audio.Intro);
+		Platformer.ShowEinstein(true);
 	}
 	// Platformer.AddTestBox(v3(0, 0, 0), v3(5, 5, 5));
 	Platformer.IsWorldEnding = false;
