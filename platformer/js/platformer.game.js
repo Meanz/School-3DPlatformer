@@ -79,7 +79,7 @@ Platformer.LoadLevel = function(levelName) {
 					var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 					Platformer.AddFloor(position, scale, floorMaterial);
 				}
-				Platformer.AddFloppyDisk(v3(scale.x * tileX, scale.y * 0.5, scale.z * tileY));
+				Platformer.AddFloppyDisk(v3(scale.x * tileX, scale.y * tileHeight + 0.5, scale.z * tileY));
 			} else if (type == "pendulum") {
 				var position = v3(scale.x * tileX, scale.y * tileHeight, scale.z * tileY);
 				Platformer.AddFloor(position, scale, floorMaterial);
