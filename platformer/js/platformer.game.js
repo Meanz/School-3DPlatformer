@@ -10,7 +10,6 @@ Platformer.LoadLevel = function(levelName) {
 					map: Platformer.Texture,
 					blending: THREE.AdditiveBlending,
 					shininess: 0
-					// loader.load('images/bg.png')
 				}),.5, // high friction
 				.0 // low restitution
 		);
@@ -25,7 +24,6 @@ Platformer.LoadLevel = function(levelName) {
 			var tileY = obj.TileY;
 			var type = obj.TileType;
 			var tileHeight = obj.TileHeight;
-
 			if (type == "floor" || type == "start") {
 
 				var dimension = scale;
